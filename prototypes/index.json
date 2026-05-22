@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-05-22T09:44:21+08:00",
+  "count": 2,
+  "prototypes": [
+    {
+      "prototypeId": "prototype-20260522-094401",
+      "title": "已发货订单结算匹配",
+      "businessSystem": "ERP",
+      "owner": "Favours-ff",
+      "sourcePath": "prototype\\order-settlement-reconciliation",
+      "createdAt": "2026-05-22T09:44:01+08:00",
+      "updatedAt": "2026-05-22T09:44:01+08:00",
+      "path": "prototypes/erp/prototype-20260522-094401",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260522-094401/"
+    },
+    {
+      "prototypeId": "prototype-20260522-094417",
+      "title": "已发货订单结算匹配",
+      "businessSystem": "ERP",
+      "owner": "Favours-ff",
+      "sourcePath": "prototype\\order-settlement-reconciliation",
+      "createdAt": "2026-05-22T09:44:17+08:00",
+      "updatedAt": "2026-05-22T09:44:17+08:00",
+      "path": "prototypes/erp/prototype-20260522-094417",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260522-094417/"
+    }
+  ]
+}
