@@ -154,6 +154,44 @@ input, select {
   font-size: 12px;
 }
 
+.table-panel {
+  padding-top: 10px;
+}
+
+.table-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.btn-link {
+  height: 36px;
+  border: 1px solid #c7d6ea;
+  background: linear-gradient(180deg, #f8fbff 0%, #f1f6fd 100%);
+  color: #2f4f79;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 34px;
+  cursor: pointer;
+  padding: 0 16px;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(47, 79, 121, 0.08);
+  transition: all 0.16s ease;
+}
+
+.btn-link:hover {
+  color: #1f3f67;
+  border-color: #aec3df;
+  background: linear-gradient(180deg, #f2f8ff 0%, #eaf2fc 100%);
+  box-shadow: 0 4px 10px rgba(47, 79, 121, 0.12);
+  transform: translateY(-1px);
+}
+
+.btn-link:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(47, 79, 121, 0.1);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -201,6 +239,12 @@ th {
   .page-shell { padding: 14px; }
   .page-header { flex-direction: column; }
   table { font-size: 12px; }
+  .btn-link {
+    height: 32px;
+    line-height: 30px;
+    font-size: 13px;
+    padding: 0 12px;
+  }
   .summary-wrap {
     flex-direction: column;
     align-items: flex-start;
