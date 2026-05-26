@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>已发货订单结算对账</title>
+  <link rel="stylesheet" href="../../ui-library/tokens.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="c-shell erp-shell" data-component="ErpShell">
+    <aside class="c-shell__sider" aria-label="ERP 侧边导航">
+      <div class="c-shell__brand">
+        <span class="c-shell__brand-mark">ERP</span>
+        <span>财务对账</span>
+      </div>
+      <nav class="c-shell__menu" aria-label="主导航">
+        <a href="https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260522-094417/" class="c-shell__menu-item">订单结算匹配</a>
+        <a href="#" class="c-shell__menu-item is-active" aria-current="page">发货确认收入</a>
+      </nav>
+    </aside>
+
+    <section class="c-shell__main">
+      <header class="c-shell__topbar">
+        <div class="c-shell__module">自研 ERP / 财务结算中心</div>
+        <div class="c-shell__top-actions">
+          <span class="tag tag--processing">prototype-draft</span>
+          <span class="text-secondary">示例静态数据</span>
+        </div>
+      </header>
+      <nav class="c-shell__breadcrumb" aria-label="面包屑">财务对账 / 发货确认收入 / 已发货订单结算对账</nav>
+
+      <main class="c-shell__content page-shell">
+        <header class="c-page-header page-header" data-component="PageHeaderBar">
+          <div>
+            <p class="eyebrow">订单结算 / 对账明细</p>
+            <h1>已发货订单结算对账</h1>
+            <p class="page-desc">用 ERP 已发货订单匹配平台后台账单，核对预估口径、结算口径和每项差异。</p>
+          </div>
+          <div class="page-header__aside">
+            <span class="tag tag--default">差异 = 结算值 - 预估值</span>
+          </div>
+        </header>
+
+        <section class="c-filter surface-panel filter-panel" data-component="QueryFilterBar" aria-label="筛选条件">
+          <div class="basis-row c-date-comparison" data-component="DateComparisonControl">
+            <div>
+              <span class="field-label">当前时间口径</span>
+              <div class="segmented" id="basisSwitch" aria-label="时间口径">
+                <button class="segmented__item is-active" type="button" data-action="switch-time-basis" data-basis="ship">发货时间</button>
+                <button class="segmented__item" type="button" data-action="switch-time-basis" data-basis="settle">结算时间</button>
+              </div>
+            </div>
+            <p class="basis-note" id="basisNote">默认按发货时间统计；切换为结算时间后，未结算订单会自动排除。</p>
+          </div>
+
+          <div class="filter-grid">
+            <label class="field">
+              <span class="field-label">平台</span>
+              <div class="custom-select" data-select="platform" data-role="ant-select"></div>
+            </label>
+            <label class="field">
+              <span class="field-label">店铺</span>
+              <div class="custom-select" data-select="shop" data-role="ant-select"></div>
+            </label>
+            <label class="field">
+              <span class="field-label">平台 SKU</span>
+              <input class="input" id="platformSkuFilter" type="text" placeholder="输入平台 SKU" />
+            </label>
+            <label class="field">
+              <span class="field-label">发货 SKU</span>
+              <input class="input" id="shippingSkuFilter" type="text" placeholder="输入发货 SKU" />
+            </label>
+            <label class="field field--active" data-range-field="ship">
+              <span class="field-label">发货时间范围</span>
+              <input class="input" id="shipRange" type="text" placeholder="YYYY-MM-DD ~ YYYY-MM-DD" />
+            </label>
+            <label class="field" data-range-field="settle">
+              <span class="field-label">结算时间范围</span>
+              <input class="input" id="settleRange" type="text" placeholder="YYYY-MM-DD ~ YYYY-MM-DD" />
+            </label>
+          </div>
+
+          <div class="filter-footer">
+            <div class="status-filter" id="settledSwitch" aria-label="是否结算">
+              <button class="status-filter__item is-active" type="button" data-action="filter-status" data-status="all">全部</button>
+              <button class="status-filter__item" type="button" data-action="filter-status" data-status="unsettled">未结算</button>
+              <button class="status-filter__item" type="button" data-action="filter-status" data-status="settled">已结算</button>
+            </div>
+            <div class="filter-actions">
+              <button id="resetBtn" class="btn" type="button">重置</button>
+              <button id="applyBtn" class="btn btn--solid btn--color-primary" type="button">筛选</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="surface-panel summary-panel" data-component="MetricComparisonCard" aria-label="汇总指标">
+          <div class="summary-head">
+            <div>
+              <span class="field-label">汇总口径</span>
+              <strong id="basisSummary">发货时间</strong>
+            </div>
+            <span class="text-secondary" id="activeFilterText">已按当前筛选条件统计</span>
+          </div>
+          <div class="metric-grid" id="summary"></div>
+        </section>
+
+        <section class="c-table surface-panel table-panel" data-component="DataTablePanel" data-state="default" aria-label="订单明细">
+          <div class="table-toolbar">
+            <div>
+              <h2>订单对账明细</h2>
+              <p id="tableSubTitle">主表展示关键字段，完整费用与差异在明细抽屉中查看。</p>
+            </div>
+            <div class="table-tools">
+              <button id="exportCurrentBtn" class="btn" type="button">导出当前列表</button>
+              <button id="exportFullBtn" class="btn btn--outlined btn--color-primary" type="button">导出完整对账明细</button>
+            </div>
+          </div>
+
+          <div id="loadingState" class="c-feedback inline-state hidden" data-component="FeedbackState">正在加载订单对账结果...</div>
+          <div id="errorState" class="c-feedback inline-state inline-state--error hidden" data-component="FeedbackState">数据加载失败，请稍后重试。</div>
+
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>平台单号</th>
+                  <th>平台</th>
+                  <th>店铺</th>
+                  <th>平台 SKU</th>
+                  <th>发货 SKU</th>
+                  <th>发货时间</th>
+                  <th>结算时间</th>
+                  <th>是否结算</th>
+                  <th class="num">预估收入</th>
+                  <th class="num">结算收入</th>
+                  <th class="num">收入差异</th>
+                  <th class="num">预估利润</th>
+                  <th class="num">结算利润</th>
+                  <th class="num">利润差异</th>
+                  <th class="actions-col">操作</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+          <div id="emptyState" class="c-feedback empty-state hidden" data-component="FeedbackState">
+            <strong>当前筛选条件下无数据</strong>
+            <span>请调整平台、店铺、SKU、时间口径或结算状态后重试。</span>
+          </div>
+        </section>
+      </main>
+    </section>
+  </div>
+
+  <div class="drawer-mask" id="drawerMask" hidden></div>
+  <aside class="c-drawer drawer" data-component="DetailDrawer" id="detailDrawer" aria-hidden="true" aria-labelledby="drawerTitle">
+    <div class="drawer__head">
+      <div>
+        <p class="eyebrow">订单差异明细</p>
+        <h2 id="drawerTitle">订单详情</h2>
+      </div>
+      <button class="c-drawer__close drawer__close" id="drawerCloseBtn" type="button" data-action="close-drawer" aria-label="关闭">×</button>
+    </div>
+    <div class="drawer__meta" id="drawerMeta"></div>
+    <div class="drawer__body" id="drawerBody"></div>
+    <footer class="drawer__foot">
+      <button class="btn" id="drawerCloseFootBtn" type="button">关闭</button>
+    </footer>
+  </aside>
+
+  <div class="c-feedback toast" data-component="FeedbackState" id="toast" hidden></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
