@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-26T11:12:34+08:00",
-  "count": 3,
+  "generatedAt": "2026-05-26T11:26:49+08:00",
+  "count": 2,
   "prototypes": [
     {
       "prototypeId": "prototype-20260522-094401",
@@ -23,17 +23,6 @@
       "updatedAt": "2026-05-22T09:53:58+08:00",
       "path": "prototypes/erp/prototype-20260522-095358",
       "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260522-095358/"
-    },
-    {
-      "prototypeId": "prototype-20260526-111229",
-      "title": "发货确认收入",
-      "businessSystem": "ERP",
-      "owner": "Favours-ff",
-      "sourcePath": "prototype\\order-settlement-reconciliation",
-      "createdAt": "2026-05-26T11:12:29+08:00",
-      "updatedAt": "2026-05-26T11:12:29+08:00",
-      "path": "prototypes/erp/prototype-20260526-111229",
-      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260526-111229/"
     }
   ]
 }

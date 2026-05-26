@@ -1,9 +1,9 @@
-{
-  "prototypeId": "prototype-20260526-111229",
-  "title": "发货确认收入",
-  "businessSystem": "ERP",
-  "owner": "Favours-ff",
-  "sourcePath": "prototype\\order-settlement-reconciliation",
-  "createdAt": "2026-05-26T11:12:29+08:00",
-  "updatedAt": "2026-05-26T11:12:29+08:00"
+﻿{
+    "prototypeId":  "prototype-20260526-111229",
+    "title":  "鍙戣揣纭鏀跺叆",
+    "businessSystem":  "ERP",
+    "owner":  "Favours-ff",
+    "sourcePath":  "prototype\\order-settlement-reconciliation",
+    "createdAt":  "2026-05-26T11:12:29+08:00",
+    "updatedAt":  "2026-05-26T11:26:49+08:00"
 }

@@ -15,8 +15,8 @@
         <span>财务对账</span>
       </div>
       <nav class="c-shell__menu" aria-label="主导航">
-        <a href="https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260522-094417/" class="c-shell__menu-item">订单结算匹配</a>
-        <a href="#" class="c-shell__menu-item is-active" aria-current="page">发货确认收入</a>
+        <a href="#settlement-match" class="c-shell__menu-item" data-page="settlement">订单结算匹配</a>
+        <a href="#shipping-revenue" class="c-shell__menu-item is-active" data-page="revenue" aria-current="page">发货确认收入</a>
       </nav>
     </aside>
 
@@ -28,17 +28,17 @@
           <span class="text-secondary">示例静态数据</span>
         </div>
       </header>
-      <nav class="c-shell__breadcrumb" aria-label="面包屑">财务对账 / 发货确认收入 / 已发货订单结算对账</nav>
+      <nav class="c-shell__breadcrumb" id="breadcrumb" aria-label="面包屑">财务对账 / 发货确认收入 / 已发货订单结算对账</nav>
 
       <main class="c-shell__content page-shell">
         <header class="c-page-header page-header" data-component="PageHeaderBar">
           <div>
-            <p class="eyebrow">订单结算 / 对账明细</p>
-            <h1>已发货订单结算对账</h1>
-            <p class="page-desc">用 ERP 已发货订单匹配平台后台账单，核对预估口径、结算口径和每项差异。</p>
+            <p class="eyebrow" id="pageEyebrow">订单结算 / 对账明细</p>
+            <h1 id="pageTitle">已发货订单结算对账</h1>
+            <p class="page-desc" id="pageDesc">用 ERP 已发货订单匹配平台后台账单，核对预估口径、结算口径和每项差异。</p>
           </div>
           <div class="page-header__aside">
-            <span class="tag tag--default">差异 = 结算值 - 预估值</span>
+            <span class="tag tag--default" id="pageHint">差异 = 结算值 - 预估值</span>
           </div>
         </header>
 
@@ -108,7 +108,7 @@
         <section class="c-table surface-panel table-panel" data-component="DataTablePanel" data-state="default" aria-label="订单明细">
           <div class="table-toolbar">
             <div>
-              <h2>订单对账明细</h2>
+              <h2 id="tableTitle">订单对账明细</h2>
               <p id="tableSubTitle">主表展示关键字段，完整费用与差异在明细抽屉中查看。</p>
             </div>
             <div class="table-tools">
@@ -122,25 +122,7 @@
 
           <div class="table-scroll">
             <table class="data-table">
-              <thead>
-                <tr>
-                  <th>平台单号</th>
-                  <th>平台</th>
-                  <th>店铺</th>
-                  <th>平台 SKU</th>
-                  <th>发货 SKU</th>
-                  <th>发货时间</th>
-                  <th>结算时间</th>
-                  <th>是否结算</th>
-                  <th class="num">预估收入</th>
-                  <th class="num">结算收入</th>
-                  <th class="num">收入差异</th>
-                  <th class="num">预估利润</th>
-                  <th class="num">结算利润</th>
-                  <th class="num">利润差异</th>
-                  <th class="actions-col">操作</th>
-                </tr>
-              </thead>
+              <thead id="tableHead"></thead>
               <tbody id="tableBody"></tbody>
             </table>
           </div>

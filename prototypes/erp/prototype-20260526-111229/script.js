@@ -327,13 +327,84 @@ const rows = rawRows.map((row) => ({
   settledProfit: calcProfit(row, settlementFormula)
 }));
 
+const pageConfigs = {
+  settlement: {
+    hash: "#settlement-match",
+    navLabel: "订单结算匹配",
+    breadcrumb: "财务对账 / 订单结算匹配 / 已发货订单结算匹配",
+    eyebrow: "订单结算 / 结算匹配",
+    title: "已发货订单结算匹配",
+    desc: "使用 ERP 已发货订单与后台结算账单进行匹配，识别已结算与未结算订单。",
+    hint: "按平台单号匹配账单",
+    tableTitle: "订单结算匹配",
+    tableSubTitle: "展示订单是否匹配到账单，以及预估收入、结算收入、预估利润和结算利润。",
+    exportCurrentName: "订单结算匹配_当前列表",
+    exportFullName: "订单结算匹配_完整明细",
+    columns: [
+      { label: "平台单号", render: (row) => escapeHtml(row.orderNo) },
+      { label: "平台", render: (row) => escapeHtml(row.platform) },
+      { label: "店铺", render: (row) => escapeHtml(row.shop) },
+      { label: "发货时间", render: (row) => escapeHtml(row.shipTime) },
+      { label: "预估收入", className: "num", render: (row) => moneyCell(row.estimatedRevenue) },
+      { label: "结算收入", className: "num", render: (row) => moneyCell(row.settledRevenue) },
+      { label: "预估利润", className: "num", render: (row) => moneyCell(row.estimatedProfit) },
+      { label: "结算利润", className: "num", render: (row) => moneyCell(row.settledProfit) },
+      { label: "结算时间", render: (row) => escapeHtml(row.settleTime || "-") },
+      { label: "是否结算", render: (row) => statusTag(row) }
+    ]
+  },
+  revenue: {
+    hash: "#shipping-revenue",
+    navLabel: "发货确认收入",
+    breadcrumb: "财务对账 / 发货确认收入 / 已发货订单结算对账",
+    eyebrow: "订单结算 / 对账明细",
+    title: "已发货订单结算对账",
+    desc: "用 ERP 已发货订单匹配平台后台账单，核对预估口径、结算口径和每项差异。",
+    hint: "差异 = 结算值 - 预估值",
+    tableTitle: "发货确认收入明细",
+    tableSubTitle: "主表展示关键字段，完整费用与差异在明细抽屉中查看。",
+    exportCurrentName: "发货确认收入_当前列表",
+    exportFullName: "发货确认收入_完整明细",
+    columns: [
+      { label: "平台单号", render: (row) => escapeHtml(row.orderNo) },
+      { label: "平台", render: (row) => escapeHtml(row.platform) },
+      { label: "店铺", render: (row) => escapeHtml(row.shop) },
+      { label: "平台 SKU", render: (row) => escapeHtml(row.platformSku) },
+      { label: "发货 SKU", render: (row) => escapeHtml(row.shippingSku) },
+      { label: "发货时间", render: (row) => escapeHtml(row.shipTime) },
+      { label: "结算时间", render: (row) => escapeHtml(row.settleTime || "-") },
+      { label: "是否结算", render: (row) => statusTag(row) },
+      { label: "预估收入", className: "num", render: (row) => moneyCell(row.estimatedRevenue) },
+      { label: "结算收入", className: "num", render: (row) => moneyCell(row.settledRevenue) },
+      { label: "收入差异", className: "num", render: (row) => formatDiff(diffFields[0], diffValue(row, diffFields[0])) },
+      { label: "预估利润", className: "num", render: (row) => moneyCell(row.estimatedProfit) },
+      { label: "结算利润", className: "num", render: (row) => moneyCell(row.settledProfit) },
+      { label: "利润差异", className: "num", render: (row) => formatDiff(diffFields[14], diffValue(row, diffFields[14])) },
+      {
+        label: "操作",
+        className: "actions-col",
+        render: (row) => `<button class="link-btn c-table__action" type="button" data-order="${escapeHtml(row.orderNo)}">查看差异</button>`
+      }
+    ]
+  }
+};
+
 const state = {
+  page: "revenue",
   platform: "全部",
   shop: "全部",
   settledStatus: "all",
   timeBasis: "ship"
 };
 
+const breadcrumb = document.getElementById("breadcrumb");
+const pageEyebrow = document.getElementById("pageEyebrow");
+const pageTitle = document.getElementById("pageTitle");
+const pageDesc = document.getElementById("pageDesc");
+const pageHint = document.getElementById("pageHint");
+const tableTitle = document.getElementById("tableTitle");
+const tableSubTitle = document.getElementById("tableSubTitle");
+const tableHead = document.getElementById("tableHead");
 const tableBody = document.getElementById("tableBody");
 const emptyState = document.getElementById("emptyState");
 const summary = document.getElementById("summary");
@@ -517,30 +588,43 @@ function moneyCell(value) {
   return "-";
 }
 
+function currentPageConfig() {
+  return pageConfigs[state.page] || pageConfigs.revenue;
+}
+
+function renderPageChrome() {
+  const config = currentPageConfig();
+  breadcrumb.textContent = config.breadcrumb;
+  pageEyebrow.textContent = config.eyebrow;
+  pageTitle.textContent = config.title;
+  pageDesc.textContent = config.desc;
+  pageHint.textContent = config.hint;
+  tableTitle.textContent = config.tableTitle;
+  tableSubTitle.textContent = config.tableSubTitle;
+
+  document.querySelectorAll("[data-page]").forEach((item) => {
+    const active = item.dataset.page === state.page;
+    item.classList.toggle("is-active", active);
+    if (active) {
+      item.setAttribute("aria-current", "page");
+    } else {
+      item.removeAttribute("aria-current");
+    }
+  });
+}
+
 function renderTable(list) {
-  tableBody.innerHTML = list.map((row) => {
-    const revenueDiff = diffValue(row, diffFields[0]);
-    const profitDiff = diffValue(row, diffFields[14]);
-    return `
+  const { columns } = currentPageConfig();
+  tableHead.innerHTML = `
+    <tr>
+      ${columns.map((column) => `<th${column.className ? ` class="${column.className}"` : ""}>${escapeHtml(column.label)}</th>`).join("")}
+    </tr>
+  `;
+  tableBody.innerHTML = list.map((row) => `
       <tr>
-        <td>${escapeHtml(row.orderNo)}</td>
-        <td>${escapeHtml(row.platform)}</td>
-        <td>${escapeHtml(row.shop)}</td>
-        <td>${escapeHtml(row.platformSku)}</td>
-        <td>${escapeHtml(row.shippingSku)}</td>
-        <td>${escapeHtml(row.shipTime)}</td>
-        <td>${escapeHtml(row.settleTime || "-")}</td>
-        <td>${statusTag(row)}</td>
-        <td class="num">${moneyCell(row.estimatedRevenue)}</td>
-        <td class="num">${moneyCell(row.settledRevenue)}</td>
-        <td class="num">${formatDiff(diffFields[0], revenueDiff)}</td>
-        <td class="num">${moneyCell(row.estimatedProfit)}</td>
-        <td class="num">${moneyCell(row.settledProfit)}</td>
-        <td class="num">${formatDiff(diffFields[14], profitDiff)}</td>
-        <td class="actions-col"><button class="link-btn c-table__action" type="button" data-order="${escapeHtml(row.orderNo)}">查看差异</button></td>
+        ${columns.map((column) => `<td${column.className ? ` class="${column.className}"` : ""}>${column.render(row)}</td>`).join("")}
       </tr>
-    `;
-  }).join("");
+    `).join("");
 
   emptyState.classList.toggle("hidden", list.length > 0);
 }
@@ -560,15 +644,19 @@ function renderSummary(list) {
   const settledCount = list.filter((row) => row.settled).length;
   const unsettledCount = list.length - settledCount;
   const profitDiff = roundMoney(sumDiff(list, diffFields[14]));
-
-  const metrics = [
+  const baseMetrics = [
     ["订单总数", list.length, "当前筛选结果"],
     ["已结算", settledCount, "已匹配到账单"],
     ["未结算", unsettledCount, "暂未匹配到账单"],
     ["预估收入合计", moneyText(sumBy(list, "estimatedRevenue")), "ERP 预估口径"],
-    ["结算收入合计", moneyText(sumBy(list, "settledRevenue")), "平台账单口径"],
-    ["利润差异合计", `${profitDiff > 0 ? "+" : ""}${moneyText(profitDiff)}`, "仅含可计算利润订单"]
+    ["结算收入合计", moneyText(sumBy(list, "settledRevenue")), "平台账单口径"]
   ];
+  const metrics = state.page === "revenue"
+    ? [
+        ...baseMetrics,
+        ["利润差异合计", `${profitDiff > 0 ? "+" : ""}${moneyText(profitDiff)}`, "仅含可计算利润订单"]
+      ]
+    : baseMetrics;
 
   summary.innerHTML = metrics.map(([label, value, hint]) => `
     <div class="c-metric-card metric-card">
@@ -603,11 +691,21 @@ function renderStatus() {
 }
 
 function render() {
+  renderPageChrome();
   renderBasis();
   renderStatus();
   const list = applyFilters();
   renderSummary(list);
   renderTable(list);
+}
+
+function setPage(page, updateHash = true) {
+  if (!pageConfigs[page] || state.page === page) return;
+  state.page = page;
+  if (updateHash) {
+    window.history.replaceState(null, "", pageConfigs[page].hash);
+  }
+  render();
 }
 
 function comparisonRows(row) {
@@ -685,6 +783,12 @@ function escapeCsv(value) {
   return text;
 }
 
+function htmlToText(value) {
+  const template = document.createElement("template");
+  template.innerHTML = String(value ?? "");
+  return template.content.textContent || "";
+}
+
 function exportCsv(filename, headers, records) {
   const csv = [headers, ...records]
     .map((line) => line.map(escapeCsv).join(","))
@@ -710,43 +814,16 @@ function showToast(message) {
 
 function exportCurrentList() {
   const list = applyFilters();
-  const headers = [
-    "平台单号",
-    "平台",
-    "店铺",
-    "平台SKU",
-    "发货SKU",
-    "发货时间",
-    "结算时间",
-    "是否结算",
-    "预估收入",
-    "结算收入",
-    "收入差异",
-    "预估利润",
-    "结算利润",
-    "利润差异"
-  ];
-  const records = list.map((row) => [
-    row.orderNo,
-    row.platform,
-    row.shop,
-    row.platformSku,
-    row.shippingSku,
-    row.shipTime,
-    row.settleTime,
-    row.settled ? "已结算" : "未结算",
-    row.estimatedRevenue,
-    row.settledRevenue,
-    diffValue(row, diffFields[0]),
-    row.estimatedProfit,
-    row.settledProfit,
-    diffValue(row, diffFields[14])
-  ]);
-  exportCsv(`订单结算对账_当前列表_${today()}.csv`, headers, records);
+  const config = currentPageConfig();
+  const exportColumns = config.columns.filter((column) => column.label !== "操作");
+  const headers = exportColumns.map((column) => column.label);
+  const records = list.map((row) => exportColumns.map((column) => htmlToText(column.render(row))));
+  exportCsv(`${config.exportCurrentName}_${today()}.csv`, headers, records);
 }
 
 function exportFullDetail() {
   const list = applyFilters();
+  const config = currentPageConfig();
   const baseFields = [
     ["平台单号", "orderNo"],
     ["平台", "platform"],
@@ -772,7 +849,7 @@ function exportFullDetail() {
     ...diffFields.map((field) => diffValue(row, field))
   ]);
 
-  exportCsv(`订单结算对账_完整明细_${today()}.csv`, headers, records);
+  exportCsv(`${config.exportFullName}_${today()}.csv`, headers, records);
 }
 
 function today() {
@@ -791,6 +868,13 @@ resetBtn.addEventListener("click", () => {
   settleRange.value = "";
   buildAllSelects();
   render();
+});
+
+document.querySelectorAll("[data-page]").forEach((item) => {
+  item.addEventListener("click", (event) => {
+    event.preventDefault();
+    setPage(item.dataset.page);
+  });
 });
 
 basisSwitch.addEventListener("click", (event) => {
@@ -825,6 +909,11 @@ document.addEventListener("keydown", (event) => {
     closeDrawer();
   }
 });
+
+const initialPage = Object.entries(pageConfigs).find(([, config]) => config.hash === window.location.hash)?.[0];
+if (initialPage) {
+  state.page = initialPage;
+}
 
 buildAllSelects();
 render();
