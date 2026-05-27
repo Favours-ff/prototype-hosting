@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>已发货订单结算匹配</title>
+  <link rel="stylesheet" href="../../ui-library/tokens.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="settlement">
+  <div class="c-shell erp-shell" data-component="ErpShell">
+    <aside class="c-shell__sider" aria-label="ERP 侧边导航">
+      <div class="c-shell__brand">
+        <span class="c-shell__brand-mark">ERP</span>
+        <span>财务对账</span>
+      </div>
+      <nav class="c-shell__menu" aria-label="主导航">
+        <a href="#settlement-match" class="c-shell__menu-item is-active" data-page="settlement" aria-current="page">已发货订单结算匹配</a>
+        <a href="#shipping-revenue" class="c-shell__menu-item" data-page="revenue">发货确认收入</a>
+      </nav>
+    </aside>
+
+    <section class="c-shell__main">
+      <header class="c-shell__topbar">
+        <div class="c-shell__module">自研 ERP / 财务结算中心</div>
+        <div class="c-shell__top-actions">
+          <span class="tag tag--processing">prototype-draft</span>
+          <span class="text-secondary">示例静态数据</span>
+        </div>
+      </header>
+      <nav class="c-shell__breadcrumb" id="breadcrumb" aria-label="面包屑">财务对账 / 已发货订单结算匹配</nav>
+
+      <main class="c-shell__content page-shell">
+        <header class="c-page-header page-header" data-component="PageHeaderBar">
+          <div>
+            <p class="eyebrow" id="pageEyebrow">订单结算 / 结算匹配</p>
+            <h1 id="pageTitle">已发货订单结算匹配</h1>
+            <p class="page-desc" id="pageDesc" hidden></p>
+          </div>
+          <div class="page-header__aside">
+            <span class="tag tag--default" id="pageHint" hidden></span>
+          </div>
+        </header>
+
+        <section class="c-filter surface-panel filter-panel" data-component="QueryFilterBar" aria-label="筛选条件">
+          <div class="status-filter status-filter--top" id="settledSwitch" aria-label="是否结算">
+            <button class="status-filter__item is-active" type="button" data-action="filter-status" data-status="unsettled">未结算（2）</button>
+            <button class="status-filter__item" type="button" data-action="filter-status" data-status="settled">已结算（4）</button>
+            <button class="status-filter__item" type="button" data-action="filter-status" data-status="all">全部（6）</button>
+          </div>
+
+          <div class="basis-row c-date-comparison" data-component="DateComparisonControl">
+            <div>
+              <span class="field-label">当前时间口径</span>
+              <div class="segmented" id="basisSwitch" aria-label="时间口径">
+                <button class="segmented__item is-active" type="button" data-action="switch-time-basis" data-basis="ship">发货时间</button>
+                <button class="segmented__item" type="button" data-action="switch-time-basis" data-basis="settle">结算时间</button>
+              </div>
+            </div>
+            <p class="basis-note" id="basisNote">默认按发货时间统计；切换为结算时间后，未结算订单会自动排除。</p>
+          </div>
+
+          <div class="filter-grid">
+            <label class="field">
+              <span class="field-label">平台</span>
+              <div class="custom-select" data-select="platform" data-role="ant-select"></div>
+            </label>
+            <label class="field">
+              <span class="field-label">店铺</span>
+              <div class="custom-select" data-select="shop" data-role="ant-select"></div>
+            </label>
+            <label class="field" data-filter-field="shopSubject" hidden>
+              <span class="field-label">店铺主体</span>
+              <div class="custom-select" data-select="shopSubject" data-role="ant-select"></div>
+            </label>
+            <label class="field" data-filter-field="settledFilter" hidden>
+              <span class="field-label">是否结算</span>
+              <div class="custom-select" data-select="settledFilter" data-role="ant-select"></div>
+            </label>
+            <label class="field" data-filter-field="orderNo">
+              <span class="field-label">平台单号</span>
+              <div class="multi-input" id="orderNoMultiInput">
+                <textarea class="input multi-input__control" id="orderNoFilter" rows="1" placeholder="输入平台单号"></textarea>
+                <span class="multi-input__count" id="orderNoCount">0个</span>
+              </div>
+            </label>
+            <label class="field" data-filter-field="platformSku" hidden>
+              <span class="field-label">平台 SKU</span>
+              <input class="input" id="platformSkuFilter" type="text" placeholder="输入平台 SKU" />
+            </label>
+            <label class="field" data-filter-field="shippingSku" hidden>
+              <span class="field-label">发货 SKU</span>
+              <input class="input" id="shippingSkuFilter" type="text" placeholder="输入发货 SKU" />
+            </label>
+            <label class="field field--active" data-filter-field="shipRange" data-range-field="ship" hidden>
+              <span class="field-label">发货时间范围</span>
+              <input class="input" id="shipRange" type="text" placeholder="YYYY-MM-DD ~ YYYY-MM-DD" />
+            </label>
+            <label class="field" data-filter-field="settleRange" data-range-field="settle" hidden>
+              <span class="field-label">结算时间范围</span>
+              <input class="input" id="settleRange" type="text" placeholder="YYYY-MM-DD ~ YYYY-MM-DD" />
+            </label>
+          </div>
+
+          <div class="filter-footer">
+            <span class="filter-footer__spacer" aria-hidden="true"></span>
+            <div class="filter-actions">
+              <button id="resetBtn" class="btn" type="button">重置</button>
+              <button id="applyBtn" class="btn btn--solid btn--color-primary" type="button">筛选</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="surface-panel summary-panel" data-component="MetricComparisonCard" aria-label="汇总指标">
+          <div class="summary-head">
+            <div>
+              <span class="field-label">汇总口径</span>
+              <strong id="basisSummary">发货时间</strong>
+            </div>
+            <span class="text-secondary" id="activeFilterText">已按当前筛选条件统计</span>
+          </div>
+          <div class="metric-grid" id="summary"></div>
+        </section>
+
+        <section class="c-table surface-panel table-panel" data-component="DataTablePanel" data-state="default" aria-label="订单明细">
+          <div class="table-toolbar">
+            <div>
+              <h2 id="tableTitle">已发货订单结算匹配</h2>
+              <p id="tableSubTitle">展示订单是否匹配到账单，以及预估收入、结算收入和结算状态。</p>
+            </div>
+            <div class="table-tools">
+              <button id="exportCurrentBtn" class="btn" type="button">导出当前列表</button>
+              <button id="exportFullBtn" class="btn btn--outlined btn--color-primary" type="button">导出完整对账明细</button>
+            </div>
+          </div>
+
+          <div id="loadingState" class="c-feedback inline-state hidden" data-component="FeedbackState">正在加载订单对账结果...</div>
+          <div id="errorState" class="c-feedback inline-state inline-state--error hidden" data-component="FeedbackState">数据加载失败，请稍后重试。</div>
+
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead id="tableHead"></thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+          <div id="emptyState" class="c-feedback empty-state hidden" data-component="FeedbackState">
+            <strong>当前筛选条件下无数据</strong>
+            <span>请调整平台、店铺、SKU、时间口径或结算状态后重试。</span>
+          </div>
+        </section>
+      </main>
+    </section>
+  </div>
+
+  <div class="drawer-mask" id="drawerMask" hidden></div>
+  <aside class="c-drawer drawer" data-component="DetailDrawer" id="detailDrawer" aria-hidden="true" aria-labelledby="drawerTitle">
+    <div class="drawer__head">
+      <div>
+        <p class="eyebrow">费用差异明细</p>
+        <h2 id="drawerTitle">差异详情</h2>
+      </div>
+      <button class="c-drawer__close drawer__close" id="drawerCloseBtn" type="button" data-action="close-drawer" aria-label="关闭">×</button>
+    </div>
+    <div class="drawer__meta" id="drawerMeta"></div>
+    <div class="drawer__body" id="drawerBody"></div>
+    <footer class="drawer__foot">
+      <button class="btn" id="drawerCloseFootBtn" type="button">关闭</button>
+    </footer>
+  </aside>
+
+  <div class="c-feedback toast" data-component="FeedbackState" id="toast" hidden></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
