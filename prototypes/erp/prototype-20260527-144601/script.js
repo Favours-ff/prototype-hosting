@@ -405,12 +405,7 @@ const pageConfigs = {
       { label: "VAT", className: "num amount-col", exportValue: (row) => displayAmount(row, "vat", "settledVat"), render: (row) => amountWithDiffCell(row, "vat", "settledVat", diffFields[11]) },
       { label: "平台回款费用", className: "num amount-col", exportValue: (row) => displayAmount(row, "platformPaymentFee", "settledPlatformPaymentFee"), render: (row) => amountWithDiffCell(row, "platformPaymentFee", "settledPlatformPaymentFee", diffFields[12]) },
       { label: "资产减值损失", className: "num amount-col", exportValue: (row) => displayAmount(row, "assetImpairmentLoss", "settledAssetImpairmentLoss"), render: (row) => amountWithDiffCell(row, "assetImpairmentLoss", "settledAssetImpairmentLoss", diffFields[13]) },
-      { label: "利润", className: "num amount-col", exportValue: (row) => displayAmount(row, "estimatedProfit", "settledProfit"), render: (row) => amountWithDiffCell(row, "estimatedProfit", "settledProfit", diffFields[14]) },
-      {
-        label: "操作",
-        className: "actions-col sticky-col",
-        render: (row) => `<button class="link-btn c-table__action" type="button" data-order="${escapeHtml(row.orderNo)}">查看差异</button>`
-      }
+      { label: "利润", className: "num amount-col", exportValue: (row) => displayAmount(row, "estimatedProfit", "settledProfit"), render: (row) => amountWithDiffCell(row, "estimatedProfit", "settledProfit", diffFields[14]) }
     ]
   }
 };
