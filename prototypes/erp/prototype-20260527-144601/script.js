@@ -388,8 +388,8 @@ const pageConfigs = {
       { label: "平台", render: (row) => escapeHtml(row.platform) },
       { label: "店铺", render: (row) => escapeHtml(row.shop) },
       { label: "币种", render: (row) => escapeHtml(row.currency) },
-      { label: "发货时间", className: "time-col", exportValue: (row) => toDateOnly(row.shipTime), render: (row) => escapeHtml(toDateOnly(row.shipTime)) },
-      { label: "结算时间", className: "time-col", exportValue: (row) => toDateOnly(row.settleTime) || "-", render: (row) => escapeHtml(toDateOnly(row.settleTime) || "-") },
+      { label: "发货时间", className: "time-col", exportValue: (row) => toMonthOnly(row.shipTime), render: (row) => escapeHtml(toMonthOnly(row.shipTime)) },
+      { label: "结算时间", className: "time-col", exportValue: (row) => toMonthOnly(row.settleTime) || "-", render: (row) => escapeHtml(toMonthOnly(row.settleTime) || "-") },
       { label: "是否结算", className: "status-col", render: (row) => statusTag(row) },
       { label: "收入", className: "num amount-col", exportValue: (row) => displayAmount(row, "estimatedRevenue", "settledRevenue"), render: (row) => amountWithDiffCell(row, "estimatedRevenue", "settledRevenue", diffFields[0]) },
       { label: "退款", className: "num amount-col", exportValue: (row) => displayAmount(row, "refundAmount", "settledRefundAmount"), render: (row) => amountWithDiffCell(row, "refundAmount", "settledRefundAmount", diffFields[1]) },
@@ -516,22 +516,26 @@ function toDateOnly(value) {
   return value ? value.slice(0, 10) : "";
 }
 
+function toMonthOnly(value) {
+  return value ? value.slice(0, 7) : "";
+}
+
 function parseRange(value) {
   const text = (value || "").trim();
   if (!text) return { from: "", to: "" };
   const parts = text.split(/\s*(?:~|至|到)\s*/);
   return {
-    from: parts[0] || "",
-    to: parts[1] || ""
+    from: toMonthOnly(parts[0] || ""),
+    to: toMonthOnly(parts[1] || "")
   };
 }
 
 function inRange(dateTime, range) {
   if (!range.from && !range.to) return true;
-  const date = toDateOnly(dateTime);
-  if (!date) return false;
-  if (range.from && date < range.from) return false;
-  if (range.to && date > range.to) return false;
+  const month = toMonthOnly(dateTime);
+  if (!month) return false;
+  if (range.from && month < range.from) return false;
+  if (range.to && month > range.to) return false;
   return true;
 }
 
