@@ -377,7 +377,7 @@ const pageConfigs = {
     hint: "差异 = 结算值 - 预估值",
     statusFilter: false,
     settledFilterField: true,
-    visibleFilters: ["shopSubject", "settledFilter", "shipRange"],
+    visibleFilters: ["shopSubject", "settledFilter", "shipRange", "settleRange"],
     tableTitle: "发货确认收入明细",
     tableSubTitle: "按主体公司、平台、店铺、币种展示收入、费用和利润明细。",
     emptyText: "请调整平台、店铺主体、店铺或时间范围后重试。",
@@ -443,6 +443,7 @@ const orderNoFilter = document.getElementById("orderNoFilter");
 const platformSkuFilter = document.getElementById("platformSkuFilter");
 const shippingSkuFilter = document.getElementById("shippingSkuFilter");
 const shipRange = document.getElementById("shipRange");
+const settleRange = document.getElementById("settleRange");
 const drawer = document.getElementById("detailDrawer");
 const drawerMask = document.getElementById("drawerMask");
 const drawerTitle = document.getElementById("drawerTitle");
@@ -557,7 +558,8 @@ function applyFilters(options = {}) {
   const { includeStatus = true } = options;
   const compactFilter = currentPageConfig().compactFilter;
   const ship = parseRange(shipRange.value);
-    const orderNos = parseMultiValues(orderNoFilter.value);
+  const settle = parseRange(settleRange.value);
+  const orderNos = parseMultiValues(orderNoFilter.value);
   const platformSku = normalizeText(platformSkuFilter.value);
   const shippingSku = normalizeText(shippingSkuFilter.value);
 
@@ -578,6 +580,7 @@ function applyFilters(options = {}) {
       if (platformSku && !row.platformSku.toLowerCase().includes(platformSku)) return false;
       if (shippingSku && !row.shippingSku.toLowerCase().includes(shippingSku)) return false;
       if (!inRange(row.shipTime, ship)) return false;
+      if (!inRange(row.settleTime, settle)) return false;
     }
 
     return true;
@@ -966,6 +969,7 @@ resetBtn.addEventListener("click", () => {
   platformSkuFilter.value = "";
   shippingSkuFilter.value = "";
   shipRange.value = "";
+  settleRange.value = "";
   buildAllSelects();
   render();
 });

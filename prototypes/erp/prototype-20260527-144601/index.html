@@ -84,6 +84,10 @@
               <span class="field-label">发货时间范围</span>
               <input class="input" id="shipRange" type="text" placeholder="YYYY-MM ~ YYYY-MM" />
             </label>
+            <label class="field" data-filter-field="settleRange" data-range-field="settle" hidden>
+              <span class="field-label">结算时间范围</span>
+              <input class="input" id="settleRange" type="text" placeholder="YYYY-MM ~ YYYY-MM" />
+            </label>
           </div>
 
           <div class="filter-footer">
@@ -154,6 +158,6 @@
 
   <div class="c-feedback toast" data-component="FeedbackState" id="toast" hidden></div>
 
-  <script src="script.js?v=20260602-ship-only"></script>
+  <script src="script.js?v=20260602-settle-filter"></script>
 </body>
 </html>
