@@ -48,18 +48,6 @@
             <button class="status-filter__item" type="button" data-action="filter-status" data-status="settled">已结算（4）</button>
             <button class="status-filter__item" type="button" data-action="filter-status" data-status="all">全部（6）</button>
           </div>
-
-          <div class="basis-row c-date-comparison" data-component="DateComparisonControl">
-            <div>
-              <span class="field-label">当前时间口径</span>
-              <div class="segmented" id="basisSwitch" aria-label="时间口径">
-                <button class="segmented__item is-active" type="button" data-action="switch-time-basis" data-basis="ship">发货时间</button>
-                <button class="segmented__item" type="button" data-action="switch-time-basis" data-basis="settle">结算时间</button>
-              </div>
-            </div>
-            <p class="basis-note" id="basisNote">默认按发货时间统计；切换为结算时间后，未结算订单会自动排除。</p>
-          </div>
-
           <div class="filter-grid">
             <label class="field">
               <span class="field-label">平台</span>
@@ -95,10 +83,6 @@
             <label class="field field--active" data-filter-field="shipRange" data-range-field="ship" hidden>
               <span class="field-label">发货时间范围</span>
               <input class="input" id="shipRange" type="text" placeholder="YYYY-MM ~ YYYY-MM" />
-            </label>
-            <label class="field" data-filter-field="settleRange" data-range-field="settle" hidden>
-              <span class="field-label">结算时间范围</span>
-              <input class="input" id="settleRange" type="text" placeholder="YYYY-MM ~ YYYY-MM" />
             </label>
           </div>
 
@@ -170,6 +154,6 @@
 
   <div class="c-feedback toast" data-component="FeedbackState" id="toast" hidden></div>
 
-  <script src="script.js?v=20260528-no-action"></script>
+  <script src="script.js?v=20260602-ship-only"></script>
 </body>
 </html>

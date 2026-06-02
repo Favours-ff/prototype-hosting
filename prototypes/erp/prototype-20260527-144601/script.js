@@ -377,7 +377,7 @@ const pageConfigs = {
     hint: "差异 = 结算值 - 预估值",
     statusFilter: false,
     settledFilterField: true,
-    visibleFilters: ["shopSubject", "settledFilter", "shipRange", "settleRange"],
+    visibleFilters: ["shopSubject", "settledFilter", "shipRange"],
     tableTitle: "发货确认收入明细",
     tableSubTitle: "按主体公司、平台、店铺、币种展示收入、费用和利润明细。",
     emptyText: "请调整平台、店铺主体、店铺或时间范围后重试。",
@@ -417,7 +417,6 @@ const state = {
   shop: "全部",
   settledFilter: "全部",
   settledStatus: "unsettled",
-  timeBasis: "ship"
 };
 
 const breadcrumb = document.getElementById("breadcrumb");
@@ -432,8 +431,6 @@ const tableBody = document.getElementById("tableBody");
 const emptyState = document.getElementById("emptyState");
 const emptyStateText = emptyState.querySelector("span");
 const summary = document.getElementById("summary");
-const basisSwitch = document.getElementById("basisSwitch");
-const basisNote = document.getElementById("basisNote");
 const basisSummary = document.getElementById("basisSummary");
 const activeFilterText = document.getElementById("activeFilterText");
 const settledSwitch = document.getElementById("settledSwitch");
@@ -446,7 +443,6 @@ const orderNoFilter = document.getElementById("orderNoFilter");
 const platformSkuFilter = document.getElementById("platformSkuFilter");
 const shippingSkuFilter = document.getElementById("shippingSkuFilter");
 const shipRange = document.getElementById("shipRange");
-const settleRange = document.getElementById("settleRange");
 const drawer = document.getElementById("detailDrawer");
 const drawerMask = document.getElementById("drawerMask");
 const drawerTitle = document.getElementById("drawerTitle");
@@ -561,8 +557,7 @@ function applyFilters(options = {}) {
   const { includeStatus = true } = options;
   const compactFilter = currentPageConfig().compactFilter;
   const ship = parseRange(shipRange.value);
-  const settle = parseRange(settleRange.value);
-  const orderNos = parseMultiValues(orderNoFilter.value);
+    const orderNos = parseMultiValues(orderNoFilter.value);
   const platformSku = normalizeText(platformSkuFilter.value);
   const shippingSku = normalizeText(shippingSkuFilter.value);
 
@@ -582,9 +577,7 @@ function applyFilters(options = {}) {
     if (!compactFilter) {
       if (platformSku && !row.platformSku.toLowerCase().includes(platformSku)) return false;
       if (shippingSku && !row.shippingSku.toLowerCase().includes(shippingSku)) return false;
-      if (state.timeBasis === "settle" && !row.settleTime) return false;
       if (!inRange(row.shipTime, ship)) return false;
-      if (!inRange(row.settleTime, settle)) return false;
     }
 
     return true;
@@ -754,23 +747,14 @@ function renderSummary(list) {
       <em>${escapeHtml(hint)}</em>
     </div>
   `).join("");
-
-  basisSummary.textContent = state.timeBasis === "ship" ? "发货时间" : "结算时间";
-  activeFilterText.textContent = state.timeBasis === "ship"
-    ? "按发货时间口径统计，结算时间可作为辅助筛选"
-    : "按结算时间口径统计，未结算订单自动排除";
+  if (basisSummary) basisSummary.textContent = "发货时间";
+  if (activeFilterText) activeFilterText.textContent = "按发货时间口径统计差异。";
 }
 
 function renderBasis() {
-  basisSwitch.querySelectorAll("[data-basis]").forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.basis === state.timeBasis);
-  });
   document.querySelectorAll("[data-range-field]").forEach((field) => {
-    field.classList.toggle("field--active", field.dataset.rangeField === state.timeBasis);
+    field.classList.toggle("field--active", field.dataset.rangeField === "ship");
   });
-  basisNote.textContent = state.timeBasis === "ship"
-    ? "默认按发货时间统计；结算时间范围仍可作为辅助筛选。"
-    : "当前按结算时间统计；没有结算时间的未结算订单会自动排除。";
 }
 
 function renderStatus() {
@@ -977,13 +961,11 @@ resetBtn.addEventListener("click", () => {
   state.shop = "全部";
   state.settledFilter = "全部";
   state.settledStatus = "unsettled";
-  state.timeBasis = "ship";
   orderNoFilter.value = "";
   syncOrderNoInputState(false);
   platformSkuFilter.value = "";
   shippingSkuFilter.value = "";
   shipRange.value = "";
-  settleRange.value = "";
   buildAllSelects();
   render();
 });
@@ -993,13 +975,6 @@ document.querySelectorAll("[data-page]").forEach((item) => {
     event.preventDefault();
     setPage(item.dataset.page);
   });
-});
-
-basisSwitch.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-basis]");
-  if (!button) return;
-  state.timeBasis = button.dataset.basis;
-  render();
 });
 
 settledSwitch.addEventListener("click", (event) => {
