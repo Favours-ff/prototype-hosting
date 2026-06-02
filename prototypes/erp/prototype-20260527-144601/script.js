@@ -657,6 +657,9 @@ function displayAmount(row, estimateKey, settlementKey) {
 
 function amountWithDiffCell(row, estimateKey, settlementKey, field) {
   const amount = displayAmount(row, estimateKey, settlementKey);
+  if (state.page === "revenue" && state.timeBasis === "settle") {
+    return `<span class="amount-cell">${moneyCell(amount)}</span>`;
+  }
   const diff = diffValue(row, field);
   const diffMarkup = isNumber(diff) && diff !== 0
     ? `<span class="amount-cell__diff">差异 ${formatDiff(field, diff)}</span>`
