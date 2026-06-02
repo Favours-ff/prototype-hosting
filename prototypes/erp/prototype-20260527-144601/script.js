@@ -417,6 +417,7 @@ const state = {
   shop: "全部",
   settledFilter: "全部",
   settledStatus: "unsettled",
+  timeBasis: "ship"
 };
 
 const breadcrumb = document.getElementById("breadcrumb");
@@ -431,6 +432,8 @@ const tableBody = document.getElementById("tableBody");
 const emptyState = document.getElementById("emptyState");
 const emptyStateText = emptyState.querySelector("span");
 const summary = document.getElementById("summary");
+const basisSwitch = document.getElementById("basisSwitch");
+const basisNote = document.getElementById("basisNote");
 const basisSummary = document.getElementById("basisSummary");
 const activeFilterText = document.getElementById("activeFilterText");
 const settledSwitch = document.getElementById("settledSwitch");
@@ -579,6 +582,7 @@ function applyFilters(options = {}) {
     if (!compactFilter) {
       if (platformSku && !row.platformSku.toLowerCase().includes(platformSku)) return false;
       if (shippingSku && !row.shippingSku.toLowerCase().includes(shippingSku)) return false;
+      if (state.timeBasis === "settle" && !row.settleTime) return false;
       if (!inRange(row.shipTime, ship)) return false;
       if (!inRange(row.settleTime, settle)) return false;
     }
@@ -750,14 +754,24 @@ function renderSummary(list) {
       <em>${escapeHtml(hint)}</em>
     </div>
   `).join("");
-  if (basisSummary) basisSummary.textContent = "发货时间";
-  if (activeFilterText) activeFilterText.textContent = "按发货时间口径统计差异。";
+  if (basisSummary) basisSummary.textContent = state.timeBasis === "ship" ? "发货时间" : "结算时间";
+  if (activeFilterText) {
+    activeFilterText.textContent = state.timeBasis === "ship"
+      ? "按发货时间口径统计；结算时间可作为辅助筛选。"
+      : "按结算时间口径统计；未结算订单会自动排除。";
+  }
 }
 
 function renderBasis() {
-  document.querySelectorAll("[data-range-field]").forEach((field) => {
-    field.classList.toggle("field--active", field.dataset.rangeField === "ship");
+  basisSwitch.querySelectorAll("[data-basis]").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.basis === state.timeBasis);
   });
+  document.querySelectorAll("[data-range-field]").forEach((field) => {
+    field.classList.toggle("field--active", field.dataset.rangeField === state.timeBasis);
+  });
+  basisNote.textContent = state.timeBasis === "ship"
+    ? "默认按发货时间统计；结算时间范围仍可作为辅助筛选。"
+    : "按结算时间统计时，没有结算时间的未结算订单会自动排除。";
 }
 
 function renderStatus() {
@@ -964,6 +978,7 @@ resetBtn.addEventListener("click", () => {
   state.shop = "全部";
   state.settledFilter = "全部";
   state.settledStatus = "unsettled";
+  state.timeBasis = "ship";
   orderNoFilter.value = "";
   syncOrderNoInputState(false);
   platformSkuFilter.value = "";
@@ -985,6 +1000,13 @@ settledSwitch.addEventListener("click", (event) => {
   const button = event.target.closest("[data-status]");
   if (!button) return;
   state.settledStatus = button.dataset.status;
+  render();
+});
+
+basisSwitch.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-basis]");
+  if (!button) return;
+  state.timeBasis = button.dataset.basis;
   render();
 });
 
