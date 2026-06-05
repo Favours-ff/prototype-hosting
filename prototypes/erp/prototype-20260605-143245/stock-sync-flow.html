@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:1600px;height:2950px;background:#fff;font-family:"Microsoft YaHei","PingFang SC",sans-serif;color:#13213a}
+.canvas{position:relative;width:1600px;height:2950px;background:linear-gradient(180deg,#fff 0%,#fbfdff 100%)}
+h1{position:absolute;top:38px;left:0;width:100%;margin:0;text-align:center;font-size:36px;letter-spacing:.5px}
+.subtitle{position:absolute;top:88px;left:0;width:100%;text-align:center;color:#64748b;font-size:16px}
+.node{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:2px solid;border-radius:14px;background:#fff;padding:14px 20px;z-index:2}
+.node b{font-size:21px;line-height:1.5}
+.node span{font-size:15px;line-height:1.7;color:#40516b;margin-top:4px}
+.start{border-color:#16a34a;background:#ecfdf3}
+.api{border-color:#0891b2;background:#ecfeff}
+.process{border-color:#2563eb;background:#f8fafc}
+.skip{border-color:#64748b;background:#f8fafc}
+.error{border-color:#ef4444;background:#fff1f2}
+.success{border-color:#16a34a;background:#ecfdf3}
+.diamond{position:absolute;width:340px;height:160px;transform:rotate(45deg);border:2px solid #f97316;background:#fff7ed;z-index:2}
+.diamond .inner{position:absolute;inset:-22px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;transform:rotate(-45deg)}
+.diamond b{font-size:20px;line-height:1.45}
+.diamond span{font-size:14px;color:#6b4a28;margin-top:5px;line-height:1.5}
+.legend{position:absolute;left:1145px;top:135px;width:335px;border:1px solid #d9e2ef;border-radius:12px;padding:14px 16px;background:#fff;z-index:2}
+.legend-title{font-weight:700;margin-bottom:10px}
+.legend-row{display:flex;gap:10px;align-items:center;margin:8px 0;color:#475569}
+.dot{width:20px;height:14px;border:2px solid;border-radius:4px}
+.lines{position:absolute;inset:0;width:1600px;height:2950px;z-index:1}
+.label{font-size:16px;font-weight:700;fill:#344054}
+</style>
+</head>
+<body>
+<div class="canvas">
+  <h1>速卖通全托管 JIT 库存同步流程</h1>
+  <div class="subtitle">库存同步主链路与跳过、阻断、失败分支</div>
+
+  <div class="legend">
+    <div class="legend-title">节点说明</div>
+    <div class="legend-row"><i class="dot" style="border-color:#0891b2;background:#ecfeff"></i>速卖通接口调用</div>
+    <div class="legend-row"><i class="dot" style="border-color:#2563eb;background:#f8fafc"></i>ERP 内部处理</div>
+    <div class="legend-row"><i class="dot" style="border-color:#f97316;background:#fff7ed"></i>条件判断</div>
+    <div class="legend-row"><i class="dot" style="border-color:#ef4444;background:#fff1f2"></i>接口失败</div>
+  </div>
+
+  <div class="node start" style="left:560px;top:130px;width:480px;height:78px"><b>开始全托管库存同步</b></div>
+  <div class="node api" style="left:500px;top:260px;width:600px;height:112px"><b>识别全托管店铺</b><span>global.seller.relation.query<br>筛选 business_type = ONE_STOP_SERVICE</span></div>
+  <div class="node api" style="left:500px;top:425px;width:600px;height:120px"><b>同步商品和 SKU 基础资料</b><span>aliexpress.choice.products.list<br>aliexpress.choice.product.query · version = 2</span></div>
+
+  <div class="diamond" style="left:630px;top:610px"><div class="inner"><b>在线 SKU 是否已匹配<br>本地 SKU？</b></div></div>
+  <div class="node skip" style="left:80px;top:625px;width:360px;height:128px"><b>未匹配本地 SKU</b><span>标记未绑定<br>不参与自动库存同步</span></div>
+
+  <div class="node api" style="left:500px;top:830px;width:600px;height:120px"><b>查询平台实时 JIT 可售库存</b><span>aliexpress.choice.product.stocks.query<br>按 product_id 获取 SKU + 仓库库存</span></div>
+  <div class="diamond" style="left:630px;top:1015px"><div class="inner"><b>是否存在可写入的<br>jit_warehouse？</b></div></div>
+  <div class="node skip" style="left:1160px;top:1030px;width:360px;height:128px"><b>非 JIT 仓库</b><span>只展示库存<br>不允许写入平台库存</span></div>
+
+  <div class="node process" style="left:500px;top:1225px;width:600px;height:104px"><b>查询 ERP 本地 SKU 可用库存</b><span>实物库存 - 锁定库存 - 待出库占用</span></div>
+  <div class="node process" style="left:500px;top:1380px;width:600px;height:112px"><b>读取 SKU 库存同步规则</b><span>本地可用库存 / 自定义数量 / 无库存兜底</span></div>
+
+  <div class="diamond" style="left:630px;top:1560px"><div class="inner"><b>是否达到规则触发条件？</b><span>根据当前库存与规则判断</span></div></div>
+  <div class="node skip" style="left:80px;top:1575px;width:360px;height:128px"><b>未达到补货条件</b><span>记录跳过原因<br>本次不更新平台库存</span></div>
+
+  <div class="node process" style="left:500px;top:1770px;width:600px;height:112px"><b>计算目标库存 target_qty</b><span>类目 JIT 安全库存仅作为风险提示<br>不作为强制写入条件</span></div>
+  <div class="diamond" style="left:630px;top:1950px"><div class="inner"><b>target_qty 是否高于<br>平台当前库存？</b></div></div>
+  <div class="node skip" style="left:1160px;top:1965px;width:360px;height:136px"><b>禁止降库存或无需更新</b><span>JIT 库存只能增加<br>目标库存持平或更低时跳过</span></div>
+
+  <div class="node process" style="left:500px;top:2160px;width:600px;height:100px"><b>按 product_id 聚合待更新 SKU</b><span>只保留需要上调库存的数据</span></div>
+  <div class="node api" style="left:500px;top:2310px;width:600px;height:118px"><b>更新 JIT 可售库存</b><span>aliexpress.choice.product.stocks.update<br>写入目标 sellable_quantity</span></div>
+
+  <div class="diamond" style="left:630px;top:2490px"><div class="inner"><b>SKU + 仓库级结果<br>是否成功？</b></div></div>
+  <div class="node error" style="left:80px;top:2500px;width:380px;height:138px"><b>记录失败日志与错误码</b><span>活动锁定示例：200016<br>Product is in promotion</span></div>
+  <div class="node success" style="left:1140px;top:2500px;width:390px;height:138px"><b>回查库存并记录成功日志</b><span>再次调用 stocks.query<br>回写平台库存快照</span></div>
+
+  <svg class="lines" viewBox="0 0 1600 2950">
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#64748b"/></marker>
+    </defs>
+    <g fill="none" stroke="#64748b" stroke-width="2.5" marker-end="url(#arrow)">
+      <path d="M800 208 L800 260"/>
+      <path d="M800 372 L800 425"/>
+      <path d="M800 545 L800 610"/>
+      <path d="M630 690 C540 690 500 690 440 690"/>
+      <path d="M800 770 L800 830"/>
+      <path d="M800 950 L800 1015"/>
+      <path d="M970 1095 C1050 1095 1090 1095 1160 1095"/>
+      <path d="M800 1175 L800 1225"/>
+      <path d="M800 1329 L800 1380"/>
+      <path d="M800 1492 L800 1560"/>
+      <path d="M630 1640 C540 1640 500 1640 440 1640"/>
+      <path d="M800 1720 L800 1770"/>
+      <path d="M800 1882 L800 1950"/>
+      <path d="M970 2030 C1050 2030 1090 2030 1160 2030"/>
+      <path d="M800 2110 L800 2160"/>
+      <path d="M800 2260 L800 2310"/>
+      <path d="M800 2428 L800 2490"/>
+      <path d="M630 2570 C550 2570 520 2570 460 2570"/>
+      <path d="M970 2570 C1040 2570 1080 2570 1140 2570"/>
+    </g>
+    <g class="label">
+      <text x="595" y="675">否</text><text x="820" y="805">是</text>
+      <text x="1025" y="1080">否</text><text x="820" y="1205">是</text>
+      <text x="595" y="1625">否</text><text x="820" y="1750">是</text>
+      <text x="1025" y="2015">否</text><text x="820" y="2140">是</text>
+      <text x="580" y="2555">否</text><text x="1010" y="2555">是</text>
+    </g>
+  </svg>
+</div>
+</body>
+</html>
