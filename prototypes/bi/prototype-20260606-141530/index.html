@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>销售运营概况 - 趋势对比原型</title>
+  <link rel="stylesheet" href="../../ui-library/tokens.css">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="c-shell" data-collapsed="true">
+    <aside class="c-shell__sider">
+      <div class="c-shell__side-item"><span class="c-shell__side-icon">⌂</span><span>首页</span></div>
+      <div class="c-shell__side-item"><span class="c-shell__side-icon">▱</span><span>BI报表</span><span class="c-shell__side-arrow">⌄</span></div>
+      <div class="c-shell__side-item c-shell__side-item--active"><span class="c-shell__side-icon">▦</span><span>销售运营概况</span></div>
+    </aside>
+
+    <header class="c-shell__header">
+      <div class="c-shell__brand"><span class="c-shell__brand-logo">BI</span><strong>BI驾驶舱系统</strong></div>
+      <button class="c-shell__collapse-btn btn btn--text" type="button" aria-label="展开菜单">☰</button>
+      <div class="c-shell__top-tab">首页</div>
+      <div class="c-shell__top-tab c-shell__top-tab--active">销售运营概况 <span>×</span></div>
+      <div class="c-shell__header-actions">
+        <button class="btn btn--text" type="button" title="最近访问">◷</button>
+        <button class="btn btn--text" type="button" title="下载">↓</button>
+        <button class="btn btn--text" type="button" title="搜索">⌕</button>
+        <button class="btn btn--text" type="button" title="全屏">⛶</button>
+        <span class="c-shell__avatar">罗</span>
+        <span>欢迎您, 罗浩</span>
+      </div>
+    </header>
+
+    <main class="c-shell__content">
+      <section class="filter-panel">
+        <div class="filter-control filter-control--wide">
+          <span class="filter-control__label">组织范围</span>
+          <div class="filter-control__value">
+            <span class="tag tag--processing">深圳速卖通事业部 ×</span>
+            <span class="tag tag--processing">广州Shopee事业部 ×</span>
+          </div>
+        </div>
+        <div class="filter-control"><span class="filter-control__label">店铺</span><span class="filter-control__placeholder">请选择店铺</span><span>⌄</span></div>
+        <div class="filter-control filter-control--small"><span>按月</span><span>⌄</span></div>
+        <div class="filter-control"><span>付款时间(平台)</span><span>⌄</span></div>
+        <div class="filter-control filter-control--date"><span>2025-07 至 2026-06</span></div>
+        <button class="btn btn--primary" type="button" id="searchBtn">搜索</button>
+        <button class="btn" type="button" id="resetBtn">重置</button>
+      </section>
+
+      <section class="overview-panel">
+        <div class="section-heading">
+          <div>
+            <h2>数据总览</h2>
+            <p>点击指标卡切换下方趋势图指标</p>
+          </div>
+          <span class="section-heading__scope">当前范围：2个事业部 · 6个部门 · 18个小组</span>
+        </div>
+        <div class="metric-grid" id="metricGrid"></div>
+      </section>
+
+      <section class="chart-panel">
+        <div class="chart-panel__header">
+          <div>
+            <h2 id="chartTitle">有效销售额趋势</h2>
+            <p id="chartSubtitle">筛选范围总计</p>
+          </div>
+          <div class="segmented" role="tablist" aria-label="趋势查看方式">
+            <button class="segmented__item active" type="button" data-mode="total">汇总趋势</button>
+            <button class="segmented__item" type="button" data-mode="compare">分组对比</button>
+          </div>
+        </div>
+
+        <div class="comparison-toolbar is-hidden" id="comparisonToolbar">
+          <div class="comparison-toolbar__field">
+            <span class="comparison-toolbar__label">对比维度</span>
+            <div class="dimension-segment">
+              <button class="dimension-segment__item active" type="button" data-dimension="division">事业部</button>
+              <button class="dimension-segment__item" type="button" data-dimension="store">店铺</button>
+            </div>
+          </div>
+          <div class="comparison-toolbar__field comparison-toolbar__field--grow">
+            <span class="comparison-toolbar__label" id="compareObjectLabel">对比事业部</span>
+            <button class="multi-select-trigger" type="button" id="groupTrigger">
+              <span id="selectedGroupText">已选择 2 个事业部</span>
+              <span>⌄</span>
+            </button>
+            <div class="group-dropdown is-hidden" id="groupDropdown"></div>
+          </div>
+          <label class="switch-label">
+            <input type="checkbox" id="totalSwitch" checked>
+            <span class="switch-ui"></span>
+            显示筛选范围总计
+          </label>
+          <span class="comparison-toolbar__limit" id="groupLimit">最多选择5个事业部</span>
+        </div>
+
+        <div class="selected-groups is-hidden" id="selectedGroups"></div>
+        <div class="chart-legend" id="chartLegend"></div>
+        <div class="chart-wrap">
+          <svg id="trendChart" viewBox="0 0 1440 430" role="img" aria-label="销售趋势折线图"></svg>
+          <div class="chart-tooltip is-hidden" id="chartTooltip"></div>
+        </div>
+        <div class="chart-note">
+          <span class="chart-note__dot"></span>
+          <span id="chartNoteText">总计趋势按顶部完整筛选条件计算</span>
+        </div>
+      </section>
+
+      <section class="ranking-panel">
+        <div class="ranking-heading">
+          <h2>销售员排名</h2>
+          <div class="ranking-heading__actions">
+            <button class="btn btn--text" type="button" title="全屏">⛶</button>
+            <button class="btn btn--primary" type="button">更多</button>
+          </div>
+        </div>
+        <div class="ranking-tabs" role="tablist">
+          <button class="ranking-tab active" type="button" data-ranking="sales">销售额排名(¥)</button>
+          <button class="ranking-tab" type="button" data-ranking="profit">利润排名(¥)</button>
+          <button class="ranking-tab" type="button" data-ranking="margin">利润率排名(%)</button>
+        </div>
+        <div class="ranking-legend"><span><i class="ranking-legend__current"></i>统计时间</span><span><i class="ranking-legend__compare"></i>对比时间</span></div>
+        <div class="ranking-chart" id="rankingChart"></div>
+        <div class="ranking-tooltip is-hidden" id="rankingTooltip"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast is-hidden" id="toast"></div>
+  <script src="./script.js"></script>
+</body>
+</html>
