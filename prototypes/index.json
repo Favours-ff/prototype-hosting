@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-06T14:15:35+08:00",
+  "generatedAt": "2026-06-10T15:20:00+08:00",
   "count": 6,
   "prototypes": [
     {
@@ -62,9 +62,9 @@
       "title": "速卖通全托管商品管理与库存同步",
       "businessSystem": "ERP",
       "owner": "Favours-ff",
-      "sourcePath": "prototype\\ali-choice-products-prototype-v2.html",
+      "sourcePath": "prototype\\ali-choice-products-v3",
       "createdAt": "2026-06-05T14:32:45+08:00",
-      "updatedAt": "2026-06-05T14:32:45+08:00",
+      "updatedAt": "2026-06-10T15:20:00+08:00",
       "path": "prototypes/erp/prototype-20260605-143245",
       "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260605-143245/"
     }
