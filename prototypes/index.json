@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-10T15:20:00+08:00",
-  "count": 6,
+  "generatedAt": "2026-06-12T11:39:57+08:00",
+  "count": 7,
   "prototypes": [
     {
       "prototypeId": "prototype-20260606-141530",
@@ -67,6 +67,17 @@
       "updatedAt": "2026-06-10T15:20:00+08:00",
       "path": "prototypes/erp/prototype-20260605-143245",
       "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260605-143245/"
+    },
+    {
+      "prototypeId": "prototype-20260612-113950",
+      "title": "折扣管理",
+      "businessSystem": "ERP",
+      "owner": "Favours-ff",
+      "sourcePath": "prototype\\discount-management",
+      "createdAt": "2026-06-12T11:39:50+08:00",
+      "updatedAt": "2026-06-12T11:39:50+08:00",
+      "path": "prototypes/erp/prototype-20260612-113950",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260612-113950/"
     }
   ]
 }
