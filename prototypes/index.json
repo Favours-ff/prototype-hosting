@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-12T11:39:57+08:00",
-  "count": 7,
+  "generatedAt": "2026-06-15T17:56:34+08:00",
+  "count": 8,
   "prototypes": [
     {
       "prototypeId": "prototype-20260606-141530",
@@ -12,6 +12,17 @@
       "updatedAt": "2026-06-06T14:15:30+08:00",
       "path": "prototypes/bi/prototype-20260606-141530",
       "url": "https://favours-ff.github.io/prototype-hosting/prototypes/bi/prototype-20260606-141530/"
+    },
+    {
+      "prototypeId": "prototype-20260615-175630",
+      "title": "销售运营概况趋势对比",
+      "businessSystem": "BI",
+      "owner": "Favours-ff",
+      "sourcePath": "prototype\\sales-trend-comparison",
+      "createdAt": "2026-06-15T17:56:30+08:00",
+      "updatedAt": "2026-06-15T17:56:30+08:00",
+      "path": "prototypes/bi/prototype-20260615-175630",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/bi/prototype-20260615-175630/"
     },
     {
       "prototypeId": "prototype-20260522-094401",
