@@ -1,8 +1,9 @@
-/* UI refresh aligned with the Wanggen ERP UI library and Ant Design ERP rules. */
+/* Visual-only refresh. Do not hide, remove, rename, or proxy any page feature. */
 body {
   min-width: 1180px;
   color: var(--color-text);
   background: var(--color-bg-layout);
+  font-family: var(--font-family);
 }
 
 body > #root > div {
@@ -10,27 +11,23 @@ body > #root > div {
 }
 
 body aside {
-  width: var(--layout-sider-width) !important;
   background: #001529 !important;
   color: rgba(255, 255, 255, 0.78) !important;
-  border-right: 0 !important;
+  border-right-color: rgba(255, 255, 255, 0.08) !important;
   box-shadow: none !important;
 }
 
-body aside button,
-body aside span,
-body aside div {
+body aside * {
   color: inherit;
 }
 
-body aside [data-ui-brand] {
+body aside > div:first-child {
   color: #fff !important;
-  font-size: var(--font-size-lg) !important;
-  font-weight: var(--font-weight-semibold) !important;
 }
 
 body aside nav button {
-  border-radius: 0 !important;
+  color: rgba(255, 255, 255, 0.78) !important;
+  border-radius: var(--radius-sm) !important;
 }
 
 body aside nav button:hover {
@@ -45,9 +42,8 @@ body aside nav button[class*="bg-"] {
 
 body header {
   min-height: var(--layout-header-height) !important;
-  padding: 0 var(--space-6) !important;
   background: var(--color-bg-container) !important;
-  border-bottom: 1px solid var(--color-border-secondary) !important;
+  border-bottom-color: var(--color-border-secondary) !important;
   box-shadow: none !important;
 }
 
@@ -58,178 +54,102 @@ body header h1 {
 }
 
 main {
-  padding: var(--layout-page-padding) !important;
   background: var(--color-bg-layout) !important;
 }
 
-[data-ui-pruned="true"],
-[data-ui-original-primary="true"] {
-  display: none !important;
+main > div {
+  border-color: var(--color-border-secondary) !important;
 }
 
-[data-ui-page-header] {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-4);
-  margin-bottom: var(--space-4);
+main [class*="bg-white"] {
+  background-color: var(--color-bg-container) !important;
 }
 
-[data-ui-page-header] h1 {
-  margin: 0;
-  color: var(--color-text);
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-semibold);
-  line-height: 1.4;
+main [class*="bg-slate-50"],
+main [class*="bg-gray-50"],
+main [class*="bg-[#fafafa]"],
+main [class*="bg-[#f5f5f5]"] {
+  background-color: var(--color-bg-spotlight) !important;
 }
 
-[data-ui-page-header] p {
-  margin: var(--space-1) 0 0;
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
+main [class*="shadow-lg"],
+main [class*="shadow-xl"],
+main [class*="shadow-2xl"] {
+  box-shadow: var(--shadow-2) !important;
 }
 
-.ui-primary-action,
-.ui-header-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: var(--control-height);
-  padding: 0 var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  background: var(--color-bg-container);
-  color: var(--color-text);
-  font-size: var(--font-size);
-  font-weight: var(--font-weight-regular);
-}
-
-.ui-primary-action {
-  border-color: var(--color-primary-6);
-  background: var(--color-primary-6);
-  color: var(--color-text-on-primary);
-}
-
-.ui-header-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-left: auto;
-}
-
-.ui-header-action {
-  width: var(--control-height);
-  padding: 0;
-  border-color: transparent;
-}
-
-[data-ui-list-panel] {
-  margin-top: 0 !important;
-  overflow: hidden !important;
-  border: 1px solid var(--color-border-secondary) !important;
-  border-radius: var(--radius-lg) !important;
-  background: var(--color-bg-container) !important;
+main [class*="shadow-sm"],
+main [class*="shadow-["] {
   box-shadow: var(--shadow-1) !important;
 }
 
-[data-ui-list-heading] {
-  padding: var(--space-3) var(--space-4) !important;
-  border-bottom: 1px solid var(--color-border-secondary) !important;
+main [class*="rounded-2xl"],
+main [class*="rounded-xl"] {
+  border-radius: var(--radius-lg) !important;
 }
 
-[data-ui-list-heading] h2 {
-  color: var(--color-text) !important;
-  font-size: var(--font-size-lg) !important;
+main h1 {
+  font-size: var(--font-size-2xl) !important;
   font-weight: var(--font-weight-semibold) !important;
 }
 
-[data-ui-list-panel] form,
-[data-ui-list-panel] [class*="bg-slate-50"],
-[data-ui-list-panel] [class*="bg-gray-50"] {
-  border-color: var(--color-border-secondary) !important;
-  background: var(--color-bg-spotlight) !important;
+main h2,
+main h3 {
+  font-weight: var(--font-weight-semibold) !important;
 }
 
-[data-ui-list-panel] input,
-[data-ui-list-panel] select {
-  height: var(--control-height) !important;
+main button,
+main input,
+main select,
+main textarea {
+  font-family: var(--font-family) !important;
+}
+
+main input,
+main select,
+main textarea {
   border-color: var(--color-border) !important;
   border-radius: var(--radius) !important;
   background-color: var(--color-bg-container) !important;
   box-shadow: none !important;
 }
 
-[data-ui-list-panel] select {
-  appearance: none;
-  padding-right: 28px !important;
-  background-image: linear-gradient(45deg, transparent 50%, var(--color-text-tertiary) 50%),
-    linear-gradient(135deg, var(--color-text-tertiary) 50%, transparent 50%);
-  background-position: calc(100% - 13px) 13px, calc(100% - 9px) 13px;
-  background-repeat: no-repeat;
-  background-size: 4px 4px, 4px 4px;
+main input:focus,
+main select:focus,
+main textarea:focus {
+  border-color: var(--color-primary-6) !important;
+  outline: 2px solid rgba(22, 119, 255, 0.12) !important;
+  outline-offset: 0 !important;
 }
 
-[data-ui-list-panel] button {
+main button {
   border-radius: var(--radius) !important;
   box-shadow: none !important;
 }
 
-[data-ui-list-panel] table {
-  width: 100% !important;
-  min-width: 960px !important;
+main button[class*="bg-[#1677ff]"],
+main button[class*="bg-blue-"],
+main button[class*="bg-primary"] {
+  border-color: var(--color-primary-6) !important;
+  background: var(--color-primary-6) !important;
+  color: var(--color-text-on-primary) !important;
+}
+
+main table {
   font-size: var(--font-size-sm) !important;
 }
 
-[data-ui-list-panel] th {
-  padding: 11px var(--space-3) !important;
+main th {
   background: var(--color-bg-spotlight) !important;
   color: var(--color-text-secondary) !important;
   font-weight: var(--font-weight-medium) !important;
-  white-space: nowrap;
 }
 
-[data-ui-list-panel] td {
-  padding: var(--space-3) !important;
+main td,
+main th {
   border-color: var(--color-border-secondary) !important;
-  vertical-align: top;
 }
 
-[data-ui-list-panel] tbody tr:hover td {
+main tbody tr:hover td {
   background: var(--color-primary-bg) !important;
-}
-
-[data-ui-list-panel] th:nth-child(4),
-[data-ui-list-panel] td:nth-child(4),
-[data-ui-list-panel] th:nth-child(8),
-[data-ui-list-panel] td:nth-child(8) {
-  display: none;
-}
-
-[data-ui-row-action-hidden="true"] {
-  display: none !important;
-}
-
-[data-ui-list-panel] td:last-child {
-  min-width: 132px;
-  white-space: nowrap;
-}
-
-[data-ui-list-panel] td:last-child button {
-  height: auto !important;
-  padding: 0 var(--space-1) !important;
-  border: 0 !important;
-  background: transparent !important;
-  color: var(--color-primary-6) !important;
-  font-weight: var(--font-weight-regular) !important;
-}
-
-@media (max-width: 1350px) {
-  main {
-    padding: var(--space-4) !important;
-  }
-
-  [data-ui-list-panel] th:nth-child(7),
-  [data-ui-list-panel] td:nth-child(7) {
-    display: none;
-  }
 }
