@@ -1,5 +1,16 @@
 (() => {
   const failedActivityName = "黑五电子产品降价";
+  const textDetail = "详情";
+  const textView = "查看";
+  const textViewFailure = "查看失败";
+  const textMore = "更多";
+  const preferredActions = [
+    { status: "待审核", actions: ["通过"] },
+    { status: "已拒绝", actions: ["重新提交"] },
+    { status: "草稿", actions: ["编辑"] },
+    { status: "执行中", actions: [textDetail] },
+    { status: "结束", actions: [textView] },
+  ];
 
   const showToast = (message) => {
     document.querySelector(".failure-toast")?.remove();
@@ -15,9 +26,98 @@
       item.textContent.includes(failedActivityName)
     );
     const detailButton = [...(row?.querySelectorAll("button") || [])].find(
-      (button) => button.textContent.trim() === "详情"
+      (button) => button.textContent.trim() === textDetail
     );
     detailButton?.click();
+  };
+
+  const closeActionMenus = (exceptMenu) => {
+    document.querySelectorAll(".row-action-menu.is-open").forEach((menu) => {
+      if (menu !== exceptMenu) menu.classList.remove("is-open");
+    });
+  };
+
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest(".row-action-compact")) closeActionMenus();
+  });
+
+  const createProxyButton = (source, className) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = className;
+    button.textContent = source.textContent.trim();
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      closeActionMenus();
+      source.click();
+    });
+    return button;
+  };
+
+  const pickPrimaryAction = (row, buttons) => {
+    const failureAction = buttons.find((button) => button.textContent.trim() === textViewFailure);
+    if (failureAction) return failureAction;
+
+    const statusText = row.textContent;
+    for (const rule of preferredActions) {
+      if (!statusText.includes(rule.status)) continue;
+      const matched = buttons.find((button) => rule.actions.includes(button.textContent.trim()));
+      if (matched) return matched;
+    }
+
+    return buttons.find((button) => [textDetail, textView].includes(button.textContent.trim())) || buttons[0];
+  };
+
+  const compactRowActions = () => {
+    document.querySelectorAll("tbody tr").forEach((row) => {
+      const actionCell = row.querySelector("td:last-child");
+      const actionWrap = actionCell?.querySelector("div");
+      if (!actionWrap || actionWrap.dataset.actionCompact === "true") return;
+
+      const sourceButtons = [...actionWrap.children].filter(
+        (item) => item.tagName === "BUTTON" && !item.classList.contains("row-action-proxy")
+      );
+      if (sourceButtons.length <= 1) return;
+
+      const primary = pickPrimaryAction(row, sourceButtons);
+      if (!primary) return;
+
+      actionWrap.dataset.actionCompact = "true";
+      sourceButtons.forEach((button) => button.classList.add("row-action-source"));
+
+      const compact = document.createElement("div");
+      compact.className = "row-action-compact";
+
+      const primaryButton = createProxyButton(primary, "row-action-proxy row-action-primary");
+      if (primary.textContent.trim() === textViewFailure) primaryButton.classList.add("is-danger");
+      compact.appendChild(primaryButton);
+
+      const menuItems = sourceButtons.filter((button) => button !== primary);
+      if (menuItems.length > 0) {
+        const more = document.createElement("button");
+        more.type = "button";
+        more.className = "row-action-proxy row-action-more";
+        more.textContent = textMore;
+
+        const menu = document.createElement("div");
+        menu.className = "row-action-menu";
+        menuItems.forEach((source) => menu.appendChild(createProxyButton(source, "row-action-proxy row-action-menu-item")));
+
+        more.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          const nextOpen = !menu.classList.contains("is-open");
+          closeActionMenus(menu);
+          menu.classList.toggle("is-open", nextOpen);
+        });
+
+        compact.appendChild(more);
+        compact.appendChild(menu);
+      }
+
+      actionWrap.appendChild(compact);
+    });
   };
 
   const enhanceListLevel = () => {
@@ -100,6 +200,7 @@
     requestAnimationFrame(() => {
       scheduled = false;
       enhanceListLevel();
+      compactRowActions();
       enhanceDetailAndSkuLevels();
     });
   };
