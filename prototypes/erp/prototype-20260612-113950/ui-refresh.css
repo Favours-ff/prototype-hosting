@@ -15,28 +15,11 @@ body > #root > div > .flex-1 {
   width: 0 !important;
 }
 
-body > #root > div.reference-erp-shell {
-  min-height: 100vh !important;
-  background: var(--color-bg-layout) !important;
-}
-
-body > #root > div > .reference-erp-main {
-  flex: 1 1 auto !important;
-  min-width: 0 !important;
-  width: 0 !important;
-}
-
 body aside {
   background: #001529 !important;
   color: rgba(255, 255, 255, 0.78) !important;
   border-right-color: rgba(255, 255, 255, 0.08) !important;
   box-shadow: none !important;
-}
-
-body aside.reference-erp-sider {
-  width: 200px !important;
-  flex: 0 0 200px !important;
-  padding-top: 0 !important;
 }
 
 body aside * {
@@ -105,42 +88,6 @@ body header h1 {
 
 main {
   background: var(--color-bg-layout) !important;
-}
-
-main.reference-erp-content {
-  padding: 0 var(--layout-page-padding) var(--layout-page-padding) !important;
-  overflow: visible !important;
-}
-
-.reference-breadcrumb {
-  display: flex;
-  align-items: center;
-  height: var(--layout-breadcrumb-height);
-  padding: 0 var(--layout-page-padding);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-}
-
-.reference-page-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: var(--space-4);
-  padding-top: var(--space-2);
-}
-
-.reference-page-header h1 {
-  margin: 0 0 var(--space-1) !important;
-  color: var(--color-text);
-  font-size: var(--font-size-2xl) !important;
-  font-weight: var(--font-weight-semibold) !important;
-  line-height: 1.25;
-}
-
-.reference-page-header p {
-  margin: 0 !important;
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
 }
 
 main > div {
@@ -247,11 +194,6 @@ main tbody tr:hover td {
   padding: var(--space-4) !important;
   border-radius: var(--radius-lg) !important;
   box-shadow: var(--shadow-1) !important;
-}
-
-.reference-filter-panel {
-  border: 1px solid var(--color-border-secondary) !important;
-  background: var(--color-bg-container) !important;
 }
 
 .top-list-filters {
@@ -470,113 +412,6 @@ main > div.grid > div p:first-child {
   color: var(--color-text-tertiary);
   font-size: var(--font-size-xs);
   line-height: 16px;
-}
-
-.reference-table-panel {
-  margin-top: 0 !important;
-  margin-bottom: var(--space-4) !important;
-  border: 1px solid var(--color-border-secondary) !important;
-  border-radius: var(--radius-lg) !important;
-  background: var(--color-bg-container) !important;
-  box-shadow: var(--shadow-1) !important;
-  overflow: hidden !important;
-}
-
-.reference-table-panel > div:first-child {
-  min-height: 46px !important;
-  padding: 0 var(--space-4) !important;
-  border-bottom: 1px solid var(--color-border-secondary) !important;
-  background: var(--color-bg-container) !important;
-}
-
-.reference-table-panel > div:first-child h1,
-.reference-table-panel > div:first-child h2,
-.reference-table-panel > div:first-child h3 {
-  font-size: var(--font-size) !important;
-  font-weight: var(--font-weight-semibold) !important;
-}
-
-.reference-table-panel > div:first-child button {
-  height: var(--control-height) !important;
-  padding: 0 var(--space-4) !important;
-}
-
-.reference-table-summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 47px;
-  padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--color-border-secondary);
-  background: var(--color-bg-container);
-  font-size: var(--font-size-sm);
-}
-
-.reference-table-summary > div {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-}
-
-.reference-table-summary span {
-  color: var(--color-text-secondary);
-}
-
-.reference-table-summary b {
-  color: var(--color-text);
-  font-weight: var(--font-weight-semibold);
-}
-
-.reference-table-panel .overflow-x-auto {
-  padding: 0 var(--space-4) !important;
-  background: var(--color-bg-container) !important;
-}
-
-.reference-table-panel table {
-  min-width: 1180px !important;
-}
-
-.reference-table-panel th {
-  height: 40px !important;
-  padding: 0 var(--space-3) !important;
-  border-bottom: 1px solid var(--color-border) !important;
-  background: var(--color-bg-spotlight) !important;
-  color: var(--color-text-secondary) !important;
-  font-weight: var(--font-weight-medium) !important;
-}
-
-.reference-table-panel td {
-  padding: var(--space-3) !important;
-  border-bottom: 1px solid var(--color-border-secondary) !important;
-  vertical-align: middle !important;
-}
-
-.reference-table-panel > div:last-child {
-  min-height: 56px !important;
-  padding: var(--space-3) var(--space-4) !important;
-  border-top: 1px solid var(--color-border-secondary) !important;
-  background: var(--color-bg-container) !important;
-  color: var(--color-text-secondary) !important;
-  font-size: var(--font-size-sm) !important;
-}
-
-.reference-metric-grid {
-  order: initial;
-}
-
-.reference-metric-grid > div {
-  border: 1px solid var(--color-border-secondary) !important;
-  border-radius: var(--radius-lg) !important;
-  background: var(--color-bg-container) !important;
-  box-shadow: var(--shadow-1) !important;
-}
-
-.reference-chart-panel {
-  margin-top: var(--space-4) !important;
-  border: 1px solid var(--color-border-secondary) !important;
-  border-radius: var(--radius-lg) !important;
-  background: var(--color-bg-container) !important;
-  box-shadow: var(--shadow-1) !important;
 }
 
 .failure-list-tag {
