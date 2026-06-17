@@ -189,7 +189,7 @@ main tbody tr:hover td {
 
 .top-filter-toolbar {
   align-items: flex-start !important;
-  gap: var(--space-3) var(--space-4) !important;
+  gap: var(--space-4) !important;
   margin-bottom: var(--space-4) !important;
   padding: var(--space-4) !important;
   border-radius: var(--radius-lg) !important;
@@ -200,23 +200,24 @@ main tbody tr:hover td {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: end;
-  gap: var(--space-4) var(--space-5);
+  gap: var(--space-4);
   order: 1;
-  flex: 1 1 850px;
+  flex: 1 0 100%;
   min-width: 0;
 }
 
 .top-filter-field {
   display: inline-flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-2);
   min-width: 0;
 }
 
 .top-filter-field > span {
-  color: var(--color-text-secondary);
+  color: var(--color-text);
   font-size: var(--font-size-sm);
-  line-height: 1;
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.4;
 }
 
 .top-filter-control {
@@ -266,11 +267,33 @@ main tbody tr:hover td {
 }
 
 .top-action-group {
-  order: 2;
-  align-self: end;
-  margin-left: auto;
+  order: 3;
+  display: flex !important;
+  flex: 1 0 100%;
+  align-self: flex-start;
+  gap: var(--space-2) !important;
+  margin-left: 0;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+}
+
+.top-action-group button {
+  min-width: 90px !important;
+  height: var(--control-height) !important;
+  padding: 0 var(--space-4) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius) !important;
+  background: var(--color-bg-container) !important;
+  color: var(--color-text) !important;
+  font-size: var(--font-size) !important;
+  font-weight: var(--font-weight-regular) !important;
+  line-height: calc(var(--control-height) - 2px) !important;
+}
+
+.top-action-group button:first-child {
+  border-color: var(--color-primary-6) !important;
+  background: var(--color-primary-6) !important;
+  color: var(--color-text-on-primary) !important;
 }
 
 .top-filter-chips {
