@@ -16,14 +16,11 @@ body > #root > div > .flex-1 {
 }
 
 body aside {
-  background: #001529 !important;
-  color: rgba(255, 255, 255, 0.78) !important;
-  border-right-color: rgba(255, 255, 255, 0.08) !important;
-  box-shadow: none !important;
+  display: none !important;
 }
 
-body aside * {
-  color: inherit;
+body > #root > div {
+  padding-left: 0 !important;
 }
 
 body aside > div:first-child {
