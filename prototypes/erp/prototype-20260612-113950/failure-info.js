@@ -11,6 +11,7 @@
     { status: "执行中", actions: [textDetail] },
     { status: "结束", actions: [textView] },
   ];
+  let comparisonText = "上期同周期";
 
   const showToast = (message) => {
     document.querySelector(".failure-toast")?.remove();
@@ -53,6 +54,209 @@
       source.click();
     });
     return button;
+  };
+
+  const setNativeValue = (element, value) => {
+    const descriptor = Object.getOwnPropertyDescriptor(element.constructor.prototype, "value");
+    descriptor?.set ? descriptor.set.call(element, value) : (element.value = value);
+    element.dispatchEvent(new Event("input", { bubbles: true }));
+    element.dispatchEvent(new Event("change", { bubbles: true }));
+  };
+
+  const createFilterField = (labelText, control) => {
+    const field = document.createElement("label");
+    field.className = "top-filter-field";
+    const label = document.createElement("span");
+    label.textContent = labelText;
+    field.append(label, control);
+    return field;
+  };
+
+  const syncSelectOptions = (proxy, source) => {
+    proxy.innerHTML = "";
+    [...source.options].forEach((option) => {
+      const next = document.createElement("option");
+      next.value = option.value;
+      next.textContent = option.textContent;
+      proxy.appendChild(next);
+    });
+    proxy.value = source.value;
+  };
+
+  const enhanceMetricComparison = () => {
+    const metricGrid = [...document.querySelectorAll("main > div.grid")].find((grid) =>
+      grid.textContent.includes("订单数") && grid.textContent.includes("销售额") && grid.textContent.includes("销量")
+    );
+    if (!metricGrid) return;
+
+    metricGrid.querySelectorAll(":scope > div").forEach((card) => {
+      let note = card.querySelector(".metric-compare-note");
+      if (!note) {
+        note = document.createElement("div");
+        note.className = "metric-compare-note";
+        card.appendChild(note);
+      }
+      note.textContent = `对比时间：${comparisonText || "上期同周期"}`;
+    });
+  };
+
+  const enhanceTopFilters = () => {
+    const main = document.querySelector("main");
+    const topToolbar = main?.firstElementChild;
+    const listRoot = [...document.querySelectorAll("main > div")].find((item) =>
+      item.textContent.includes("折扣活动列表")
+    );
+    const listFilter = [...(listRoot?.children || [])].find((item) =>
+      item.textContent.includes("活动名称:") && item.textContent.includes("活动类型:")
+    );
+    if (!topToolbar || !listFilter) return;
+
+    listFilter.classList.add("list-filter-source-hidden");
+
+    if (!topToolbar.querySelector("[data-top-list-filters]")) {
+      topToolbar.classList.add("top-filter-toolbar");
+      const sourceInput = listFilter.querySelector("input");
+      const sourceSelects = listFilter.querySelectorAll("select");
+      const sourceButtons = [...listFilter.querySelectorAll("button")];
+      const sourceQuery = sourceButtons.find((button) => button.textContent.trim() === "查询");
+      const sourceReset = sourceButtons.find((button) => button.textContent.trim() === "重置");
+
+      const group = document.createElement("div");
+      group.className = "top-list-filters";
+      group.dataset.topListFilters = "true";
+
+      if (sourceInput) {
+        const proxy = document.createElement("input");
+        proxy.type = "text";
+        proxy.placeholder = sourceInput.placeholder || "请输入";
+        proxy.className = "top-filter-control top-filter-input";
+        proxy.value = sourceInput.value;
+        proxy.addEventListener("input", () => setNativeValue(sourceInput, proxy.value));
+        group.appendChild(createFilterField("活动名称", proxy));
+      }
+
+      if (sourceSelects[0]) {
+        const proxy = document.createElement("select");
+        proxy.className = "top-filter-control";
+        syncSelectOptions(proxy, sourceSelects[0]);
+        proxy.addEventListener("change", () => setNativeValue(sourceSelects[0], proxy.value));
+        group.appendChild(createFilterField("活动类型", proxy));
+      }
+
+      if (sourceSelects[1]) {
+        const proxy = document.createElement("select");
+        proxy.className = "top-filter-control";
+        syncSelectOptions(proxy, sourceSelects[1]);
+        proxy.addEventListener("change", () => setNativeValue(sourceSelects[1], proxy.value));
+        group.appendChild(createFilterField("状态", proxy));
+      }
+
+      const createdAt = document.createElement("input");
+      createdAt.type = "text";
+      createdAt.placeholder = "开始日期 ~ 结束日期";
+      createdAt.className = "top-filter-control top-filter-date";
+      group.appendChild(createFilterField("创建时间", createdAt));
+
+      const metric = document.createElement("select");
+      metric.className = "top-filter-control";
+      ["销售额", "订单数", "销量"].forEach((text) => {
+        const option = document.createElement("option");
+        option.value = text;
+        option.textContent = text;
+        metric.appendChild(option);
+      });
+      metric.addEventListener("change", () => {
+        const chartRoot = [...document.querySelectorAll("main > div")].find((item) =>
+          item.textContent.includes("汇总趋势图")
+        );
+        [...(chartRoot?.querySelectorAll("button") || [])]
+          .find((button) => button.textContent.trim() === metric.value)
+          ?.click();
+      });
+      group.appendChild(createFilterField("数据指标", metric));
+
+      const points = document.createElement("select");
+      points.className = "top-filter-control top-filter-small";
+      points.innerHTML = '<option value="show">显示点</option><option value="hide">隐藏点</option>';
+      points.addEventListener("change", () => {
+        const chartRoot = [...document.querySelectorAll("main > div")].find((item) =>
+          item.textContent.includes("汇总趋势图")
+        );
+        const toggle = [...(chartRoot?.querySelectorAll("button") || [])].find((button) => !button.textContent.trim());
+        const isOn = toggle?.className.includes("bg-[#1677ff]");
+        if (toggle && ((points.value === "show" && !isOn) || (points.value === "hide" && isOn))) toggle.click();
+      });
+      group.appendChild(createFilterField("图表点", points));
+
+      const compare = document.createElement("input");
+      compare.type = "text";
+      compare.placeholder = "对比时间，如 2026-05-20 ~ 2026-06-02";
+      compare.className = "top-filter-control top-filter-compare";
+      compare.addEventListener("input", () => {
+        comparisonText = compare.value.trim() || "上期同周期";
+        enhanceMetricComparison();
+      });
+      group.appendChild(createFilterField("对比时间", compare));
+
+      const actionGroup = [...topToolbar.children].find((item) => item.textContent.includes("查询") && item.textContent.includes("重置"));
+      topToolbar.insertBefore(group, actionGroup || null);
+
+      actionGroup?.querySelectorAll("button").forEach((button) => {
+        if (button.dataset.listFilterLinked === "true") return;
+        button.dataset.listFilterLinked = "true";
+        button.addEventListener("click", () => {
+          const text = button.textContent.trim();
+          if (text === "查询") sourceQuery?.click();
+          if (text === "重置") {
+            sourceReset?.click();
+            if (sourceInput) setNativeValue(sourceInput, "");
+            sourceSelects.forEach((select) => setNativeValue(select, ""));
+            group.querySelectorAll("input").forEach((input) => {
+              input.value = "";
+            });
+            group.querySelectorAll("select").forEach((select) => {
+              select.selectedIndex = 0;
+            });
+            comparisonText = "上期同周期";
+            enhanceMetricComparison();
+          }
+        });
+      });
+    }
+
+    const chartRoot = [...document.querySelectorAll("main > div")].find((item) =>
+      item.textContent.includes("汇总趋势图")
+    );
+    const chartHeader = chartRoot?.firstElementChild;
+    if (chartHeader) chartHeader.classList.add("chart-filter-source-hidden");
+
+    enhanceMetricComparison();
+  };
+
+  const removeProductImages = () => {
+    const table = [...document.querySelectorAll("table")].find((item) =>
+      [...item.querySelectorAll("thead th")].some((header) => header.textContent.trim() === "产品")
+    );
+    if (!table) return;
+
+    const headers = [...table.querySelectorAll("thead th")];
+    const productColumnIndex = headers.findIndex((header) => header.textContent.trim() === "产品");
+    if (productColumnIndex < 0) return;
+
+    table.querySelectorAll("tbody tr").forEach((row) => {
+      const cell = row.children[productColumnIndex];
+      if (!cell || cell.dataset.productImagesRemoved === "true" || !cell.querySelector("img")) return;
+
+      const rawText = cell.textContent.trim();
+      const count = rawText.match(/\+?(\d+)/)?.[1] || "0";
+      cell.dataset.productImagesRemoved = "true";
+      cell.innerHTML = `
+        <div class="product-count-summary">
+          <span class="product-count-value">${count}</span>
+          <span class="product-count-label">个商品</span>
+        </div>
+      `;
+    });
   };
 
   const pickPrimaryAction = (row, buttons) => {
@@ -237,8 +441,10 @@
     scheduled = true;
     requestAnimationFrame(() => {
       scheduled = false;
+      enhanceTopFilters();
       enhanceListLevel();
       enhanceValidTimeRanges();
+      removeProductImages();
       compactRowActions();
       enhanceDetailAndSkuLevels();
     });
