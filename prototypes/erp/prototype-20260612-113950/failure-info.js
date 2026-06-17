@@ -11,7 +11,7 @@
     { status: "执行中", actions: [textDetail] },
     { status: "结束", actions: [textView] },
   ];
-  let comparisonText = "环比上周期";
+  let selectedDateRangeText = "2026-06-03 ~ 2026-06-17";
   const singleStoreByActivity = {
     "双11鞋服大促": "SPE002_VN_BT",
     "黑五电子产品降价": "TIK201_US_EL",
@@ -48,6 +48,9 @@
 
   document.addEventListener("click", (event) => {
     if (!event.target.closest(".row-action-compact")) closeActionMenus();
+    if (!event.target.closest(".date-filter-combo")) {
+      document.querySelectorAll(".date-picker-panel.is-open").forEach((panel) => panel.classList.remove("is-open"));
+    }
   });
 
   const createProxyButton = (source, className) => {
@@ -91,7 +94,7 @@
     proxy.value = source.value;
   };
 
-  const createMonthGrid = (year, month, activeDays = []) => {
+  const createMonthGrid = (year, month, activeDays = [], rangeDays = [], onSelect) => {
     const monthStart = new Date(year, month - 1, 1);
     const startOffset = monthStart.getDay() || 7;
     const daysInMonth = new Date(year, month, 0).getDate();
@@ -111,7 +114,12 @@
       const isCurrentMonth = day >= 1 && day <= daysInMonth;
       current.textContent = String(isCurrentMonth ? day : new Date(year, month - 1, day).getDate());
       if (!isCurrentMonth) current.classList.add("is-muted");
+      if (isCurrentMonth && rangeDays.includes(day)) current.classList.add("is-in-range");
       if (isCurrentMonth && activeDays.includes(day)) current.classList.add("is-active");
+      if (isCurrentMonth && onSelect) {
+        const selectedDay = day;
+        current.addEventListener("click", () => onSelect(year, month, selectedDay));
+      }
       grid.appendChild(current);
       day += 1;
     }
@@ -121,34 +129,70 @@
 
   const createDateComparisonControl = () => {
     const wrapper = document.createElement("div");
-    wrapper.className = "date-filter-combo c-date-comparison";
+    wrapper.className = "date-filter-combo";
     wrapper.dataset.dateFilterCombo = "true";
 
     const range = document.createElement("input");
     range.type = "text";
     range.readOnly = true;
     range.className = "top-filter-control date-range-trigger";
-    range.value = "2026-06-17 ~ 2026-06-17";
+    range.value = selectedDateRangeText;
     range.setAttribute("aria-label", "统计时间");
 
-    const mode = document.createElement("div");
-    mode.className = "compare-mode";
-    mode.innerHTML = `
-      <button type="button" class="is-active" data-compare-mode="period">环比上周期</button>
-      <button type="button" data-compare-mode="year">同比去年同期</button>
-      <button type="button" data-compare-mode="none">不对比</button>
-    `;
+    const panel = document.createElement("div");
+    panel.className = "date-picker-panel";
 
-    mode.querySelectorAll("button").forEach((button) => {
+    const quickRanges = [
+      ["今天", "2026-06-17 ~ 2026-06-17"],
+      ["昨天", "2026-06-16 ~ 2026-06-16"],
+      ["最近7天", "2026-06-11 ~ 2026-06-17"],
+      ["最近14天", "2026-06-04 ~ 2026-06-17"],
+      ["最近30天", "2026-05-19 ~ 2026-06-17"],
+      ["本月", "2026-06-01 ~ 2026-06-17"],
+      ["上月", "2026-05-01 ~ 2026-05-31"],
+      ["最近半年", "2025-12-18 ~ 2026-06-17"],
+      ["最近一年", "2025-06-18 ~ 2026-06-17"],
+    ];
+    const quickList = document.createElement("div");
+    quickList.className = "date-quick-list";
+    quickRanges.forEach(([label, value]) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = label;
       button.addEventListener("click", () => {
-        mode.querySelectorAll("button").forEach((item) => item.classList.remove("is-active"));
-        button.classList.add("is-active");
-        comparisonText = button.textContent.trim();
+        selectedDateRangeText = value;
+        range.value = value;
+        panel.classList.remove("is-open");
         enhanceMetricComparison();
       });
+      quickList.appendChild(button);
     });
 
-    wrapper.append(range, mode);
+    const calendar = document.createElement("div");
+    calendar.className = "date-calendar";
+    const setSingleDay = (year, month, day) => {
+      const date = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      selectedDateRangeText = `${date} ~ ${date}`;
+      range.value = selectedDateRangeText;
+      panel.classList.remove("is-open");
+      enhanceMetricComparison();
+    };
+    const juneRange = Array.from({ length: 15 }, (_, index) => index + 3);
+    calendar.append(
+      createMonthGrid(2026, 6, [3, 17], juneRange, setSingleDay),
+      createMonthGrid(2026, 7, [], [], setSingleDay)
+    );
+    panel.append(quickList, calendar);
+
+    range.addEventListener("click", (event) => {
+      event.stopPropagation();
+      document.querySelectorAll(".date-picker-panel.is-open").forEach((item) => {
+        if (item !== panel) item.classList.remove("is-open");
+      });
+      panel.classList.toggle("is-open");
+    });
+
+    wrapper.append(range, panel);
     return wrapper;
   };
 
@@ -165,7 +209,7 @@
         note.className = "metric-compare-note";
         card.appendChild(note);
       }
-      note.textContent = `对比时间：${comparisonText || "上期同周期"}`;
+      note.textContent = `统计时间：${selectedDateRangeText.replace(" ~ ", " 至 ")}`;
     });
   };
 
@@ -237,8 +281,7 @@
       const chips = document.createElement("div");
       chips.className = "top-filter-chips";
       chips.innerHTML = `
-        <span class="top-filter-chip">统计时间：2026-06-17 至 2026-06-17 <button type="button">×</button></span>
-        <span class="top-filter-chip">对比：环比上周期 <button type="button">×</button></span>
+        <span class="top-filter-chip">统计时间：2026-06-03 至 2026-06-17 <button type="button">×</button></span>
         <span class="top-filter-clear">全部清空</span>
       `;
 
@@ -266,9 +309,8 @@
             group.querySelectorAll("select").forEach((select) => {
               select.selectedIndex = 0;
             });
-            comparisonText = "环比上周期";
-            group.querySelector(".compare-mode button[data-compare-mode='period']")?.click();
-            group.querySelector(".date-range-trigger").value = "2026-06-17 ~ 2026-06-17";
+            selectedDateRangeText = "2026-06-03 ~ 2026-06-17";
+            group.querySelector(".date-range-trigger").value = selectedDateRangeText;
             enhanceMetricComparison();
           }
         });
