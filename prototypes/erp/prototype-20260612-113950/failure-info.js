@@ -51,6 +51,9 @@
     if (!event.target.closest(".date-filter-combo")) {
       document.querySelectorAll(".date-picker-panel.is-open").forEach((panel) => panel.classList.remove("is-open"));
     }
+    if (event.target.classList.contains("audit-modal")) {
+      event.target.remove();
+    }
   });
 
   const createProxyButton = (source, className) => {
@@ -63,6 +66,100 @@
       event.stopPropagation();
       closeActionMenus();
       source.click();
+    });
+    return button;
+  };
+
+  const getActivityTitleFromRow = (row) => {
+    const firstCell = row?.querySelector("td");
+    const rawText = firstCell?.textContent.trim() || "";
+    return rawText.split("#")[0].trim() || "折扣活动";
+  };
+
+  const writeAuditResult = (row, result, remark) => {
+    const firstCell = row?.querySelector("td");
+    if (!firstCell) return;
+    firstCell.querySelector(".audit-result-card")?.remove();
+    const card = document.createElement("div");
+    card.className = `audit-result-card ${result === "审核拒绝" ? "is-rejected" : "is-approved"}`;
+    card.innerHTML = `
+      <div><span>审核结果</span><strong>${result}</strong></div>
+      <div><span>审核备注</span><p>${remark || "无"}</p></div>
+    `;
+    firstCell.appendChild(card);
+  };
+
+  const openAuditPanel = (row) => {
+    document.querySelector(".audit-modal")?.remove();
+    const activityTitle = getActivityTitleFromRow(row);
+    const modal = document.createElement("div");
+    modal.className = "audit-modal";
+    modal.innerHTML = `
+      <section class="audit-dialog" role="dialog" aria-modal="true" aria-label="活动审核">
+        <div class="audit-dialog__header">
+          <div>
+            <div class="audit-dialog__eyebrow">待审核活动</div>
+            <h3>${activityTitle}</h3>
+          </div>
+          <button type="button" class="audit-dialog__close" data-audit-close>×</button>
+        </div>
+        <div class="audit-dialog__body">
+          <div class="audit-info-grid">
+            <div><span>当前状态</span><strong>待审核</strong></div>
+            <div><span>提交人</span><strong>张运营</strong></div>
+            <div><span>提交时间</span><strong>2023-10-15 10:00:00</strong></div>
+          </div>
+          <label class="audit-field">
+            <span>审核结论</span>
+            <div class="audit-choice">
+              <button type="button" class="is-active" data-audit-result="审核通过">审核通过</button>
+              <button type="button" data-audit-result="审核拒绝">审核拒绝</button>
+            </div>
+          </label>
+          <label class="audit-field">
+            <span>审核备注</span>
+            <textarea rows="4" placeholder="请输入审核意见，业务人员可在列表中查看"></textarea>
+          </label>
+          <div class="audit-preview">
+            <span>页面可见信息</span>
+            <p>提交后会在活动列表中展示审核结果和审核备注。</p>
+          </div>
+        </div>
+        <div class="audit-dialog__footer">
+          <button type="button" data-audit-close>取消</button>
+          <button type="button" data-audit-submit>提交审核</button>
+        </div>
+      </section>
+    `;
+
+    let selectedResult = "审核通过";
+    modal.querySelectorAll("[data-audit-result]").forEach((button) => {
+      button.addEventListener("click", () => {
+        modal.querySelectorAll("[data-audit-result]").forEach((item) => item.classList.remove("is-active"));
+        button.classList.add("is-active");
+        selectedResult = button.dataset.auditResult;
+      });
+    });
+    modal.querySelectorAll("[data-audit-close]").forEach((button) => button.addEventListener("click", () => modal.remove()));
+    modal.querySelector("[data-audit-submit]").addEventListener("click", () => {
+      const remark = modal.querySelector("textarea").value.trim();
+      writeAuditResult(row, selectedResult, remark);
+      modal.remove();
+      showToast("审核信息已记录到活动列表");
+    });
+    document.body.appendChild(modal);
+  };
+
+  const createAuditButton = (row, className) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = className;
+    button.textContent = "审核";
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      closeActionMenus();
+      openAuditPanel(row);
     });
     return button;
   };
@@ -291,6 +388,7 @@
       });
       actionGroup?.classList.add("top-action-group");
       topToolbar.insertBefore(group, actionGroup || null);
+      if (actionGroup) group.appendChild(actionGroup);
       topToolbar.appendChild(chips);
 
       actionGroup?.querySelectorAll("button").forEach((button) => {
@@ -330,7 +428,16 @@
         metricGroup.dataset.metricOrderEnhanced = "true";
         ["销量", "销售额", "订单数"].forEach((text) => {
           const button = [...metricGroup.querySelectorAll("button")].find((item) => item.textContent.trim() === text);
-          if (button) metricGroup.appendChild(button);
+          if (button) {
+            metricGroup.appendChild(button);
+            button.classList.add("chart-metric-toggle", "is-selected");
+            button.dataset.metricSelected = "true";
+            button.addEventListener("click", () => {
+              const nextSelected = button.dataset.metricSelected !== "true";
+              button.dataset.metricSelected = String(nextSelected);
+              button.classList.toggle("is-selected", nextSelected);
+            });
+          }
         });
       }
       if (pointGroup) {
@@ -419,7 +526,6 @@
       <span class="single-detail-label">生效店铺</span>
       <div class="single-detail-store">
         <strong>${store}</strong>
-        <span>一个活动仅对应一个店铺，商品结构和价格按店铺独立维护</span>
       </div>
     `;
   };
@@ -458,7 +564,9 @@
       const compact = document.createElement("div");
       compact.className = "row-action-compact";
 
-      const primaryButton = createProxyButton(primary, "row-action-proxy row-action-primary");
+      const primaryButton = row.textContent.includes("待审核")
+        ? createAuditButton(row, "row-action-proxy row-action-primary")
+        : createProxyButton(primary, "row-action-proxy row-action-primary");
       if (primary.textContent.trim() === textViewFailure) primaryButton.classList.add("is-danger");
       compact.appendChild(primaryButton);
 
@@ -600,6 +708,38 @@
     firstPanel?.insertAdjacentElement("afterend", createDetailPanel());
   };
 
+  const removeOperatorIrrelevantDetailBlocks = () => {
+    ["状态映射", "接口与异常追踪"].forEach((title) => {
+      [...document.querySelectorAll("h3, h4, div, p")].forEach((node) => {
+        if (node.textContent.trim() !== title) return;
+        const card = node.closest("[class*='bg-white'], [class*='border']");
+        if (card && card.parentElement) card.remove();
+      });
+    });
+  };
+
+  const enhanceSkuDetailTable = () => {
+    const heading = [...document.querySelectorAll("h2, h3")].find((item) =>
+      item.textContent.includes("促销商品明细")
+    );
+    const card = heading?.closest("[class*='bg-white'], [class*='border']");
+    if (!card || card.dataset.skuDetailEnhanced === "true") return;
+    card.dataset.skuDetailEnhanced = "true";
+    card.classList.add("sku-detail-card");
+    const table = card.querySelector("table");
+    table?.classList.add("sku-detail-table");
+
+    table?.querySelectorAll("tbody tr").forEach((row) => {
+      const rowText = row.textContent;
+      if (row.querySelector("img") || rowText.includes("主商品编辑")) {
+        row.classList.add("sku-product-row");
+      } else {
+        row.classList.add("sku-variant-row");
+      }
+      row.querySelectorAll("td").forEach((cell) => cell.classList.add("sku-detail-cell"));
+    });
+  };
+
   let scheduled = false;
   const enhance = () => {
     if (scheduled) return;
@@ -611,9 +751,11 @@
       enhanceValidTimeRanges();
       enforceSingleStoreActivities();
       enforceSingleStoreDetail();
+      removeOperatorIrrelevantDetailBlocks();
       removeProductImages();
       compactRowActions();
       enhanceDetailAndSkuLevels();
+      enhanceSkuDetailTable();
     });
   };
 
