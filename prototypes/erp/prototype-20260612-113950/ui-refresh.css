@@ -279,6 +279,45 @@ main > div.grid > div p:first-child {
   color: var(--color-primary-6);
 }
 
+.valid-time-range {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 172px;
+}
+
+.valid-time-dates {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  padding: 3px 8px;
+  border: 1px solid var(--color-primary-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-primary-bg);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.valid-time-arrow {
+  color: var(--color-primary-6);
+  font-weight: var(--font-weight-semibold);
+}
+
+.valid-time-hours {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding-left: 2px;
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+  line-height: 16px;
+  white-space: nowrap;
+}
+
 .failure-detail-panel {
   margin-bottom: var(--space-4);
   overflow: hidden;

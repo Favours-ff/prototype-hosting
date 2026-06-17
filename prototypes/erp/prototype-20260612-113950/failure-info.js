@@ -120,6 +120,44 @@
     });
   };
 
+  const enhanceValidTimeRanges = () => {
+    const table = [...document.querySelectorAll("table")].find((item) =>
+      [...item.querySelectorAll("thead th")].some((header) => header.textContent.trim() === "有效时间")
+    );
+    if (!table) return;
+
+    const headers = [...table.querySelectorAll("thead th")];
+    const timeColumnIndex = headers.findIndex((header) => header.textContent.trim() === "有效时间");
+    if (timeColumnIndex < 0) return;
+
+    table.querySelectorAll("tbody tr").forEach((row) => {
+      const cell = row.children[timeColumnIndex];
+      if (!cell || cell.dataset.validTimeEnhanced === "true") return;
+
+      const matches = [...cell.textContent.matchAll(/(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2}:\d{2})/g)];
+      if (matches.length < 2) return;
+
+      const [, startDate, startTime] = matches[0];
+      const [, endDate, endTime] = matches[1];
+      cell.dataset.validTimeEnhanced = "true";
+      cell.setAttribute("title", `${startDate} ${startTime} - ${endDate} ${endTime}`);
+      cell.innerHTML = `
+        <div class="valid-time-range">
+          <div class="valid-time-dates">
+            <span>${startDate}</span>
+            <span class="valid-time-arrow">→</span>
+            <span>${endDate}</span>
+          </div>
+          <div class="valid-time-hours">
+            <span>${startTime}</span>
+            <span>至</span>
+            <span>${endTime}</span>
+          </div>
+        </div>
+      `;
+    });
+  };
+
   const enhanceListLevel = () => {
     const row = [...document.querySelectorAll("tbody tr")].find((item) =>
       item.textContent.includes(failedActivityName)
@@ -200,6 +238,7 @@
     requestAnimationFrame(() => {
       scheduled = false;
       enhanceListLevel();
+      enhanceValidTimeRanges();
       compactRowActions();
       enhanceDetailAndSkuLevels();
     });
