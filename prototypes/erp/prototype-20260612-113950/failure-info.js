@@ -11,7 +11,7 @@
     { status: "执行中", actions: [textDetail] },
     { status: "结束", actions: [textView] },
   ];
-  let comparisonText = "标准对比模式";
+  let comparisonText = "环比上周期";
   const singleStoreByActivity = {
     "双11鞋服大促": "SPE002_VN_BT",
     "黑五电子产品降价": "TIK201_US_EL",
@@ -48,9 +48,6 @@
 
   document.addEventListener("click", (event) => {
     if (!event.target.closest(".row-action-compact")) closeActionMenus();
-    if (!event.target.closest(".date-filter-combo")) {
-      document.querySelectorAll(".date-picker-panel.is-open").forEach((panel) => panel.classList.remove("is-open"));
-    }
   });
 
   const createProxyButton = (source, className) => {
@@ -124,64 +121,34 @@
 
   const createDateComparisonControl = () => {
     const wrapper = document.createElement("div");
-    wrapper.className = "date-filter-combo";
+    wrapper.className = "date-filter-combo c-date-comparison";
     wrapper.dataset.dateFilterCombo = "true";
 
-    const range = document.createElement("button");
-    range.type = "button";
-    range.className = "date-range-trigger";
-    range.innerHTML = `
-      <span data-start-date>2026-06-17</span>
-      <span class="date-range-arrow">→</span>
-      <span data-end-date>2026-06-17</span>
-      <span class="date-range-clear">×</span>
-    `;
+    const range = document.createElement("input");
+    range.type = "text";
+    range.readOnly = true;
+    range.className = "top-filter-control date-range-trigger";
+    range.value = "2026-06-17 ~ 2026-06-17";
+    range.setAttribute("aria-label", "统计时间");
 
     const mode = document.createElement("div");
     mode.className = "compare-mode";
     mode.innerHTML = `
-      <button type="button" class="is-active" data-compare-mode="standard">标准对比模式</button>
-      <button type="button" data-compare-mode="custom">自定义对比</button>
-      <span class="compare-help">?</span>
+      <button type="button" class="is-active" data-compare-mode="period">环比上周期</button>
+      <button type="button" data-compare-mode="year">同比去年同期</button>
+      <button type="button" data-compare-mode="none">不对比</button>
     `;
-
-    const panel = document.createElement("div");
-    panel.className = "date-picker-panel";
-    const quick = document.createElement("div");
-    quick.className = "date-quick-list";
-    ["今天", "昨天", "近7天(不含今日)", "近14天(不含今日)", "近30天(不含今日)"].forEach((item) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.textContent = item;
-      button.addEventListener("click", () => {
-        wrapper.querySelector("[data-start-date]").textContent = "2026-06-17";
-        wrapper.querySelector("[data-end-date]").textContent = item === "今天" ? "2026-06-17" : "2026-06-16";
-        panel.classList.remove("is-open");
-      });
-      quick.appendChild(button);
-    });
-
-    const calendar = document.createElement("div");
-    calendar.className = "date-calendar";
-    calendar.append(createMonthGrid(2026, 6, [17]), createMonthGrid(2026, 7));
-    panel.append(quick, calendar);
-
-    range.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      panel.classList.toggle("is-open");
-    });
 
     mode.querySelectorAll("button").forEach((button) => {
       button.addEventListener("click", () => {
         mode.querySelectorAll("button").forEach((item) => item.classList.remove("is-active"));
         button.classList.add("is-active");
-        comparisonText = button.dataset.compareMode === "custom" ? "自定义对比时间" : "标准对比模式";
+        comparisonText = button.textContent.trim();
         enhanceMetricComparison();
       });
     });
 
-    wrapper.append(range, mode, panel);
+    wrapper.append(range, mode);
     return wrapper;
   };
 
@@ -224,7 +191,7 @@
       const sourceReset = sourceButtons.find((button) => button.textContent.trim() === "重置");
 
       const group = document.createElement("div");
-      group.className = "top-list-filters";
+      group.className = "top-list-filters c-filter__row";
       group.dataset.topListFilters = "true";
 
       if (sourceInput) {
@@ -284,8 +251,6 @@
       });
       group.appendChild(createFilterField("图表点", points));
 
-      group.appendChild(createFilterField("时间筛选", createDateComparisonControl()));
-
       const store = document.createElement("select");
       store.className = "top-filter-control top-store-select";
       storeOptions.forEach((text) => {
@@ -296,12 +261,25 @@
       });
       group.appendChild(createFilterField("店铺", store));
 
+      const dateField = createFilterField("统计时间", createDateComparisonControl());
+      dateField.classList.add("top-filter-field--wide");
+      group.appendChild(dateField);
+
+      const chips = document.createElement("div");
+      chips.className = "top-filter-chips";
+      chips.innerHTML = `
+        <span class="top-filter-chip">统计时间：2026-06-17 至 2026-06-17 <button type="button">×</button></span>
+        <span class="top-filter-chip">对比：环比上周期 <button type="button">×</button></span>
+        <span class="top-filter-clear">全部清空</span>
+      `;
+
       const actionGroup = [...topToolbar.children].find((item) => item.textContent.includes("查询") && item.textContent.includes("重置"));
       [...topToolbar.children].forEach((child) => {
         if (child !== actionGroup && child !== group) child.classList.add("top-source-filter-hidden");
       });
       actionGroup?.classList.add("top-action-group");
       topToolbar.insertBefore(group, actionGroup || null);
+      topToolbar.appendChild(chips);
 
       actionGroup?.querySelectorAll("button").forEach((button) => {
         if (button.dataset.listFilterLinked === "true") return;
@@ -319,10 +297,9 @@
             group.querySelectorAll("select").forEach((select) => {
               select.selectedIndex = 0;
             });
-            comparisonText = "标准对比模式";
-            group.querySelector(".compare-mode button[data-compare-mode='standard']")?.click();
-            group.querySelector("[data-start-date]").textContent = "2026-06-17";
-            group.querySelector("[data-end-date]").textContent = "2026-06-17";
+            comparisonText = "环比上周期";
+            group.querySelector(".compare-mode button[data-compare-mode='period']")?.click();
+            group.querySelector(".date-range-trigger").value = "2026-06-17 ~ 2026-06-17";
             enhanceMetricComparison();
           }
         });
@@ -566,7 +543,7 @@
           <tbody>
             <tr><td>TIK201_US_EL</td><td>户外折叠椅<br><code>SKU-CHAIR-BLK</code></td><td>折扣价低于平台最低价格限制</td><td><code>PRICE_BELOW_MIN<br>request_id: req_260615_001</code></td><td><button type="button" data-retry-one>修改后重试</button></td></tr>
             <tr><td>TIK201_US_EL</td><td>蓝牙无线耳机<br><code>SKU-EAR-WHT</code></td><td>活动库存不能大于可售库存</td><td><code>STOCK_NOT_ENOUGH<br>request_id: req_260615_002</code></td><td><button type="button" data-retry-one>修改后重试</button></td></tr>
-            <tr><td>TIK202_TH_EL</td><td>智能手表<br><code>SKU-WATCH-01</code></td><td>商品当前不可参加平台活动</td><td><code>PRODUCT_NOT_ELIGIBLE<br>request_id: req_260615_003</code></td><td><button type="button" data-retry-one>查看商品</button></td></tr>
+            <tr><td>TIK201_US_EL</td><td>智能手表<br><code>SKU-WATCH-01</code></td><td>商品当前不可参加平台活动</td><td><code>PRODUCT_NOT_ELIGIBLE<br>request_id: req_260615_003</code></td><td><button type="button" data-retry-one>查看商品</button></td></tr>
           </tbody>
         </table>
       </div>
