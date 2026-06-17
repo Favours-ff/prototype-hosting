@@ -11,7 +11,15 @@
     { status: "执行中", actions: [textDetail] },
     { status: "结束", actions: [textView] },
   ];
-  let comparisonText = "上期同周期";
+  let comparisonText = "标准对比模式";
+  const singleStoreByActivity = {
+    "双11鞋服大促": "SPE002_VN_BT",
+    "黑五电子产品降价": "TIK201_US_EL",
+    "双12预热-台湾站": "SPE088_TW_HM",
+    "清仓大处理": "TIK_TH_01",
+    "春季上新活动": "VN_STORE_02",
+  };
+  const storeOptions = ["全部店铺", "SPE002_VN_BT", "TIK201_US_EL", "SPE088_TW_HM", "TIK_TH_01", "VN_STORE_02"];
 
   const showToast = (message) => {
     document.querySelector(".failure-toast")?.remove();
@@ -40,6 +48,9 @@
 
   document.addEventListener("click", (event) => {
     if (!event.target.closest(".row-action-compact")) closeActionMenus();
+    if (!event.target.closest(".date-filter-combo")) {
+      document.querySelectorAll(".date-picker-panel.is-open").forEach((panel) => panel.classList.remove("is-open"));
+    }
   });
 
   const createProxyButton = (source, className) => {
@@ -81,6 +92,97 @@
       proxy.appendChild(next);
     });
     proxy.value = source.value;
+  };
+
+  const createMonthGrid = (year, month, activeDays = []) => {
+    const monthStart = new Date(year, month - 1, 1);
+    const startOffset = monthStart.getDay() || 7;
+    const daysInMonth = new Date(year, month, 0).getDate();
+    let day = 2 - startOffset;
+    const table = document.createElement("div");
+    table.className = "date-month";
+    table.innerHTML = `
+      <div class="date-month-title">${year}年 ${month}月</div>
+      <div class="date-weekdays"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+    `;
+    const grid = document.createElement("div");
+    grid.className = "date-days";
+    for (let i = 0; i < 42; i += 1) {
+      const current = document.createElement("button");
+      current.type = "button";
+      current.className = "date-day";
+      const isCurrentMonth = day >= 1 && day <= daysInMonth;
+      current.textContent = String(isCurrentMonth ? day : new Date(year, month - 1, day).getDate());
+      if (!isCurrentMonth) current.classList.add("is-muted");
+      if (isCurrentMonth && activeDays.includes(day)) current.classList.add("is-active");
+      grid.appendChild(current);
+      day += 1;
+    }
+    table.appendChild(grid);
+    return table;
+  };
+
+  const createDateComparisonControl = () => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "date-filter-combo";
+    wrapper.dataset.dateFilterCombo = "true";
+
+    const range = document.createElement("button");
+    range.type = "button";
+    range.className = "date-range-trigger";
+    range.innerHTML = `
+      <span data-start-date>2026-06-17</span>
+      <span class="date-range-arrow">→</span>
+      <span data-end-date>2026-06-17</span>
+      <span class="date-range-clear">×</span>
+    `;
+
+    const mode = document.createElement("div");
+    mode.className = "compare-mode";
+    mode.innerHTML = `
+      <button type="button" class="is-active" data-compare-mode="standard">标准对比模式</button>
+      <button type="button" data-compare-mode="custom">自定义对比</button>
+      <span class="compare-help">?</span>
+    `;
+
+    const panel = document.createElement("div");
+    panel.className = "date-picker-panel";
+    const quick = document.createElement("div");
+    quick.className = "date-quick-list";
+    ["今天", "昨天", "近7天(不含今日)", "近14天(不含今日)", "近30天(不含今日)"].forEach((item) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = item;
+      button.addEventListener("click", () => {
+        wrapper.querySelector("[data-start-date]").textContent = "2026-06-17";
+        wrapper.querySelector("[data-end-date]").textContent = item === "今天" ? "2026-06-17" : "2026-06-16";
+        panel.classList.remove("is-open");
+      });
+      quick.appendChild(button);
+    });
+
+    const calendar = document.createElement("div");
+    calendar.className = "date-calendar";
+    calendar.append(createMonthGrid(2026, 6, [17]), createMonthGrid(2026, 7));
+    panel.append(quick, calendar);
+
+    range.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      panel.classList.toggle("is-open");
+    });
+
+    mode.querySelectorAll("button").forEach((button) => {
+      button.addEventListener("click", () => {
+        mode.querySelectorAll("button").forEach((item) => item.classList.remove("is-active"));
+        button.classList.add("is-active");
+        comparisonText = button.dataset.compareMode === "custom" ? "自定义对比时间" : "标准对比模式";
+        enhanceMetricComparison();
+      });
+    });
+
+    wrapper.append(range, mode, panel);
+    return wrapper;
   };
 
   const enhanceMetricComparison = () => {
@@ -151,12 +253,6 @@
         group.appendChild(createFilterField("状态", proxy));
       }
 
-      const createdAt = document.createElement("input");
-      createdAt.type = "text";
-      createdAt.placeholder = "开始日期 ~ 结束日期";
-      createdAt.className = "top-filter-control top-filter-date";
-      group.appendChild(createFilterField("创建时间", createdAt));
-
       const metric = document.createElement("select");
       metric.className = "top-filter-control";
       ["销售额", "订单数", "销量"].forEach((text) => {
@@ -188,17 +284,23 @@
       });
       group.appendChild(createFilterField("图表点", points));
 
-      const compare = document.createElement("input");
-      compare.type = "text";
-      compare.placeholder = "对比时间，如 2026-05-20 ~ 2026-06-02";
-      compare.className = "top-filter-control top-filter-compare";
-      compare.addEventListener("input", () => {
-        comparisonText = compare.value.trim() || "上期同周期";
-        enhanceMetricComparison();
+      group.appendChild(createFilterField("时间筛选", createDateComparisonControl()));
+
+      const store = document.createElement("select");
+      store.className = "top-filter-control top-store-select";
+      storeOptions.forEach((text) => {
+        const option = document.createElement("option");
+        option.value = text === "全部店铺" ? "" : text;
+        option.textContent = text;
+        store.appendChild(option);
       });
-      group.appendChild(createFilterField("对比时间", compare));
+      group.appendChild(createFilterField("店铺", store));
 
       const actionGroup = [...topToolbar.children].find((item) => item.textContent.includes("查询") && item.textContent.includes("重置"));
+      [...topToolbar.children].forEach((child) => {
+        if (child !== actionGroup && child !== group) child.classList.add("top-source-filter-hidden");
+      });
+      actionGroup?.classList.add("top-action-group");
       topToolbar.insertBefore(group, actionGroup || null);
 
       actionGroup?.querySelectorAll("button").forEach((button) => {
@@ -217,7 +319,10 @@
             group.querySelectorAll("select").forEach((select) => {
               select.selectedIndex = 0;
             });
-            comparisonText = "上期同周期";
+            comparisonText = "标准对比模式";
+            group.querySelector(".compare-mode button[data-compare-mode='standard']")?.click();
+            group.querySelector("[data-start-date]").textContent = "2026-06-17";
+            group.querySelector("[data-end-date]").textContent = "2026-06-17";
             enhanceMetricComparison();
           }
         });
@@ -257,6 +362,56 @@
         </div>
       `;
     });
+  };
+
+  const enforceSingleStoreActivities = () => {
+    const table = [...document.querySelectorAll("table")].find((item) =>
+      [...item.querySelectorAll("thead th")].some((header) => header.textContent.trim() === "店铺")
+    );
+    if (!table) return;
+
+    const headers = [...table.querySelectorAll("thead th")];
+    const storeColumnIndex = headers.findIndex((header) => header.textContent.trim() === "店铺");
+    if (storeColumnIndex < 0) return;
+
+    table.querySelectorAll("tbody tr").forEach((row) => {
+      const activityName = Object.keys(singleStoreByActivity).find((name) => row.textContent.includes(name));
+      const cell = row.children[storeColumnIndex];
+      if (!activityName || !cell || cell.dataset.singleStoreEnhanced === "true") return;
+
+      const store = singleStoreByActivity[activityName];
+      cell.dataset.singleStoreEnhanced = "true";
+      cell.innerHTML = `
+        <div class="single-store-cell">
+          <span>${store}</span>
+        </div>
+      `;
+    });
+  };
+
+  const enforceSingleStoreDetail = () => {
+    const heading = [...document.querySelectorAll("h2")].find((item) =>
+      Object.keys(singleStoreByActivity).includes(item.textContent.trim())
+    );
+    if (!heading) return;
+
+    const store = singleStoreByActivity[heading.textContent.trim()];
+    if (!store) return;
+
+    const detailRoot = heading.closest("main > div") || heading.parentElement?.parentElement?.parentElement;
+    const storeBlock = [...(detailRoot?.querySelectorAll("div") || [])].find((item) =>
+      item.className.includes("col-span-2") && item.textContent.includes("生效店铺")
+    );
+    if (!storeBlock || storeBlock.dataset.singleStoreDetail === "true") return;
+
+    storeBlock.dataset.singleStoreDetail = "true";
+    storeBlock.innerHTML = `
+      <span class="single-detail-label">生效店铺</span>
+      <div class="single-detail-store">
+        <strong>${store}</strong>
+        <span>一个活动仅对应一个店铺，商品结构和价格按店铺独立维护</span>
+      </div>
+    `;
   };
 
   const pickPrimaryAction = (row, buttons) => {
@@ -400,7 +555,7 @@
       </div>
       <div class="failure-detail-meta">
         <span>失败环节：<b>商品绑定</b></span>
-        <span>影响范围：<b>3 个店铺 / 12 个 SKU</b></span>
+        <span>影响范围：<b>1 个店铺 / 12 个 SKU</b></span>
         <span>失败时间：<b>2026-06-15 10:24:36</b></span>
         <span>建议处理：<b>调整折扣价、补充库存后重试</b></span>
       </div>
@@ -444,6 +599,8 @@
       enhanceTopFilters();
       enhanceListLevel();
       enhanceValidTimeRanges();
+      enforceSingleStoreActivities();
+      enforceSingleStoreDetail();
       removeProductImages();
       compactRowActions();
       enhanceDetailAndSkuLevels();
