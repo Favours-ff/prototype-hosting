@@ -171,7 +171,12 @@
 
   const enhanceTopFilters = () => {
     const main = document.querySelector("main");
-    const topToolbar = main?.firstElementChild;
+    const topToolbar = [...(main?.children || [])].find(
+      (item) =>
+        !item.matches("[data-reference-page-header]") &&
+        (item.classList.contains("top-filter-toolbar") ||
+          (item.textContent.includes("选择店铺") && item.textContent.includes("创建时间:")))
+    );
     const listRoot = [...document.querySelectorAll("main > div")].find((item) =>
       item.textContent.includes("折扣活动列表")
     );
@@ -313,6 +318,102 @@
     if (chartHeader) chartHeader.classList.add("chart-filter-source-hidden");
 
     enhanceMetricComparison();
+  };
+
+  const alignWithReferencePrototype = () => {
+    const shell = document.querySelector("body > #root > div");
+    const mainColumn = shell?.querySelector(":scope > div:last-child");
+    const aside = shell?.querySelector("aside");
+    const header = mainColumn?.querySelector("header");
+    const main = document.querySelector("main");
+    const topToolbar = [...(main?.children || [])].find(
+      (item) =>
+        !item.matches("[data-reference-page-header]") &&
+        (item.classList.contains("top-filter-toolbar") ||
+          (item.textContent.includes("选择店铺") && item.textContent.includes("创建时间:")))
+    );
+    const tablePanel = [...(main?.querySelectorAll(":scope > div") || [])].find((item) =>
+      item.textContent.includes("折扣活动列表")
+    );
+    const metricGrid = [...(main?.querySelectorAll(":scope > div.grid") || [])].find((item) =>
+      item.textContent.includes("订单数") && item.textContent.includes("销售额") && item.textContent.includes("销量")
+    );
+    const chartPanel = [...(main?.querySelectorAll(":scope > div") || [])].find((item) =>
+      item.textContent.includes("汇总趋势图")
+    );
+
+    shell?.classList.add("reference-erp-shell");
+    mainColumn?.classList.add("reference-erp-main");
+    aside?.classList.add("reference-erp-sider");
+    header?.classList.add("reference-erp-header");
+    main?.classList.add("reference-erp-content");
+    topToolbar?.classList.add("reference-filter-panel");
+    tablePanel?.classList.add("reference-table-panel");
+    metricGrid?.classList.add("reference-metric-grid");
+    chartPanel?.classList.add("reference-chart-panel");
+
+    const brand = aside?.firstElementChild;
+    if (brand && brand.dataset.referenceBrand !== "true") {
+      brand.dataset.referenceBrand = "true";
+      brand.textContent = "SEABOSS ERP";
+    }
+
+    const headerTitle = header?.querySelector("h1") || header?.firstElementChild;
+    if (headerTitle && headerTitle.dataset.referenceTitle !== "true") {
+      headerTitle.dataset.referenceTitle = "true";
+      headerTitle.textContent = "营销管理";
+    }
+
+    if (mainColumn && header && !mainColumn.querySelector("[data-reference-breadcrumb]")) {
+      const breadcrumb = document.createElement("div");
+      breadcrumb.className = "reference-breadcrumb";
+      breadcrumb.dataset.referenceBreadcrumb = "true";
+      breadcrumb.textContent = "营销管理 / 跨平台营销折扣活动";
+      header.insertAdjacentElement("afterend", breadcrumb);
+    }
+
+    if (main && topToolbar && !main.querySelector("[data-reference-page-header]")) {
+      const pageHeader = document.createElement("section");
+      pageHeader.className = "reference-page-header";
+      pageHeader.dataset.referencePageHeader = "true";
+      pageHeader.innerHTML = `
+        <div>
+          <h1>跨平台营销折扣活动</h1>
+          <p>管理 Shopee / TikTok 店铺折扣活动，跟踪发布状态、销售表现与异常处理。</p>
+        </div>
+      `;
+      main.insertBefore(pageHeader, topToolbar);
+    }
+
+    const pageHeader = main?.querySelector("[data-reference-page-header]");
+    pageHeader?.classList.remove("top-filter-toolbar", "reference-filter-panel");
+    if (main && pageHeader && topToolbar && pageHeader.nextElementSibling !== topToolbar) {
+      main.insertBefore(pageHeader, topToolbar);
+    }
+
+    if (main && topToolbar && tablePanel && tablePanel.previousElementSibling !== topToolbar) {
+      topToolbar.insertAdjacentElement("afterend", tablePanel);
+    }
+
+    if (tablePanel) {
+      const headerBar = tablePanel.firstElementChild;
+      let summary = tablePanel.querySelector("[data-reference-table-summary]");
+      if (!summary) {
+        summary = document.createElement("div");
+        summary.className = "reference-table-summary";
+        summary.dataset.referenceTableSummary = "true";
+        headerBar?.insertAdjacentElement("afterend", summary);
+      }
+      const rows = [...tablePanel.querySelectorAll("tbody tr")];
+      const count = rows.length;
+      const running = rows.filter((row) => row.textContent.includes("执行中")).length;
+      const pending = rows.filter((row) => row.textContent.includes("待审核")).length;
+      const failed = rows.filter((row) => row.textContent.includes("发布失败")).length;
+      summary.innerHTML = `
+        <div><b>折扣活动列表</b><span>当前筛选 ${count} 条，每页展示 10 条</span></div>
+        <div><span>执行中 <b>${running}</b></span><span>待审核 <b>${pending}</b></span><span>发布失败 <b>${failed}</b></span></div>
+      `;
+    }
   };
 
   const removeProductImages = () => {
@@ -574,6 +675,7 @@
     requestAnimationFrame(() => {
       scheduled = false;
       enhanceTopFilters();
+      alignWithReferencePrototype();
       enhanceListLevel();
       enhanceValidTimeRanges();
       enforceSingleStoreActivities();
