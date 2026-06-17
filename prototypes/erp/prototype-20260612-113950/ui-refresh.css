@@ -342,7 +342,88 @@ main tbody tr:hover td {
 }
 
 .chart-filter-source-hidden > div:last-child {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--space-4) !important;
+}
+
+.chart-filter-source-hidden > div:last-child > div:first-child {
+  display: inline-flex !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+.chart-filter-source-hidden > div:last-child > div:first-child button {
+  height: var(--control-height) !important;
+  min-width: 64px !important;
+  padding: 0 var(--space-3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  border-right: 0 !important;
+  border-radius: 0 !important;
+  background: #5b9bd5 !important;
+  color: #fff !important;
+  font-size: var(--font-size-sm) !important;
+  font-weight: var(--font-weight-medium) !important;
+}
+
+.chart-filter-source-hidden > div:last-child > div:first-child button > div {
   display: none !important;
+}
+
+.chart-filter-source-hidden > div:last-child > div:first-child button:first-child {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm) !important;
+}
+
+.chart-filter-source-hidden > div:last-child > div:first-child button:last-child {
+  border-right: 1px solid rgba(255, 255, 255, 0.28) !important;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0 !important;
+}
+
+.chart-filter-source-hidden > div:last-child label,
+.chart-filter-source-hidden > div:last-child span {
+  color: var(--color-text) !important;
+  font-size: var(--font-size-sm) !important;
+  font-weight: var(--font-weight-semibold) !important;
+}
+
+.chart-point-control {
+  gap: var(--space-2) !important;
+  padding-left: var(--space-3) !important;
+  border-left: 1px solid var(--color-border-secondary) !important;
+}
+
+.chart-point-toggle {
+  position: relative !important;
+  width: 14px !important;
+  min-width: 14px !important;
+  height: 14px !important;
+  padding: 0 !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 2px !important;
+  background: var(--color-bg-container) !important;
+  line-height: 1 !important;
+}
+
+.chart-point-toggle > div {
+  display: none !important;
+}
+
+.chart-point-toggle.is-active {
+  border-color: var(--color-primary-6) !important;
+  background: var(--color-primary-6) !important;
+}
+
+.chart-point-toggle.is-active::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 .date-filter-combo {

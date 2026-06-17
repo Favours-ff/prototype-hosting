@@ -220,37 +220,6 @@
         group.appendChild(createFilterField("状态", proxy));
       }
 
-      const metric = document.createElement("select");
-      metric.className = "top-filter-control";
-      ["销售额", "订单数", "销量"].forEach((text) => {
-        const option = document.createElement("option");
-        option.value = text;
-        option.textContent = text;
-        metric.appendChild(option);
-      });
-      metric.addEventListener("change", () => {
-        const chartRoot = [...document.querySelectorAll("main > div")].find((item) =>
-          item.textContent.includes("汇总趋势图")
-        );
-        [...(chartRoot?.querySelectorAll("button") || [])]
-          .find((button) => button.textContent.trim() === metric.value)
-          ?.click();
-      });
-      group.appendChild(createFilterField("数据指标", metric));
-
-      const points = document.createElement("select");
-      points.className = "top-filter-control top-filter-small";
-      points.innerHTML = '<option value="show">显示点</option><option value="hide">隐藏点</option>';
-      points.addEventListener("change", () => {
-        const chartRoot = [...document.querySelectorAll("main > div")].find((item) =>
-          item.textContent.includes("汇总趋势图")
-        );
-        const toggle = [...(chartRoot?.querySelectorAll("button") || [])].find((button) => !button.textContent.trim());
-        const isOn = toggle?.className.includes("bg-[#1677ff]");
-        if (toggle && ((points.value === "show" && !isOn) || (points.value === "hide" && isOn))) toggle.click();
-      });
-      group.appendChild(createFilterField("图表点", points));
-
       const store = document.createElement("select");
       store.className = "top-filter-control top-store-select";
       storeOptions.forEach((text) => {
@@ -310,7 +279,29 @@
       item.textContent.includes("汇总趋势图")
     );
     const chartHeader = chartRoot?.firstElementChild;
-    if (chartHeader) chartHeader.classList.add("chart-filter-source-hidden");
+    if (chartHeader) {
+      chartHeader.classList.add("chart-filter-source-hidden");
+      const chartControls = chartHeader.lastElementChild;
+      const metricGroup = chartControls?.firstElementChild;
+      const pointGroup = chartControls?.children?.[1];
+      if (metricGroup && metricGroup.dataset.metricOrderEnhanced !== "true") {
+        metricGroup.dataset.metricOrderEnhanced = "true";
+        ["销量", "销售额", "订单数"].forEach((text) => {
+          const button = [...metricGroup.querySelectorAll("button")].find((item) => item.textContent.trim() === text);
+          if (button) metricGroup.appendChild(button);
+        });
+      }
+      if (pointGroup) {
+        pointGroup.classList.add("chart-point-control");
+        const label = pointGroup.querySelector("span");
+        if (label) label.textContent = "数据点";
+        const toggle = pointGroup.querySelector("button");
+        if (toggle) {
+          toggle.classList.add("chart-point-toggle");
+          toggle.classList.toggle("is-active", toggle.className.includes("bg-[#1677ff]"));
+        }
+      }
+    }
 
     enhanceMetricComparison();
   };
