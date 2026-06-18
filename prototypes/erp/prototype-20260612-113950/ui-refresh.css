@@ -204,6 +204,12 @@ main tbody tr:hover td {
   min-width: 0;
 }
 
+@media (max-width: 1440px) {
+  .top-list-filters {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 .top-filter-field {
   display: inline-flex;
   flex-direction: column;
@@ -265,7 +271,7 @@ main tbody tr:hover td {
 }
 
 .top-action-group {
-  grid-column: 3 / 5;
+  grid-column: auto;
   display: flex !important;
   align-self: end;
   gap: var(--space-2) !important;
@@ -275,7 +281,7 @@ main tbody tr:hover td {
 }
 
 .top-action-group button {
-  min-width: 90px !important;
+  min-width: 88px !important;
   height: var(--control-height) !important;
   padding: 0 var(--space-4) !important;
   border: 1px solid var(--color-border) !important;
@@ -338,14 +344,15 @@ main tbody tr:hover td {
   display: flex !important;
   align-items: center !important;
   justify-content: flex-start !important;
-  gap: var(--space-4) !important;
-  padding: var(--space-3) var(--space-4) !important;
+  gap: var(--space-3) !important;
+  padding: var(--space-2) var(--space-4) !important;
+  min-height: 48px !important;
 }
 
 .chart-filter-source-hidden > div:last-child {
   display: flex !important;
   align-items: center !important;
-  gap: var(--space-4) !important;
+  gap: var(--space-3) !important;
   margin-left: 0 !important;
 }
 
@@ -353,19 +360,21 @@ main tbody tr:hover td {
   display: inline-flex !important;
   align-items: center !important;
   overflow: hidden !important;
-  border-radius: var(--radius-sm) !important;
+  gap: var(--space-1) !important;
+  border-radius: var(--radius) !important;
+  background: var(--color-bg-spotlight) !important;
+  padding: 2px !important;
 }
 
 .chart-filter-source-hidden > div:last-child > div:first-child button {
-  height: var(--control-height) !important;
-  min-width: 64px !important;
-  padding: 0 var(--space-3) !important;
-  border: 1px solid rgba(255, 255, 255, 0.28) !important;
-  border-right: 0 !important;
-  border-radius: 0 !important;
-  background: #5b9bd5 !important;
+  height: 28px !important;
+  min-width: 56px !important;
+  padding: 0 var(--space-2) !important;
+  border: 1px solid var(--color-primary-6) !important;
+  border-radius: var(--radius-sm) !important;
+  background: var(--color-primary-6) !important;
   color: #fff !important;
-  font-size: var(--font-size-sm) !important;
+  font-size: var(--font-size-xs) !important;
   font-weight: var(--font-weight-medium) !important;
 }
 
@@ -385,12 +394,12 @@ main tbody tr:hover td {
 }
 
 .chart-filter-source-hidden > div:last-child > div:first-child button:first-child {
-  border-radius: var(--radius-sm) 0 0 var(--radius-sm) !important;
+  border-radius: var(--radius-sm) !important;
 }
 
 .chart-filter-source-hidden > div:last-child > div:first-child button:last-child {
-  border-right: 1px solid rgba(255, 255, 255, 0.28) !important;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0 !important;
+  border-right: 1px solid var(--color-primary-6) !important;
+  border-radius: var(--radius-sm) !important;
 }
 
 .chart-filter-source-hidden > div:last-child label,
@@ -401,7 +410,7 @@ main tbody tr:hover td {
 }
 
 .chart-point-control {
-  gap: var(--space-2) !important;
+  gap: var(--space-1) !important;
   padding-left: var(--space-3) !important;
   border-left: 1px solid var(--color-border-secondary) !important;
 }
@@ -863,6 +872,53 @@ main > div.grid > div p:first-child {
 .single-detail-store span {
   color: var(--color-text-tertiary);
   font-size: var(--font-size-xs);
+}
+
+.discount-detail-page {
+  display: grid !important;
+  gap: var(--space-3) !important;
+}
+
+.discount-detail-page > div {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.discount-detail-page [class*="bg-white"],
+.discount-detail-page [class*="shadow"] {
+  box-shadow: var(--shadow-1) !important;
+}
+
+.discount-detail-page [class*="p-6"] {
+  padding: var(--space-4) !important;
+}
+
+.discount-detail-page [class*="p-5"] {
+  padding: var(--space-4) !important;
+}
+
+.discount-detail-page [class*="gap-6"] {
+  gap: var(--space-4) !important;
+}
+
+.discount-detail-page [class*="gap-4"] {
+  gap: var(--space-3) !important;
+}
+
+.discount-detail-page h2 {
+  margin-bottom: var(--space-2) !important;
+  font-size: var(--font-size-xl) !important;
+  line-height: 1.35 !important;
+}
+
+.discount-detail-page h3 {
+  font-size: var(--font-size) !important;
+  line-height: 1.35 !important;
+}
+
+.discount-detail-page p,
+.discount-detail-page span {
+  line-height: 1.45 !important;
 }
 
 .audit-modal {

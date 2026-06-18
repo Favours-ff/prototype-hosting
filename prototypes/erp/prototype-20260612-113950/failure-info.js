@@ -516,6 +516,7 @@
     if (!store) return;
 
     const detailRoot = heading.closest("main > div") || heading.parentElement?.parentElement?.parentElement;
+    detailRoot?.classList.add("discount-detail-page");
     const storeBlock = [...(detailRoot?.querySelectorAll("div") || [])].find((item) =>
       item.className.includes("col-span-2") && item.textContent.includes("生效店铺")
     );
@@ -703,18 +704,38 @@
     );
     if (!heading) return;
     const detailRoot = heading.closest("main > div") || heading.parentElement?.parentElement?.parentElement;
+    detailRoot?.classList.add("discount-detail-page");
     if (!detailRoot || detailRoot.querySelector("[data-failure-detail]")) return;
     const firstPanel = heading.closest(".bg-white") || detailRoot.firstElementChild;
     firstPanel?.insertAdjacentElement("afterend", createDetailPanel());
   };
 
   const removeOperatorIrrelevantDetailBlocks = () => {
-    ["状态映射", "接口与异常追踪"].forEach((title) => {
-      [...document.querySelectorAll("h3, h4, div, p")].forEach((node) => {
-        if (node.textContent.trim() !== title) return;
-        const card = node.closest("[class*='bg-white'], [class*='border']");
-        if (card && card.parentElement) card.remove();
-      });
+    const detailHeading = [...document.querySelectorAll("h2")].find((item) =>
+      Object.keys(singleStoreByActivity).includes(item.textContent.trim()) || item.textContent.trim() === failedActivityName
+    );
+    const detailRoot = detailHeading?.closest("main > div") || detailHeading?.parentElement?.parentElement?.parentElement;
+    detailRoot?.classList.add("discount-detail-page");
+    if (!detailRoot) return;
+
+    [...detailRoot.querySelectorAll("[class*='bg-white'], [class*='shadow'], [class*='border']")].forEach((card) => {
+      if (card.dataset.operatorIrrelevantRemoved === "true") return;
+      const text = card.textContent.replace(/\s+/g, "");
+      const shouldRemove =
+        text.includes("状态映射") ||
+        text.includes("ERP统一状态") ||
+        text.includes("平台原始类型") ||
+        text.includes("平台原始状态") ||
+        text.includes("接口与异常追踪") ||
+        text.includes("主要创建接口") ||
+        text.includes("/api/v2/discount/add_discount") ||
+        text.includes("request_id") ||
+        text.includes("审批详情") ||
+        text.includes("提交审核") ||
+        text.includes("审核通过");
+      if (!shouldRemove) return;
+      card.dataset.operatorIrrelevantRemoved = "true";
+      card.remove();
     });
   };
 
