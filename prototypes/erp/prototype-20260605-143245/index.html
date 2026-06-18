@@ -5,25 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>速卖通全托管商品</title>
   <link rel="stylesheet" href="../../ui-library/tokens.css">
-  <link rel="stylesheet" href="./styles.css?v=20260610-log2">
+  <link rel="stylesheet" href="./styles.css?v=20260617-date-range-single">
 </head>
 <body>
   <div class="c-shell" data-component="ErpShell">
-    <aside class="c-shell__sider">
-      <div class="c-shell__brand">SEABOSS ERP</div>
-      <nav class="c-shell__menu">
-        <div class="c-shell__menu-item">首页</div>
-        <div class="c-shell__menu-item c-shell__menu-item--open">商品管理</div>
-        <div class="c-shell__menu-sub c-shell__menu-sub--active">全托管商品</div>
-        <div class="c-shell__menu-sub">本地商品</div>
-        <div class="c-shell__menu-item">订单管理</div>
-        <div class="c-shell__menu-item">库存管理</div>
-      </nav>
-    </aside>
-
     <div class="c-shell__main">
       <header class="c-shell__header">
-        <button class="btn btn--text c-shell__collapse" id="collapseBtn" aria-label="折叠菜单">☰</button>
         <div class="c-shell__header-title">商品管理</div>
         <div class="c-shell__header-actions"><span>帮助</span><span>通知</span><b>王更</b></div>
       </header>
@@ -123,6 +110,57 @@
         <div><h2>操作日志</h2><p id="logSubtitle"></p></div>
         <button class="btn btn--text c-log-close" data-close="log" aria-label="关闭">×</button>
       </header>
+      <div class="c-log-filter">
+        <div class="c-log-filter__field c-log-filter__field--date">
+          <label>操作时间</label>
+          <div class="c-date-range" id="logDateRange">
+            <input class="input c-date-range__input" id="logDateRangeInput" placeholder="请选择操作时间" readonly>
+            <button class="btn btn--text c-date-range__arrow" id="logDateArrow" aria-label="展开日期选择">›</button>
+            <div class="c-date-panel" id="logDatePanel">
+              <div class="c-date-panel__range">
+                <input class="input" id="logStartDate" placeholder="开始日期" readonly>
+                <input class="input" id="logEndDate" placeholder="结束时间" readonly>
+              </div>
+              <div class="c-date-panel__head"><button class="c-action" data-date-nav="prev">‹‹</button><button class="c-action" data-date-nav="prevMonth">‹</button><b id="logDateTitle">2026 年 6 月</b><span></span></div>
+              <div class="c-date-panel__week"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+              <div class="c-date-panel__days" id="logDateDays"></div>
+            </div>
+          </div>
+        </div>
+        <div class="c-log-filter__field">
+          <label>操作模块</label>
+          <div class="c-select">
+            <button class="c-select__trigger" data-select="logModule"><span>全部模块</span><i></i></button>
+            <div class="c-select__popup" data-popup="logModule">
+              <button class="c-action" data-value="全部模块">全部模块</button>
+              <button class="c-action" data-value="商品同步">商品同步</button>
+              <button class="c-action" data-value="库存同步">库存同步</button>
+              <button class="c-action" data-value="货品绑定">货品绑定</button>
+              <button class="c-action" data-value="审核状态">审核状态</button>
+              <button class="c-action" data-value="库存同步规则">库存同步规则</button>
+              <button class="c-action" data-value="商品列表同步">商品列表同步</button>
+            </div>
+          </div>
+        </div>
+        <div class="c-log-filter__field">
+          <label>操作人</label>
+          <div class="c-select">
+            <button class="c-select__trigger" data-select="logOperator"><span>全部操作人</span><i></i></button>
+            <div class="c-select__popup" data-popup="logOperator">
+              <button class="c-action" data-value="全部操作人">全部操作人</button>
+              <button class="c-action" data-value="王更">王更</button>
+              <button class="c-action" data-value="李明">李明</button>
+              <button class="c-action" data-value="张敏">张敏</button>
+              <button class="c-action" data-value="马丽">马丽</button>
+              <button class="c-action" data-value="系统任务">系统任务</button>
+            </div>
+          </div>
+        </div>
+        <div class="c-log-filter__actions">
+          <button class="btn btn--primary" id="logSearchBtn">查询</button>
+          <button class="btn" id="logResetBtn">重置</button>
+        </div>
+      </div>
       <div class="c-log-body">
         <div class="c-log-table-wrap">
           <table class="c-log-table">
@@ -169,7 +207,7 @@
   </div>
 
   <div class="c-message" id="message"></div>
-  <script src="./data.js?v=20260610-log"></script>
-  <script src="./script.js?v=20260610-log"></script>
+  <script src="./data.js?v=20260617-date-range-single"></script>
+  <script src="./script.js?v=20260617-date-range-single"></script>
 </body>
 </html>

@@ -21,7 +21,12 @@ window.PRODUCTS = [
     id:"1005012097534664", title:"Buck Converter 600W 25A DC Power Supply", category:"工具 / DC 电源", store:"SMT03全托管", operator:"张敏", stocking:"JIT 即时补货",
     status:"审核不通过", statusText:"商品标题包含平台限制词，请修改后重新提交审核。", price:"CNY 29.80", purchase:"CNY 21.30", platformStock:0, localStock:0, sales:7, salesTrend:"环比 -22%",
     binding:"未绑定", bindingText:"未绑定 4", change:"审核结果更新", changeTime:"09:42", skuCount:4,
-    skus:[{name:"BUCK-600W-25A",online:"AEO-1005012097534664-25A",local:"SKU-BUCK-600W-25A",code:"070625",barcode:"697113957001",goodsId:"979113957001",spec:"25A",status:"停售",price:"CNY 29.80",platform:0,localStock:0,warehouse:"CSC207",binding:"未绑定",method:"无库存兜底"}]
+    skus:[
+      {name:"BUCK-600W-25A",online:"AEO-1005012097534664-25A",local:"SKU-BUCK-600W-25A",code:"070625",barcode:"697113957001",goodsId:"979113957001",spec:"25A",status:"停售",price:"CNY 29.80",platform:0,localStock:0,warehouse:"CSC207",binding:"未绑定",method:"无库存兜底"},
+      {name:"BUCK-600W-15A",online:"AEO-1005012097534664-15A",local:"SKU-BUCK-600W-15A",code:"070615",barcode:"697113957002",goodsId:"979113957002",spec:"15A",status:"停售",price:"CNY 25.80",platform:0,localStock:0,warehouse:"CSC207",binding:"未绑定",method:"无库存兜底"},
+      {name:"BUCK-600W-20A",online:"AEO-1005012097534664-20A",local:"SKU-BUCK-600W-20A",code:"070620",barcode:"697113957003",goodsId:"979113957003",spec:"20A",status:"停售",price:"CNY 27.80",platform:0,localStock:0,warehouse:"CSC207",binding:"未绑定",method:"无库存兜底"},
+      {name:"BUCK-600W-30A",online:"AEO-1005012097534664-30A",local:"SKU-BUCK-600W-30A",code:"070630",barcode:"697113957004",goodsId:"979113957004",spec:"30A",status:"停售",price:"CNY 32.80",platform:0,localStock:0,warehouse:"CSC207",binding:"未绑定",method:"无库存兜底"}
+    ]
   }
 ];
 
