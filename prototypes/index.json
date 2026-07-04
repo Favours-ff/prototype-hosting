@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-18T00:00:00+08:00",
-  "count": 8,
+  "generatedAt": "2026-07-04T17:45:24+08:00",
+  "count": 9,
   "prototypes": [
     {
       "prototypeId": "prototype-20260606-141530",
@@ -89,6 +89,17 @@
       "updatedAt": "2026-06-12T11:39:50+08:00",
       "path": "prototypes/erp/prototype-20260612-113950",
       "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260612-113950/"
+    },
+    {
+      "prototypeId": "prototype-20260704-174519",
+      "title": "售后挽损模块-包裹丢失与运费多扣最终逻辑",
+      "businessSystem": "ERP售后挽损",
+      "owner": "Favours-ff",
+      "sourcePath": "prototype\\after-sales-loss-recovery-logistics",
+      "createdAt": "2026-07-04T17:45:19+08:00",
+      "updatedAt": "2026-07-04T17:45:19+08:00",
+      "path": "prototypes/erp/prototype-20260704-174519",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260704-174519/"
     }
   ]
 }
