@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>售后挽损模块 - 包裹丢失与运费多扣最终逻辑 v1.1</title>
+<link rel="stylesheet" href="../../ui-library/tokens.css">
+<style>
+  :root{
+    --bg:#f5f5f5;--surface:#fff;--border:#e8e8e8;--text:#1f1f1f;--t2:#666;--t3:#999;
+    --primary:#1677ff;--primary-bg:#e6f4ff;--success:#52c41a;--success-bg:#f6ffed;
+    --warning:#faad14;--warning-bg:#fffbe6;--error:#ff4d4f;--error-bg:#fff2f0;
+    --purple:#722ed1;--purple-bg:#f9f0ff;--cyan:#13c2c2;--cyan-bg:#e6fffb;--radius:8px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.72;padding:40px 20px;}
+  .container{max-width:1080px;margin:0 auto;}
+  .header{background:linear-gradient(135deg,#1677ff,#722ed1);color:#fff;padding:40px;border-radius:var(--radius);margin-bottom:24px;text-align:center;}
+  .header h1{font-size:28px;margin-bottom:10px;font-weight:700;}
+  .header p{font-size:13px;opacity:.92;margin-top:4px;}
+  .meta-bar{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:16px;}
+  .meta-bar span{background:rgba(255,255,255,.18);padding:4px 12px;border-radius:20px;font-size:12px;}
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 28px;margin-bottom:24px;}
+  .toc h2{font-size:16px;margin-bottom:10px;}
+  .toc ol{padding-left:20px;font-size:13px;line-height:2;}
+  .toc a{color:var(--primary);text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+  section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:30px;margin-bottom:20px;}
+  section h2{font-size:20px;margin-bottom:4px;border-left:4px solid var(--primary);padding-left:12px;}
+  section .desc{font-size:13px;color:var(--t3);margin:6px 0 18px;padding-left:16px;}
+  section h3{font-size:16px;margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+  section h4{font-size:14px;margin:18px 0 6px;color:#333;}
+  p{font-size:13.5px;margin:8px 0;}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0 16px;}
+  th{background:#fafafa;text-align:left;padding:9px 12px;font-weight:600;border-bottom:2px solid var(--border);font-size:12px;color:var(--t2);}
+  td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+  td code,p code,li code{background:#f0f0f0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:'SF Mono',Consolas,monospace;}
+  ul,ol{padding-left:22px;margin:6px 0 12px;}
+  li{font-size:13.5px;margin:5px 0;}
+  .card{padding:13px 16px;border-radius:0 var(--radius) var(--radius) 0;margin:12px 0;font-size:13px;border-left:3px solid var(--primary);background:var(--primary-bg);}
+  .card.warn{border-left-color:var(--warning);background:var(--warning-bg);}
+  .card.danger{border-left-color:var(--error);background:var(--error-bg);}
+  .card.ok{border-left-color:var(--success);background:var(--success-bg);}
+  .card.purple{border-left-color:var(--purple);background:var(--purple-bg);}
+  .card.cyan{border-left-color:var(--cyan);background:var(--cyan-bg);}
+  .tag{display:inline-block;padding:2px 9px;border-radius:4px;font-size:11.5px;font-weight:600;margin:2px 4px 2px 0;}
+  .t-ok{background:var(--success-bg);color:#237804;}
+  .t-api{background:var(--primary-bg);color:var(--primary);}
+  .t-warn{background:var(--warning-bg);color:#ad6800;}
+  .t-risk{background:var(--error-bg);color:#a8071a;}
+  .t-hold{background:#f0f0f0;color:var(--t2);}
+  .fig{border:1px solid var(--border);border-radius:var(--radius);background:#fff;padding:18px;margin:14px 0;text-align:center;}
+  .fig svg{max-width:100%;height:auto;}
+  .fig figcaption{font-size:12px;color:var(--t3);margin-top:8px;}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:12px 0;}
+  .mini{border:1px solid var(--border);border-radius:var(--radius);padding:14px;background:#fff;}
+  .mini h4{margin-top:0;color:#111;}
+  .checkpoint{background:var(--success-bg);border:1px dashed var(--success);border-radius:var(--radius);padding:18px 22px;margin:20px 0 0;font-size:14px;}
+  .checkpoint b{color:#237804;}
+  .footer{text-align:center;color:var(--t3);font-size:12px;padding:24px 0 12px;}
+  .anchor{display:block;position:relative;top:-20px;visibility:hidden;}
+  .formula{background:#fbfbfb;border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-family:'SF Mono',Consolas,monospace;font-size:12px;color:#333;margin:10px 0;white-space:pre-wrap;}
+  @media (max-width:760px){body{padding:20px 12px}.header{padding:28px 18px}.grid{grid-template-columns:1fr}section{padding:22px 16px}table{font-size:12px}}
+</style>
+</head>
+<body>
+<div class="c-shell" aria-hidden="true" style="display:none"></div>
+<div class="container">
+
+  <div class="header">
+    <h1>售后挽损模块 - 包裹丢失与运费多扣最终逻辑</h1>
+    <p>跨境电商 ERP · Shopee / TikTok Shop · 物流与财务核查口径</p>
+    <div class="meta-bar">
+      <span>版本 v1.1</span>
+      <span>最终口径</span>
+      <span>输出：Excel 结果表 + 接口审计记录</span>
+      <span>范围：包裹丢失赔付 / 包裹损坏赔付 / 运费多扣</span>
+    </div>
+  </div>
+
+  <div class="toc">
+    <h2>目录</h2>
+    <ol>
+      <li><a href="#s0">0 · 目标与边界</a></li>
+      <li><a href="#s1">1 · 总体处理链路</a></li>
+      <li><a href="#s2">2 · 包裹丢失识别逻辑</a></li>
+      <li><a href="#s3">3 · 包裹丢失赔付判断逻辑</a></li>
+      <li><a href="#s4">4 · 运费多扣识别逻辑</a></li>
+      <li><a href="#s5">5 · 退货退款场景拆分</a></li>
+      <li><a href="#s6">6 · 结果表字段模板</a></li>
+      <li><a href="#s7">7 · 风险点与校验规则</a></li>
+      <li><a href="#s8">8 · 程序落地建议</a></li>
+    </ol>
+  </div>
+
+  <section id="s0"><span class="anchor"></span>
+    <h2>0 · 目标与边界</h2>
+    <p class="desc">明确这个模块要解决什么问题，以及哪些数据不能直接下结论。</p>
+    <table>
+      <tr><th style="width:150px">目标</th><th>说明</th><th>最终动作</th></tr>
+      <tr>
+        <td>包裹流失</td>
+        <td>识别物流已判定丢失或损坏无法派送的订单，并判断平台是否已经赔付。</td>
+        <td><span class="tag t-ok">已赔付</span><span class="tag t-warn">需索赔</span><span class="tag t-risk">接口异常待重试</span></td>
+      </tr>
+      <tr>
+        <td>运费多扣</td>
+        <td>识别实际运费高于预估运费的订单，并拆分未退货、退货退款两类。</td>
+        <td><span class="tag t-api">输出多扣金额</span><span class="tag t-api">输出 SKU</span><span class="tag t-api">输出正反向物流金额</span></td>
+      </tr>
+    </table>
+    <div class="card warn">
+      核心原则：所有财务金额必须以平台最终结算后的数据为准。未结算订单只能作为预估数据，不进入最终索赔或多扣判断。
+    </div>
+  </section>
+
+  <section id="s1"><span class="anchor"></span>
+    <h2>1 · 总体处理链路</h2>
+    <p class="desc">先识别风险订单，再调用财务接口确认金额，最后生成可执行结果表。</p>
+    <figure class="fig">
+      <svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" role="img">
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,6 L9,3 z" fill="#8c8c8c"/>
+          </marker>
+        </defs>
+        <rect x="40" y="40" width="160" height="70" rx="10" fill="#e6f4ff" stroke="#91caff"/>
+        <text x="120" y="70" text-anchor="middle" font-size="15" font-weight="700" fill="#0958d9">订单基础数据</text>
+        <text x="120" y="92" text-anchor="middle" font-size="12" fill="#666">订单 / 店铺 / SKU / 物流</text>
+
+        <rect x="270" y="40" width="180" height="70" rx="10" fill="#fffbe6" stroke="#ffe58f"/>
+        <text x="360" y="70" text-anchor="middle" font-size="15" font-weight="700" fill="#ad6800">风险识别</text>
+        <text x="360" y="92" text-anchor="middle" font-size="12" fill="#666">丢件 / 运费多扣</text>
+
+        <rect x="520" y="40" width="190" height="70" rx="10" fill="#f9f0ff" stroke="#d3adf7"/>
+        <text x="615" y="70" text-anchor="middle" font-size="15" font-weight="700" fill="#531dab">结算确认</text>
+        <text x="615" y="92" text-anchor="middle" font-size="12" fill="#666">escrow / statement</text>
+
+        <rect x="780" y="40" width="180" height="70" rx="10" fill="#f6ffed" stroke="#b7eb8f"/>
+        <text x="870" y="70" text-anchor="middle" font-size="15" font-weight="700" fill="#237804">结果表</text>
+        <text x="870" y="92" text-anchor="middle" font-size="12" fill="#666">已赔 / 待索赔 / 多扣</text>
+
+        <line x1="200" y1="75" x2="270" y2="75" stroke="#8c8c8c" stroke-width="2" marker-end="url(#arrow)"/>
+        <line x1="450" y1="75" x2="520" y2="75" stroke="#8c8c8c" stroke-width="2" marker-end="url(#arrow)"/>
+        <line x1="710" y1="75" x2="780" y2="75" stroke="#8c8c8c" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <rect x="90" y="180" width="820" height="110" rx="12" fill="#fafafa" stroke="#d9d9d9"/>
+        <text x="500" y="208" text-anchor="middle" font-size="15" font-weight="700" fill="#333">关键校验点</text>
+        <text x="160" y="240" font-size="13" fill="#333">1. 订单状态不能单独作为结论，必须结合物流状态和财务结算。</text>
+        <text x="160" y="265" font-size="13" fill="#333">2. TikTok 赔付不能只看订单维度 statement，要扫描有 adjustment 的 statement。</text>
+        <text x="160" y="290" font-size="13" fill="#333">3. 运费多扣必须拆分未退货、退货退款，退货退款需展示正向和反向物流金额。</text>
+      </svg>
+      <figcaption>总链路：订单与物流识别风险，财务接口确认最终金额，结果表承接后续索赔动作。</figcaption>
+    </figure>
+  </section>
+
+  <section id="s2"><span class="anchor"></span>
+    <h2>2 · 包裹丢失识别逻辑</h2>
+    <p class="desc">先判断包裹是否确实丢失，再进入赔付核查。</p>
+
+    <h3>2.1 基础筛选</h3>
+    <table>
+      <tr><th style="width:180px">条件</th><th>最终口径</th></tr>
+      <tr><td>时间范围</td><td>最近一个月订单，后续程序可配置为 <code>start_time</code> / <code>end_time</code>。</td></tr>
+      <tr><td>平台范围</td><td>Shopee、TikTok Shop。</td></tr>
+      <tr><td>店铺范围</td><td>按站点和指定店铺执行，店铺授权需要有效。</td></tr>
+      <tr><td>订单范围</td><td>必须存在订单号、店铺 ID、平台、站点、物流单号或包裹信息。</td></tr>
+    </table>
+
+    <h3>2.2 命中规则</h3>
+    <table>
+      <tr><th style="width:180px">平台</th><th>接口 / 数据源</th><th>命中条件</th></tr>
+      <tr>
+        <td>Shopee</td>
+        <td><code>order/get_order_detail</code><br><code>logistics/get_tracking_info</code></td>
+        <td>
+          <code>package_list.logistics_status = LOGISTICS_LOST</code><br>
+          或轨迹中出现 <code>LOST</code>、<code>parcel lost</code>、<code>package lost</code><br>
+          或取消原因明确为包裹丢失 / 包裹损坏。
+        </td>
+      </tr>
+      <tr>
+        <td>TikTok Shop</td>
+        <td>订单详情 + 履约物流轨迹</td>
+        <td>
+          物流状态或轨迹中出现 <code>package lost</code>、<code>parcel lost</code>、<code>lost</code>、<code>damaged</code>、<code>cannot be delivered</code><br>
+          或后台订单显示“包裹丢失 / 包裹损坏”。
+        </td>
+      </tr>
+    </table>
+
+    <h3>2.3 包裹流失二级分类</h3>
+    <table>
+      <tr><th style="width:120px">一级归类</th><th style="width:140px">二级类型</th><th>命中关键词 / 状态</th><th>处理口径</th></tr>
+      <tr>
+        <td>丢件</td>
+        <td>物流丢失</td>
+        <td><code>lost</code>、<code>parcel lost</code>、<code>package lost</code>、<code>LOGISTICS_LOST</code>、包裹丢失、丢件、遗失</td>
+        <td>进入丢件赔付核查。</td>
+      </tr>
+      <tr>
+        <td>丢件</td>
+        <td>包裹损坏</td>
+        <td><code>damaged</code>、<code>parcel damaged</code>、<code>package damaged</code>、<code>cannot be delivered</code>、包裹损坏、破损、损坏无法派送</td>
+        <td>归类仍为丢件，进入同一套赔付核查。</td>
+      </tr>
+    </table>
+
+    <div class="card ok">
+      案例订单 <code>26061437KDKPEQ</code>：轨迹显示 <code>Our logistics partner has reported that the parcel has been damaged and cannot be delivered</code>。最终归类为：<code>lost_category = 丢件</code>，<code>lost_sub_type = 包裹损坏</code>，命中关键词为 <code>damaged / cannot be delivered</code>。
+    </div>
+
+    <div class="card danger">
+      取消订单不能直接算丢件。必须结合取消原因、物流轨迹、平台丢件状态判断。单纯买家取消、卖家取消、超时取消不进入丢件赔付核查。
+    </div>
+  </section>
+
+  <section id="s3"><span class="anchor"></span>
+    <h2>3 · 包裹丢失赔付判断逻辑</h2>
+    <p class="desc">这里是最终版口径，尤其修正了 TikTok 赔付不在订单维度 statement 中的问题。</p>
+
+    <h3>3.1 Shopee 赔付判断</h3>
+    <table>
+      <tr><th style="width:180px">项目</th><th>口径</th></tr>
+      <tr><td>接口</td><td><code>payment/get_escrow_detail</code></td></tr>
+      <tr><td>赔付记录来源</td><td><code>order_adjustment</code> 或 escrow detail 中的调整记录。</td></tr>
+      <tr><td>赔付原因识别</td><td>原因或描述包含 <code>parcel lost</code>、<code>lost compensation</code>、<code>seller_lost_compensation</code>、<code>damaged parcels compensation</code> 等。</td></tr>
+      <tr><td>金额字段</td><td>取平台返回的赔付调整金额，币种取 escrow 结算币种。</td></tr>
+      <tr><td>结论</td><td>存在赔付记录则 <code>compensation_completed = Y</code>；不存在则 <code>N</code>。</td></tr>
+    </table>
+
+    <h3>3.2 TikTok Shop 赔付判断</h3>
+    <div class="card warn">
+      TikTok 不能只调用 <code>/finance/202501/orders/{order_id}/statement_transactions</code>。这个接口只能确认订单自身结算，不一定能看到后续进入其他 statement 的赔付 adjustment。
+    </div>
+    <table>
+      <tr><th style="width:180px">步骤</th><th>接口 / 规则</th><th>说明</th></tr>
+      <tr>
+        <td>1. 拉取 statement</td>
+        <td><code>GET /finance/202309/statements</code></td>
+        <td>按店铺和时间范围拉取 statement，参数必须包含 <code>sort_field=statement_time</code>。</td>
+      </tr>
+      <tr>
+        <td>2. 筛选有调整的 statement</td>
+        <td><code>adjustment_amount != 0</code></td>
+        <td>只扫描存在调整金额的 statement，减少调用量。</td>
+      </tr>
+      <tr>
+        <td>3. 拉取 statement 明细</td>
+        <td><code>GET /finance/202501/statements/{statement_id}/statement_transactions</code></td>
+        <td>需要分页拉全，参数使用 <code>sort_field=order_create_time</code>。</td>
+      </tr>
+      <tr>
+        <td>4. 匹配赔付交易</td>
+        <td><code>type = LOGISTICS_REIMBURSEMENT</code><br><code>adjustment_order_id = 当前订单号</code></td>
+        <td>命中后说明该订单已完成物流赔付。</td>
+      </tr>
+      <tr>
+        <td>5. 取金额</td>
+        <td><code>adjustment_amount</code> 或 <code>settlement_amount</code></td>
+        <td>币种取 statement 的 <code>currency</code>。</td>
+      </tr>
+    </table>
+
+    <div class="formula">TikTok 已赔付判断：
+存在 statement_transactions 行：
+  type = LOGISTICS_REIMBURSEMENT
+  adjustment_order_id = order_id
+
+则：
+  compensation_completed = Y
+  actual_compensation_amount = adjustment_amount 或 settlement_amount
+  compensation_reason = LOGISTICS_REIMBURSEMENT</div>
+
+    <h3>3.3 赔付结果状态</h3>
+    <table>
+      <tr><th style="width:180px">状态</th><th>判定</th><th>动作</th></tr>
+      <tr><td><span class="tag t-ok">已完成赔付</span></td><td>接口存在明确赔付记录。</td><td>无需索赔。</td></tr>
+      <tr><td><span class="tag t-warn">未发现赔付记录</span></td><td>接口调用成功，但未找到赔付 adjustment。</td><td>需要发起或跟进索赔。</td></tr>
+      <tr><td><span class="tag t-risk">接口异常</span></td><td>接口超时、权限不足、token 失效、返回错误。</td><td>必须重试，不允许当作未赔付。</td></tr>
+    </table>
+  </section>
+
+  <section id="s4"><span class="anchor"></span>
+    <h2>4 · 运费多扣识别逻辑</h2>
+    <p class="desc">核心是判断物流业者实际收取运费是否高于平台预估运费。</p>
+
+    <h3>4.1 前置条件：必须已结算</h3>
+    <table>
+      <tr><th style="width:180px">平台</th><th>结算判断接口</th><th>最终口径</th></tr>
+      <tr>
+        <td>Shopee</td>
+        <td><code>payment/get_escrow_list</code></td>
+        <td>只有已结算订单，<code>get_escrow_detail</code> 返回的费用才是真实最终费用；未结算订单不进入最终多扣判断。</td>
+      </tr>
+      <tr>
+        <td>TikTok Shop</td>
+        <td>Finance statement / transaction</td>
+        <td>只使用 <code>SETTLED</code> 后的 statement 数据进行判断。</td>
+      </tr>
+    </table>
+
+    <h3>4.2 Shopee 多扣字段</h3>
+    <table>
+      <tr><th style="width:260px">字段</th><th>含义</th><th>用途</th></tr>
+      <tr><td><code>estimated_shipping_fee</code></td><td>预估运费</td><td>判断基准。</td></tr>
+      <tr><td><code>actual_shipping_fee</code></td><td>物流业者实际收取运费</td><td>与预估运费比较。</td></tr>
+      <tr><td><code>buyer_paid_shipping_fee</code></td><td>买家支付运费</td><td>计算卖家实际承担影响。</td></tr>
+      <tr><td><code>shopee_shipping_rebate</code></td><td>Shopee 运费回扣 / 补贴</td><td>抵减卖家承担费用。</td></tr>
+      <tr><td><code>seller_paid_shipping_fee_sst</code></td><td>卖家支付运费税费</td><td>计算完整卖家承担金额。</td></tr>
+    </table>
+
+    <div class="formula">运费多扣命中：
+actual_shipping_fee > estimated_shipping_fee
+
+运费多扣金额：
+shipping_overcharge_amount = actual_shipping_fee - estimated_shipping_fee
+
+卖家实际承担影响：
+seller_shipping_cost =
+  actual_shipping_fee
+  - buyer_paid_shipping_fee
+  - shopee_shipping_rebate
+  + seller_paid_shipping_fee_sst</div>
+
+    <div class="card cyan">
+      后台“运费总额”是多个费用项汇总后的展示，不等于单纯多扣金额。判断多扣必须看“物流业者实际收取运费”是否高于“预估运费”。
+    </div>
+
+    <h3>4.3 多扣原因</h3>
+    <table>
+      <tr><th style="width:180px">原因来源</th><th>处理方式</th></tr>
+      <tr><td>接口返回重量 / 尺寸差异</td><td>记录 <code>listed_weight</code>、<code>actual_weight</code>、<code>listed_dimension</code>、<code>actual_dimension</code>。</td></tr>
+      <tr><td>接口未返回原因</td><td>写入备注：后台显示多扣标签，但开放接口未返回完整原因；需后台详情补充。</td></tr>
+      <tr><td>常见原因</td><td>实际商品重量 / 尺寸高于刊登商品重量 / 尺寸。</td></tr>
+    </table>
+  </section>
+
+  <section id="s5"><span class="anchor"></span>
+    <h2>5 · 退货退款场景拆分</h2>
+    <p class="desc">运费多扣结果表必须拆成未退货和退货退款两类，避免正反向物流混在一起。</p>
+
+    <div class="grid">
+      <div class="mini">
+        <h4>未产生退货</h4>
+        <p>判断条件：</p>
+        <ul>
+          <li>无 return / refund 记录。</li>
+          <li>无 reverse shipping fee。</li>
+          <li>订单正常结算。</li>
+        </ul>
+        <p>输出重点：SKU、预估运费、实际运费、买家支付运费、平台补贴、多扣金额。</p>
+      </div>
+      <div class="mini">
+        <h4>产生退货退款</h4>
+        <p>判断条件：</p>
+        <ul>
+          <li>存在 return / refund 记录。</li>
+          <li>或存在 reverse shipping fee / return shipping fee。</li>
+        </ul>
+        <p>输出重点：SKU、正向物流金额、反向物流金额、退款金额、多扣金额。</p>
+      </div>
+    </div>
+
+    <table>
+      <tr><th style="width:220px">字段</th><th>口径</th></tr>
+      <tr><td>正向物流金额</td><td><code>forward_shipping_fee = actual_shipping_fee</code></td></tr>
+      <tr><td>反向物流金额</td><td><code>reverse_shipping_fee = return_shipping_fee / reverse_shipping_fee</code></td></tr>
+      <tr><td>接口无反向物流字段</td><td>写入“接口未返回反向物流金额”，不允许用 0 代替未知。</td></tr>
+    </table>
+  </section>
+
+  <section id="s6"><span class="anchor"></span>
+    <h2>6 · 结果表字段模板</h2>
+    <p class="desc">建议最终 Excel 三个结果表，字段尽量保留原始数据与接口核查状态。</p>
+
+    <h3>6.1 01_包裹丢失赔付核查</h3>
+    <table>
+      <tr><th>字段</th><th>说明</th></tr>
+      <tr><td><code>platform</code>、<code>site</code>、<code>store</code>、<code>shop_id</code></td><td>平台、站点、店铺名称、店铺 ID。</td></tr>
+      <tr><td><code>order_id</code>、<code>tracking_no</code>、<code>logistics_channel</code>、<code>carrier</code></td><td>订单号、物流单号、物流渠道、承运商。</td></tr>
+      <tr><td><code>lost_category</code>、<code>lost_sub_type</code></td><td>一级归类固定为“丢件”；二级类型区分“物流丢失 / 包裹损坏”。</td></tr>
+      <tr><td><code>latest_tracking_status</code>、<code>latest_tracking_desc</code></td><td>最后物流状态和描述。</td></tr>
+      <tr><td><code>lost_rule_hit</code>、<code>hit_keyword</code></td><td>丢件规则是否命中、命中关键词。</td></tr>
+      <tr><td><code>compensation_completed</code></td><td>是否已完成赔付，Y / N。</td></tr>
+      <tr><td><code>expected_compensation_amount</code></td><td>应赔付金额，无法确定时留空并备注。</td></tr>
+      <tr><td><code>actual_compensation_amount</code></td><td>接口确认的实际赔付金额。</td></tr>
+      <tr><td><code>compensation_currency</code></td><td>赔付币种。</td></tr>
+      <tr><td><code>compensation_reason</code></td><td>赔付原因，如 <code>LOGISTICS_REIMBURSEMENT</code>。</td></tr>
+      <tr><td><code>claim_status</code>、<code>claim_action</code></td><td>索赔状态和下一步动作。</td></tr>
+      <tr><td><code>api_result</code>、<code>api_error</code>、<code>remark</code></td><td>接口结果、错误、备注。</td></tr>
+    </table>
+
+    <h3>6.2 02_运费多扣_未退货</h3>
+    <table>
+      <tr><th>字段</th><th>说明</th></tr>
+      <tr><td><code>order_id</code>、<code>platform</code>、<code>site</code>、<code>store</code></td><td>订单基础信息，必须展示店铺名称。</td></tr>
+      <tr><td><code>tracking_no</code>、<code>logistics_channel</code>、<code>carrier</code></td><td>物流单号、物流渠道、承运商。</td></tr>
+      <tr><td><code>sku</code></td><td>销售 SKU / 发货 SKU，按订单商品行展示。</td></tr>
+      <tr><td><code>settlement_status</code></td><td>是否已结算。</td></tr>
+      <tr><td><code>estimated_shipping_fee</code></td><td>预估运费。</td></tr>
+      <tr><td><code>actual_shipping_fee</code></td><td>物流业者实际收取运费。</td></tr>
+      <tr><td><code>buyer_paid_shipping_fee</code></td><td>买家支付运费。</td></tr>
+      <tr><td><code>platform_shipping_subsidy</code></td><td>平台运费补贴。</td></tr>
+      <tr><td><code>shipping_overcharge_amount</code></td><td>实际运费 - 预估运费。</td></tr>
+      <tr><td><code>overcharge_reason</code></td><td>多扣原因，能取则取，不能取则说明接口未返回。</td></tr>
+    </table>
+
+    <h3>6.3 03_运费多扣_退货退款</h3>
+    <table>
+      <tr><th>字段</th><th>说明</th></tr>
+      <tr><td><code>order_id</code>、<code>platform</code>、<code>site</code>、<code>store</code></td><td>订单基础信息，必须展示店铺名称。</td></tr>
+      <tr><td><code>tracking_no</code>、<code>logistics_channel</code>、<code>carrier</code></td><td>物流单号、物流渠道、承运商。</td></tr>
+      <tr><td><code>sku</code></td><td>对应 SKU。</td></tr>
+      <tr><td><code>forward_shipping_fee</code></td><td>正向物流金额。</td></tr>
+      <tr><td><code>reverse_shipping_fee</code></td><td>反向物流金额。</td></tr>
+      <tr><td><code>refund_amount</code></td><td>退款金额。</td></tr>
+      <tr><td><code>estimated_shipping_fee</code>、<code>actual_shipping_fee</code></td><td>预估运费、实际运费。</td></tr>
+      <tr><td><code>shipping_overcharge_amount</code></td><td>多扣金额。</td></tr>
+      <tr><td><code>api_result</code>、<code>api_error</code>、<code>remark</code></td><td>接口结果、错误、备注。</td></tr>
+    </table>
+  </section>
+
+  <section id="s7"><span class="anchor"></span>
+    <h2>7 · 风险点与校验规则</h2>
+    <p class="desc">这些规则用于防止误判，也是后续程序必须保留的校验点。</p>
+    <table>
+      <tr><th style="width:220px">风险点</th><th>错误做法</th><th>正确做法</th></tr>
+      <tr>
+        <td>取消订单被误判为丢件</td>
+        <td>只要订单取消就算丢件。</td>
+        <td>必须结合物流状态和取消原因，确认是包裹丢失。</td>
+      </tr>
+      <tr>
+        <td>包裹损坏漏归类</td>
+        <td>只识别 lost，不识别 damaged。</td>
+        <td>损坏且无法派送也归入“丢件”，二级类型标记为“包裹损坏”。</td>
+      </tr>
+      <tr>
+        <td>TikTok 赔付漏识别</td>
+        <td>只查订单维度 statement。</td>
+        <td>按店铺扫描有 adjustment 的 statement，再用 <code>adjustment_order_id</code> 匹配订单。</td>
+      </tr>
+      <tr>
+        <td>未结算订单金额不准</td>
+        <td>未结算也直接取 ES / escrow detail 判断。</td>
+        <td>必须先用结算接口确认已结算。</td>
+      </tr>
+      <tr>
+        <td>接口异常被当成未赔付</td>
+        <td>接口报错时写 N。</td>
+        <td>写“接口异常待重试”，不进入最终结论。</td>
+      </tr>
+      <tr>
+        <td>反向物流金额缺失</td>
+        <td>接口没返回就写 0。</td>
+        <td>写“接口未返回反向物流金额”。</td>
+      </tr>
+    </table>
+  </section>
+
+  <section id="s8"><span class="anchor"></span>
+    <h2>8 · 程序落地建议</h2>
+    <p class="desc">后续写成系统功能时，建议按任务批次执行，并保留接口审计。</p>
+    <ol>
+      <li>先生成批次号 <code>batch_id</code>，所有订单结果和接口原始返回都绑定批次。</li>
+      <li>先跑订单和物流识别，生成候选订单；再跑财务核查，避免无效接口调用。</li>
+      <li>包裹流失识别需要同时输出 <code>lost_category</code> 和 <code>lost_sub_type</code>，便于区分物流丢失和包裹损坏。</li>
+      <li>TikTok 赔付核查按“店铺 + statement 时间范围”缓存 statement，避免每个订单重复全量扫描。</li>
+      <li>所有接口异常都进入重试队列，不允许写成最终 N。</li>
+      <li>结果表固定保留 <code>api_result</code>、<code>api_error</code>、<code>validation_result</code>、<code>remark</code>。</li>
+    </ol>
+    <div class="checkpoint">
+      <b>最终结论：</b>包裹流失的核心是“物流是否确认为丢失或损坏无法派送 + 财务是否已有赔付”；运费多扣的核心是“已结算后实际运费是否高于预估运费”，并按未退货、退货退款拆分输出，同时展示物流单号、物流渠道和店铺名称。
+    </div>
+  </section>
+
+  <div class="footer">
+    售后挽损模块 · 包裹丢失与运费多扣最终逻辑 v1.1
+  </div>
+</div>
+</body>
+</html>
