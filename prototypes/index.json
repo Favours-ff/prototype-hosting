@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-20T15:57:49+08:00",
-  "count": 13,
+  "generatedAt": "2026-07-24T17:35:59+08:00",
+  "count": 14,
   "prototypes": [
     {
       "prototypeId": "prototype-20260716-111913",
@@ -144,6 +144,17 @@
       "updatedAt": "2026-07-20T15:57:46+08:00",
       "path": "prototypes/finance-system/prototype-20260720-155746",
       "url": "https://favours-ff.github.io/prototype-hosting/prototypes/finance-system/prototype-20260720-155746/"
+    },
+    {
+      "prototypeId": "shunde-daliang-2d1n-2-1-20260724-173552",
+      "title": "Shunde Daliang 2D1N - 顺德大良2天1夜行程",
+      "businessSystem": "Travel Guide - 旅行攻略",
+      "owner": "Favours-ff",
+      "sourcePath": "prototype\\shunde-daliang-2d1n",
+      "createdAt": "2026-07-24T17:35:52+08:00",
+      "updatedAt": "2026-07-24T17:35:52+08:00",
+      "path": "prototypes/travel-guide/shunde-daliang-2d1n-2-1-20260724-173552",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/travel-guide/shunde-daliang-2d1n-2-1-20260724-173552/"
     }
   ]
 }
