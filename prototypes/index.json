@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-24T17:35:59+08:00",
-  "count": 14,
+  "generatedAt": "2026-07-28T17:37:22+08:00",
+  "count": 15,
   "prototypes": [
     {
       "prototypeId": "prototype-20260716-111913",
@@ -45,6 +45,17 @@
       "updatedAt": "2026-07-16T11:18:47+08:00",
       "path": "prototypes/business-system/prototype-20260716-111847",
       "url": "https://favours-ff.github.io/prototype-hosting/prototypes/business-system/prototype-20260716-111847/"
+    },
+    {
+      "prototypeId": "prototype-20260728-173719",
+      "title": "发货确认收入导入与同步记录",
+      "businessSystem": "财务系统",
+      "owner": "Favours-ff",
+      "sourcePath": "prototype\\finance-delivery-income-import",
+      "createdAt": "2026-07-28T17:37:19+08:00",
+      "updatedAt": "2026-07-28T17:37:19+08:00",
+      "path": "prototypes/business-system/prototype-20260728-173719",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/business-system/prototype-20260728-173719/"
     },
     {
       "prototypeId": "prototype-20260522-094401",

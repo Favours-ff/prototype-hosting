@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>发货确认收入 - 导入与同步记录</title>
+  <link rel="stylesheet" href="../../ui-library/tokens.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="c-shell" data-collapsed="false">
+    <aside class="c-shell__sider" aria-label="财务系统导航">
+      <div class="c-shell__brand"><span class="c-shell__brand-logo">F</span><span class="c-shell__brand-text">财务系统</span></div>
+      <nav class="c-shell__menu">
+        <div class="c-shell__menu-item"><span class="c-shell__menu-icon">⌂</span>财务-首页</div>
+        <div class="c-shell__menu-item"><span class="c-shell__menu-icon">▦</span>财务报表 <span class="menu-arrow">⌄</span></div>
+        <div class="c-shell__menu-item"><span class="c-shell__menu-icon">▤</span>销售报表 <span class="menu-arrow">⌄</span></div>
+        <div class="c-shell__menu-item"><span class="c-shell__menu-icon">≡</span>关联交易采购管理 <span class="menu-arrow">⌄</span></div>
+        <div class="c-shell__menu-item"><span class="c-shell__menu-icon">▣</span>关联交易订单管理 <span class="menu-arrow">⌄</span></div>
+        <div class="c-shell__menu-group">进销存管理</div>
+        <div class="c-shell__menu-subitem">国内主体进销存</div>
+        <div class="c-shell__menu-subitem">国内仓库进销存</div>
+        <div class="c-shell__menu-subitem c-shell__menu-subitem--active">发货确认收入</div>
+        <div class="c-shell__menu-subitem">已发货订单结算匹配</div>
+      </nav>
+    </aside>
+
+    <header class="c-shell__header">
+      <span class="c-shell__collapse-btn" title="折叠菜单">☰</span>
+      <div class="c-shell__tabs" aria-label="页面页签">
+        <span class="c-shell__tab">财务-首页 <b>×</b></span>
+        <span class="c-shell__tab">国内仓库进销存 <b>×</b></span>
+        <span class="c-shell__tab c-shell__tab--active">发货确认收入 <b>×</b></span>
+        <span class="c-shell__tab">已发货订单结算匹配 <b>×</b></span>
+      </div>
+      <div class="c-shell__header-actions"><span class="c-shell__icon-btn">◷</span><span class="c-shell__icon-btn">⇩</span><span class="c-shell__icon-btn">⌕</span><span class="c-shell__avatar">杨</span></div>
+    </header>
+
+    <main class="c-shell__content">
+      <section class="page-toolbar">
+        <div class="segmented" role="group" aria-label="时间口径"><button class="segmented__item segmented__item--active">发货时间</button><button class="segmented__item">结算时间</button></div>
+        <button class="field field--month" type="button"><span class="field__icon">□</span><span>2026-06</span></button>
+        <button class="field select-trigger" type="button" data-field="list-platform"><span class="placeholder">平台</span><span class="field__arrow">⌄</span></button>
+        <button class="field select-trigger" type="button" data-field="list-company"><span class="placeholder">主体公司</span><span class="field__arrow">⌄</span></button>
+        <div class="field field--input"><span class="placeholder">请选择店铺</span></div>
+        <button class="btn btn--primary">搜索</button><button class="btn">重置</button>
+        <span class="toolbar-spacer"></span>
+        <button class="btn" data-action="open-records">导入/同步记录</button>
+        <button class="btn btn--primary" data-action="open-import">导入数据</button>
+      </section>
+
+      <section class="table-panel">
+        <div class="table-panel__actions"><button class="btn btn--link">导出当前列表</button><button class="btn btn--link">导出完整对账明细</button></div>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr><th>主体公司</th><th>平台</th><th>店铺</th><th>币种</th><th>发货时间</th><th>收入</th><th>退款</th><th>商品成本</th><th>退件补成本</th><th>平台佣金</th><th>推广费</th><th>广告费</th><th>店铺杂费</th><th>回款费用</th><th>物流费</th><th>仓库处理费</th><th>毛利润</th><th>毛利率</th><th>保证金</th></tr></thead>
+            <tbody><tr class="table-empty"><td colspan="19"><div class="empty-state"><span class="empty-state__icon">▤</span><span>暂无数据</span></div></td></tr></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="select-menu" data-menu="list-platform"><button>Shopee</button><button>TikTok Shop</button><button>Lazada</button></div>
+  <div class="select-menu" data-menu="list-company"><button>深圳市云易盒科技有限公司</button><button>深圳市海创供应链有限公司</button></div>
+
+  <div class="modal-mask is-hidden" id="import-modal" role="dialog" aria-modal="true" aria-labelledby="import-title">
+    <section class="modal modal--wide">
+      <header class="modal__header"><div><h2 id="import-title">导入发货确认收入数据</h2><p>导入仅支持新增；重复数据将按文件类型配置的唯一键自动跳过。</p></div><button class="icon-close" data-action="close-import" aria-label="关闭">×</button></header>
+      <div class="steps" id="import-steps"><div class="steps__item steps__item--active"><b>1</b><span>填写导入信息</span></div><i></i><div class="steps__item"><b>2</b><span>文件校验</span></div><i></i><div class="steps__item"><b>3</b><span>确认新增</span></div></div>
+      <div class="modal__body" id="import-stage-form">
+        <div class="form-grid">
+          <label class="form-item"><span>平台 <em>*</em></span><button class="field select-trigger" type="button" data-field="import-platform"><strong class="placeholder">请选择平台</strong><b class="field__arrow">⌄</b></button></label>
+          <label class="form-item"><span>店铺 <em>*</em></span><button class="field select-trigger is-disabled" type="button" data-field="import-store" disabled><strong class="placeholder">请先选择平台</strong><b class="field__arrow">⌄</b></button></label>
+          <label class="form-item"><span>主体公司</span><span class="field field--readonly" id="company-field">选择店铺后自动回显</span></label>
+          <label class="form-item"><span>月份 <em>*</em></span><button class="field field--month select-trigger" type="button" data-field="import-month"><span class="field__icon">□</span><strong id="month-value">2026-06</strong><b class="field__arrow">⌄</b></button></label>
+          <label class="form-item"><span>文件类型 <em>*</em></span><button class="field select-trigger" type="button" data-field="file-type"><strong class="placeholder">请选择文件类型</strong><b class="field__arrow">⌄</b></button></label>
+        </div>
+        <section class="upload-box" id="upload-box"><div class="upload-box__icon">⇧</div><b>点击或拖拽文件到此区域上传</b><p>支持 .xlsx、.csv 文件；文件大小不超过 20MB</p><input id="file-input" type="file" accept=".xlsx,.csv" hidden /><button class="btn" data-action="choose-file">选择文件</button><button class="btn btn--link" data-action="download-template">下载模板</button></section>
+        <div class="import-note"><span>i</span><p>系统将根据“平台 + 店铺 + 月份 + 文件类型”记录导入批次；数据按该文件类型配置的业务唯一键去重，已有数据不会被覆盖。</p></div>
+      </div>
+      <div class="modal__body is-hidden" id="import-stage-check">
+        <div class="check-summary"><div><span>文件名称</span><b id="checked-file-name">Shopee_TH_2026-06_账单.xlsx</b></div><div><span>校验状态</span><b class="tag tag--success">校验通过</b></div></div>
+        <div class="stat-grid"><article><span>文件总行数</span><b>3,286</b></article><article><span>可新增</span><b class="text-success">3,112</b></article><article><span>重复跳过</span><b class="text-warning">168</b></article><article><span>错误行</span><b>6</b></article></div>
+        <div class="check-list"><div><span class="status-dot status-dot--success"></span><span>模板字段校验通过</span><b>必填字段完整</b></div><div><span class="status-dot status-dot--success"></span><span>店铺与主体公司校验通过</span><b>主体公司自动匹配</b></div><div><span class="status-dot status-dot--warning"></span><span>检测到 168 条重复数据</span><button class="btn btn--link" data-action="download-duplicate">下载重复明细</button></div><div><span class="status-dot status-dot--error"></span><span>检测到 6 条错误数据</span><button class="btn btn--link" data-action="download-error">下载错误明细</button></div></div>
+        <div class="import-note"><span>!</span><p>确认后仅新增 3,112 条有效数据；6 条错误数据和 168 条重复数据不会写入系统。</p></div>
+      </div>
+      <footer class="modal__footer" id="import-form-footer"><button class="btn" data-action="close-import">取消</button><button class="btn btn--primary" id="validate-import" disabled>开始校验</button></footer>
+      <footer class="modal__footer is-hidden" id="import-check-footer"><button class="btn" data-action="back-to-form">返回修改</button><button class="btn btn--primary" data-action="confirm-import">确认新增 3,112 条</button></footer>
+    </section>
+  </div>
+
+  <aside class="drawer is-hidden" id="records-drawer" aria-label="导入与同步记录">
+    <header class="drawer__header"><div><h2>导入/同步记录</h2><p>查询人工上传和系统自动同步任务，支持下载原始文件及处理明细。</p></div><button class="icon-close" data-action="close-records">×</button></header>
+    <div class="drawer__body">
+      <section class="record-filters"><button class="field select-trigger" type="button" data-field="record-source"><span>全部来源</span><b class="field__arrow">⌄</b></button><button class="field select-trigger" type="button" data-field="record-status"><span>全部状态</span><b class="field__arrow">⌄</b></button><button class="field field--month" type="button"><span class="field__icon">□</span><span>2026-06</span></button><button class="btn btn--primary">查询</button></section>
+      <div class="record-summary"><span>共 24 条记录</span><span>包含 <b>17</b> 条人工上传、<b>7</b> 条系统同步</span></div>
+      <section class="record-list">
+        <article class="record-card"><header><div><span class="tag tag--processing">人工上传</span><b>Shopee_TH_2026-06_账单.xlsx</b></div><span class="tag tag--success">处理成功</span></header><dl><div><dt>平台/店铺</dt><dd>Shopee / SPE055_TH_BT</dd></div><div><dt>主体公司</dt><dd>深圳市云易盒科技有限公司</dd></div><div><dt>月份/类型</dt><dd>2026-06 / 平台账单</dd></div><div><dt>上传人/时间</dt><dd>杨青璐 / 2026-07-17 14:32:18</dd></div><div><dt>处理结果</dt><dd>新增 3,112，重复跳过 168，错误 6</dd></div></dl><footer><button class="btn btn--link" data-action="download-original">下载原文件</button><button class="btn btn--link" data-action="download-error">下载错误明细</button></footer></article>
+        <article class="record-card"><header><div><span class="tag tag--default">系统同步</span><b>TikTok_TH_2026-06_费用同步任务</b></div><span class="tag tag--success">处理成功</span></header><dl><div><dt>平台/店铺</dt><dd>TikTok Shop / TIK025_TH_BT</dd></div><div><dt>主体公司</dt><dd>深圳市海创供应链有限公司</dd></div><div><dt>月份/类型</dt><dd>2026-06 / 平台账单</dd></div><div><dt>任务来源/时间</dt><dd>Python 爬取任务 / 2026-07-17 02:10:06</dd></div><div><dt>处理结果</dt><dd>新增 5,864，重复跳过 42，错误 0</dd></div></dl><footer><button class="btn btn--link" data-action="download-original">下载同步原始数据</button></footer></article>
+        <article class="record-card"><header><div><span class="tag tag--default">系统同步</span><b>Lazada_TH_2026-06_费用同步任务</b></div><span class="tag tag--warning">部分成功</span></header><dl><div><dt>平台/店铺</dt><dd>Lazada / LZD019_TH_BT</dd></div><div><dt>主体公司</dt><dd>深圳市云易盒科技有限公司</dd></div><div><dt>月份/类型</dt><dd>2026-06 / 广告费用</dd></div><div><dt>任务来源/时间</dt><dd>Python 爬取任务 / 2026-07-17 02:14:12</dd></div><div><dt>处理结果</dt><dd>新增 1,682，重复跳过 0，错误 12</dd></div></dl><footer><button class="btn btn--link" data-action="download-original">下载同步原始数据</button><button class="btn btn--link" data-action="download-error">下载错误明细</button></footer></article>
+      </section>
+    </div>
+  </aside>
+  <div class="drawer-mask is-hidden" id="drawer-mask" data-action="close-records"></div>
+  <div class="select-menu" data-menu="import-platform"><button>Shopee</button><button>TikTok Shop</button><button>Lazada</button></div>
+  <div class="select-menu" data-menu="import-store"></div>
+  <div class="select-menu" data-menu="import-month"><button>2026-07</button><button>2026-06</button><button>2026-05</button><button>2026-04</button><button>2026-03</button></div>
+  <div class="select-menu" data-menu="file-type"><button>平台账单</button><button>广告费用</button><button>物流费用</button><button>人工调整明细</button></div>
+  <div class="select-menu" data-menu="record-source"><button>全部来源</button><button>人工上传</button><button>系统同步</button></div>
+  <div class="select-menu" data-menu="record-status"><button>全部状态</button><button>处理成功</button><button>部分成功</button><button>处理失败</button></div>
+  <div class="toast is-hidden" id="toast"></div>
+  <script src="./script.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "prototypeId": "prototype-20260728-173719",
+  "title": "发货确认收入导入与同步记录",
+  "businessSystem": "财务系统",
+  "owner": "Favours-ff",
+  "sourcePath": "prototype\\finance-delivery-income-import",
+  "createdAt": "2026-07-28T17:37:19+08:00",
+  "updatedAt": "2026-07-28T17:37:19+08:00"
+}
