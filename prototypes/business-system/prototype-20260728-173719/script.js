@@ -134,5 +134,5 @@ $('#upload-box').addEventListener('drop', (event) => { event.preventDefault(); $
 $('#validate-import').addEventListener('click', showCheckStage);
 $$('[data-action="back-to-form"]').forEach((button) => button.addEventListener('click', backToForm));
 $$('[data-action="confirm-import"]').forEach((button) => button.addEventListener('click', () => { $('#import-modal').classList.add('is-hidden'); showToast('已提交新增导入任务，处理完成后可在导入/同步记录中下载结果。'); backToForm(); }));
-$$('[data-action="download-template"],[data-action="download-original"],[data-action="download-error"],[data-action="download-duplicate"]').forEach((button) => button.addEventListener('click', () => showToast('原型演示：已触发文件下载。')));
+$$('[data-action="download-original"],[data-action="download-error"],[data-action="download-duplicate"]').forEach((button) => button.addEventListener('click', () => showToast('原型演示：已触发文件下载。')));
 document.addEventListener('click', closeMenus);
