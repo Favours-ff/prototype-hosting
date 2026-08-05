@@ -2,36 +2,36 @@ window.PRODUCTS = [
   {
     id: "1005009448608090", title: "USB Expansion Board Hub 1 In 4 Out High Speed Adapter with Extended Long Product Title",
     category: "电子元器件 / USB 集线器", store: "SMT01全托管", operator: "王更", stocking: "JIT 即时补货",
-    status: "销售中", statusText: "处于正常销售状态。", price: "CNY 18.80-22.50", purchase: "CNY 12.60-15.20",
-    platformStock: 3, localStock: 11, sales: 128, salesTrend: "环比 +12%", binding: "部分绑定中", bindingText: "未绑定 1 / 绑定中 1",
+    status: "销售中", statusText: "处于正常销售状态。", activity: true, activityName: "平台活动", price: "CNY 18.80-22.50", purchase: "CNY 12.60-15.20",
+    platformStock: 35, localStock: 11, sales: 128, salesTrend: "环比 +12%", binding: "部分绑定中", bindingText: "未绑定 1 / 绑定中 1",
     change: "库存 10 → 3", changeTime: "10:18", skuCount: 3,
     skus: [
-      {name:"USB-HUB-4P-BLK", online:"AEO-1005009448608090-BLK", local:"SKU-USB-HUB-BLK", code:"050972", barcode:"697113956719", goodsId:"979113956719", spec:"黑色", status:"销售中", price:"CNY 18.80", platform:3, localStock:8, warehouse:"CSC207", binding:"绑定中", method:"本地可用库存"},
-      {name:"USB-HUB-4P-WHT", online:"AEO-1005009448608090-WHT", local:"SKU-USB-HUB-WHT", code:"050973", barcode:"697113956720", goodsId:"979113956720", spec:"白色", status:"停售", price:"CNY 22.50", platform:0, localStock:3, warehouse:"CSC207", binding:"未绑定", method:"自定义数量"},
-      {name:"USB-HUB-4P-GRY", online:"AEO-1005009448608090-GRY", local:"SKU-USB-HUB-GRY", code:"050974", barcode:"697113956721", goodsId:"979113956721", spec:"灰色", status:"销售中", price:"CNY 20.00", platform:0, localStock:0, warehouse:"CSC207", binding:"绑定中", method:"无库存兜底"}
+      {name:"USB-HUB-4P-BLK", online:"AEO-1005009448608090-BLK", local:"SKU-USB-HUB-BLK", code:"050972", barcode:"697113956719", goodsId:"979113956719", spec:"黑色", status:"销售中", activity:true, price:"CNY 18.80", platform:30, localStock:8, warehouse:"CSC207", warehouses:[{code:"CN-DG-01",name:"东莞仓",stock:10},{code:"CN-HZ-01",name:"杭州仓",stock:20}], binding:"绑定中", method:"本地可用库存"},
+      {name:"USB-HUB-4P-WHT", online:"AEO-1005009448608090-WHT", local:"SKU-USB-HUB-WHT", code:"050973", barcode:"697113956720", goodsId:"979113956720", spec:"白色", status:"停售", activity:true, price:"CNY 22.50", platform:5, localStock:3, warehouse:"CSC207", warehouses:[{code:"CN-DG-01",name:"东莞仓",stock:0},{code:"CN-HZ-01",name:"杭州仓",stock:5}], binding:"未绑定", method:"自定义数量"},
+      {name:"USB-HUB-4P-GRY", online:"AEO-1005009448608090-GRY", local:"SKU-USB-HUB-GRY", code:"050974", barcode:"697113956721", goodsId:"979113956721", spec:"灰色", status:"销售中", activity:true, price:"CNY 20.00", platform:0, localStock:0, warehouse:"CSC207", warehouses:[{code:"CN-DG-01",name:"东莞仓",stock:0},{code:"CN-HZ-01",name:"杭州仓",stock:0}], binding:"绑定中", method:"无库存兜底"}
     ]
   },
   {
     id:"1005009561158752", title:"LM2596 Adjustable Step Down Power Module", category:"电子元器件 / 电源模块", store:"SMT02全托管", operator:"李明", stocking:"仓发",
-    status:"审核中", statusText:"等待平台审核中。", price:"CNY 8.80", purchase:"CNY 5.40", platformStock:1, localStock:16, sales:24, salesTrend:"环比 -8%",
+    status:"审核中", statusText:"等待平台审核中。", activity:false, price:"CNY 8.80", purchase:"CNY 5.40", platformStock:1, localStock:16, sales:24, salesTrend:"环比 -8%",
     binding:"全部已绑定", bindingText:"已绑定 1", change:"状态变更", changeTime:"待上架 → 审核中", skuCount:1,
-    skus:[{name:"LM2596-BLU",online:"AEO-1005009561158752-BLU",local:"SKU-LM2596-BLU",code:"060181",barcode:"697113956811",goodsId:"979113956811",spec:"蓝色",status:"审核中",price:"CNY 8.80",platform:1,localStock:16,warehouse:"CN-HZ-01",binding:"绑定中",method:"本地可用库存"}]
+    skus:[{name:"LM2596-BLU",online:"AEO-1005009561158752-BLU",local:"SKU-LM2596-BLU",code:"060181",barcode:"697113956811",goodsId:"979113956811",spec:"蓝色",status:"审核中",activity:false,price:"CNY 8.80",platform:1,localStock:16,warehouse:"CN-HZ-01",warehouses:[{code:"CN-DG-01",name:"东莞仓",stock:0},{code:"CN-HZ-01",name:"杭州仓",stock:1}],binding:"绑定中",method:"本地可用库存"}]
   },
   {
     id:"1005012097534664", title:"Buck Converter 600W 25A DC Power Supply", category:"工具 / DC 电源", store:"SMT03全托管", operator:"张敏", stocking:"JIT 即时补货",
-    status:"审核不通过", statusText:"商品标题包含平台限制词，请修改后重新提交审核。", price:"CNY 29.80", purchase:"CNY 21.30", platformStock:0, localStock:0, sales:7, salesTrend:"环比 -22%",
+    status:"审核不通过", statusText:"商品标题包含平台限制词、营销夸大用语，平台审核驳回；涉及词：best、high power。建议删除限制词后重新同步商品信息，并重新提交平台审核。", activity:false, price:"CNY 29.80", purchase:"CNY 21.30", platformStock:0, localStock:0, sales:7, salesTrend:"环比 -22%",
     binding:"未绑定", bindingText:"未绑定 4", change:"审核结果更新", changeTime:"09:42", skuCount:4,
     skus:[
-      {name:"BUCK-600W-25A",online:"AEO-1005012097534664-25A",local:"SKU-BUCK-600W-25A",code:"070625",barcode:"697113957001",goodsId:"979113957001",spec:"25A",status:"停售",price:"CNY 29.80",platform:0,localStock:0,warehouse:"CSC207",binding:"未绑定",method:"无库存兜底"},
-      {name:"BUCK-600W-15A",online:"AEO-1005012097534664-15A",local:"SKU-BUCK-600W-15A",code:"070615",barcode:"697113957002",goodsId:"979113957002",spec:"15A",status:"停售",price:"CNY 25.80",platform:0,localStock:0,warehouse:"CSC207",binding:"未绑定",method:"无库存兜底"},
-      {name:"BUCK-600W-20A",online:"AEO-1005012097534664-20A",local:"SKU-BUCK-600W-20A",code:"070620",barcode:"697113957003",goodsId:"979113957003",spec:"20A",status:"停售",price:"CNY 27.80",platform:0,localStock:0,warehouse:"CSC207",binding:"未绑定",method:"无库存兜底"},
-      {name:"BUCK-600W-30A",online:"AEO-1005012097534664-30A",local:"SKU-BUCK-600W-30A",code:"070630",barcode:"697113957004",goodsId:"979113957004",spec:"30A",status:"停售",price:"CNY 32.80",platform:0,localStock:0,warehouse:"CSC207",binding:"未绑定",method:"无库存兜底"}
+      {name:"BUCK-600W-25A",online:"AEO-1005012097534664-25A",local:"SKU-BUCK-600W-25A",code:"070625",barcode:"697113957001",goodsId:"979113957001",spec:"25A",status:"停售",activity:false,price:"CNY 29.80",platform:0,localStock:0,warehouse:"CSC207",warehouses:[{code:"CN-DG-01",name:"东莞仓",stock:0},{code:"CN-HZ-01",name:"杭州仓",stock:0}],binding:"未绑定",method:"无库存兜底"},
+      {name:"BUCK-600W-15A",online:"AEO-1005012097534664-15A",local:"SKU-BUCK-600W-15A",code:"070615",barcode:"697113957002",goodsId:"979113957002",spec:"15A",status:"停售",activity:false,price:"CNY 25.80",platform:0,localStock:0,warehouse:"CSC207",warehouses:[{code:"CN-DG-01",name:"东莞仓",stock:0},{code:"CN-HZ-01",name:"杭州仓",stock:0}],binding:"未绑定",method:"无库存兜底"},
+      {name:"BUCK-600W-20A",online:"AEO-1005012097534664-20A",local:"SKU-BUCK-600W-20A",code:"070620",barcode:"697113957003",goodsId:"979113957003",spec:"20A",status:"停售",activity:false,price:"CNY 27.80",platform:0,localStock:0,warehouse:"CSC207",warehouses:[{code:"CN-DG-01",name:"东莞仓",stock:0},{code:"CN-HZ-01",name:"杭州仓",stock:0}],binding:"未绑定",method:"无库存兜底"},
+      {name:"BUCK-600W-30A",online:"AEO-1005012097534664-30A",local:"SKU-BUCK-600W-30A",code:"070630",barcode:"697113957004",goodsId:"979113957004",spec:"30A",status:"停售",activity:false,price:"CNY 32.80",platform:0,localStock:0,warehouse:"CSC207",warehouses:[{code:"CN-DG-01",name:"东莞仓",stock:0},{code:"CN-HZ-01",name:"杭州仓",stock:0}],binding:"未绑定",method:"无库存兜底"}
     ]
   }
 ];
 
 window.STATUS_TABS = [
-  ["全部",1488],["销售中",452],["审核中",2],["审核不通过",219],["已下架",815]
+  ["全部",1488],["销售中",452],["售罄",36],["货品未绑定",18],["审核中",2],["审核不通过",219],["已下架",815]
 ];
 
 window.CATEGORY_TREE = [

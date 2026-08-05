@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>速卖通全托管商品</title>
   <link rel="stylesheet" href="../../ui-library/tokens.css">
-  <link rel="stylesheet" href="./styles.css?v=20260617-date-range-single">
+  <link rel="stylesheet" href="./styles.css?v=20260805-tooltip-below">
 </head>
 <body>
   <div class="c-shell" data-component="ErpShell">
@@ -71,7 +71,7 @@
             <div class="c-filter__field"><label>备货类型</label><div class="c-select"><button class="c-select__trigger" data-select="stocking"><span>全部备货类型</span><i></i></button><div class="c-select__popup" data-popup="stocking"><button class="c-action" data-value="全部备货类型">全部备货类型</button><button class="c-action" data-value="JIT 即时补货">JIT 即时补货</button><button class="c-action" data-value="仓发">仓发</button><button class="c-action" data-value="国内履约">国内履约</button><button class="c-action" data-value="海外仓">海外仓</button></div></div></div>
             <div class="c-filter__field"><label>库存状态</label><div class="c-select"><button class="c-select__trigger" data-select="stock"><span>全部库存状态</span><i></i></button><div class="c-select__popup" data-popup="stock"><button class="c-action" data-value="全部库存状态">全部库存状态</button><button class="c-action" data-value="有库存">有库存</button><button class="c-action" data-value="库存为 0">库存为 0</button><button class="c-action" data-value="部分 SKU 售罄">部分 SKU 售罄</button><button class="c-action" data-value="库存异常">库存异常</button></div></div></div>
             <div class="c-filter__field"><label>货品绑定</label><div class="c-select"><button class="c-select__trigger" data-select="binding"><span>全部绑定状态</span><i></i></button><div class="c-select__popup" data-popup="binding"><button class="c-action" data-value="全部绑定状态">全部绑定状态</button><button class="c-action" data-value="全部已绑定">全部已绑定</button><button class="c-action" data-value="部分绑定中">部分绑定中</button><button class="c-action" data-value="未绑定">未绑定</button><button class="c-action" data-value="解绑拒绝">解绑拒绝</button></div></div></div>
-            <div class="c-filter__field c-filter__empty"></div>
+            <div class="c-filter__field"><label>活动状态</label><div class="c-select"><button class="c-select__trigger" data-select="activity"><span>全部活动状态</span><i></i></button><div class="c-select__popup" data-popup="activity"><button class="c-action" data-value="全部活动状态">全部活动状态</button><button class="c-action" data-value="参加活动">参加活动</button><button class="c-action" data-value="未参加活动">未参加活动</button></div></div></div>
           </div>
           <div class="c-filter__actions">
             <button class="btn btn--primary" id="searchBtn">查询商品</button>
@@ -83,7 +83,7 @@
         <section class="surface-panel c-table" data-component="DataTablePanel">
           <div class="c-table__tabs" id="statusTabs"></div>
           <div class="c-table__summary">
-            <div><b>商品列表</b><span id="resultText">当前筛选 1,488 条，每页展示 10 条</span></div>
+            <div><b>商品列表</b><span id="resultText">当前筛选 1,488 条，每页展示 100 条</span></div>
             <div class="c-table__metrics"><span>SKU 总数 <b>3,972</b></span><span>售罄 SKU <b>36</b></span><span>货品未绑定 <b>18</b></span></div>
           </div>
           <div class="c-batch" id="batchBar">
@@ -98,7 +98,7 @@
               <tbody id="productRows"></tbody>
             </table>
           </div>
-          <div class="c-pagination"><span id="paginationTotal">共 1,488 条</span><div><button class="btn btn--sm page-action" data-page-action="prev">上一页</button><button class="btn btn--sm btn--outlined btn--color-primary page-action" data-page="1">1</button><button class="btn btn--sm page-action" data-page="2">2</button><button class="btn btn--sm page-action" data-page="3">3</button><span>...</span><button class="btn btn--sm page-action" data-page="149">149</button><button class="btn btn--sm page-action" data-page-action="next">下一页</button></div></div>
+          <div class="c-pagination"><span id="paginationTotal">共 1,488 条</span><div class="c-pagination__controls"><div class="c-select c-page-size"><button class="c-select__trigger" data-select="pageSize"><span>100 条/页</span><i></i></button><div class="c-select__popup" data-popup="pageSize"><button class="c-action" data-value="50 条/页">50 条/页</button><button class="c-action" data-value="100 条/页">100 条/页</button><button class="c-action" data-value="200 条/页">200 条/页</button><button class="c-action" data-value="500 条/页">500 条/页</button></div></div><div class="c-pagination__pages" id="paginationButtons"></div></div></div>
         </section>
       </main>
     </div>
@@ -206,8 +206,60 @@
     </section>
   </div>
 
+  <div class="c-drawer-mask" id="skuMask">
+    <aside class="c-drawer c-drawer--sku" data-component="SkuDrawer">
+      <button class="btn btn--text c-sku-drawer-close" data-close="sku" aria-label="关闭">×</button>
+      <div class="c-drawer__body c-drawer__body--sku">
+        <section class="c-sku-context" id="skuDrawerContext"></section>
+        <section class="c-filter c-filter--compact c-sku-drawer-filter">
+          <div class="c-filter__grid c-filter__grid--sku">
+            <div class="c-filter__field">
+              <label>SKU 关键词</label>
+              <div class="c-combo">
+                <button class="c-select__trigger c-combo__type" data-select="skuKeywordType"><span>在线 SKU</span><i></i></button>
+                <input class="input c-combo__input" id="skuKeywordInput" placeholder="请输入完整或部分 SKU 信息">
+                <div class="c-select__popup" data-popup="skuKeywordType">
+                  <button class="c-action" data-value="在线 SKU">在线 SKU</button>
+                  <button class="c-action" data-value="本地 SKU">本地 SKU</button>
+                  <button class="c-action" data-value="SKU 编码">SKU 编码</button>
+                  <button class="c-action" data-value="货品条码">货品条码</button>
+                  <button class="c-action" data-value="货品 ID">货品 ID</button>
+                </div>
+              </div>
+            </div>
+            <div class="c-filter__field">
+              <label>销售状态</label>
+              <div class="c-select"><button class="c-select__trigger" data-select="skuSaleStatus"><span>全部销售状态</span><i></i></button><div class="c-select__popup" data-popup="skuSaleStatus"><button class="c-action" data-value="全部销售状态">全部销售状态</button><button class="c-action" data-value="销售中">销售中</button><button class="c-action" data-value="停售">停售</button><button class="c-action" data-value="审核中">审核中</button></div></div>
+            </div>
+            <div class="c-filter__field">
+              <label>库存状态</label>
+              <div class="c-select"><button class="c-select__trigger" data-select="skuStockStatus"><span>全部库存状态</span><i></i></button><div class="c-select__popup" data-popup="skuStockStatus"><button class="c-action" data-value="全部库存状态">全部库存状态</button><button class="c-action" data-value="平台有库存">平台有库存</button><button class="c-action" data-value="平台售罄">平台售罄</button><button class="c-action" data-value="本地有库存">本地有库存</button><button class="c-action" data-value="本地无库存">本地无库存</button></div></div>
+            </div>
+            <div class="c-filter__field">
+              <label>货品绑定</label>
+              <div class="c-select"><button class="c-select__trigger" data-select="skuBindingStatus"><span>全部绑定状态</span><i></i></button><div class="c-select__popup" data-popup="skuBindingStatus"><button class="c-action" data-value="全部绑定状态">全部绑定状态</button><button class="c-action" data-value="绑定中">绑定中</button><button class="c-action" data-value="未绑定">未绑定</button><button class="c-action" data-value="解绑拒绝">解绑拒绝</button></div></div>
+            </div>
+          </div>
+          <div class="c-filter__actions">
+            <button class="btn btn--primary" id="skuSearchBtn">查询 SKU</button>
+            <button class="btn" id="skuResetBtn">重置条件</button>
+          </div>
+        </section>
+        <section class="surface-panel c-table c-sku-drawer-table">
+          <div class="c-table__summary"><div><b>SKU 列表</b><span id="skuResultText">当前筛选 0 条</span></div></div>
+          <div class="c-table__scroll">
+            <table class="c-table__main c-table__main--sku-drawer">
+              <thead><tr><th>SKU 信息</th><th>规格</th><th>销售状态</th><th>供货价</th><th>多仓库存</th><th>本地可用</th><th>货品绑定</th><th>补货方式</th></tr></thead>
+              <tbody id="skuDrawerRows"></tbody>
+            </table>
+          </div>
+          <div class="c-pagination"><span id="skuPaginationTotal">共 0 条</span></div>
+        </section>
+      </div>
+    </aside>
+  </div>
   <div class="c-message" id="message"></div>
-  <script src="./data.js?v=20260617-date-range-single"></script>
-  <script src="./script.js?v=20260617-date-range-single"></script>
+  <script src="./data.js?v=20260805-tooltip-below"></script>
+  <script src="./script.js?v=20260805-tooltip-below"></script>
 </body>
 </html>
