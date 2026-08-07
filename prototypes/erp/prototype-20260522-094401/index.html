@@ -1,0 +1,77 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>已发货订单结算匹配</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="page-header">
+      <div>
+        <h1>已发货订单结算匹配</h1>
+        <p>使用 ERP 已发货订单与后台结算账单进行匹配，识别已结算与未结算订单。</p>
+      </div>
+      <button id="exportBtn" class="btn btn-primary" type="button">导出当前列表</button>
+    </header>
+
+    <section class="panel filters">
+      <div class="filter-grid">
+        <label class="field">
+          <span>平台</span>
+          <select id="platformFilter"></select>
+        </label>
+        <label class="field">
+          <span>店铺</span>
+          <select id="shopFilter"></select>
+        </label>
+        <label class="field">
+          <span>发货时间范围</span>
+          <input id="shipRange" type="text" placeholder="YYYY-MM-DD ~ YYYY-MM-DD" />
+        </label>
+        <label class="field">
+          <span>结算时间范围</span>
+          <input id="settleRange" type="text" placeholder="YYYY-MM-DD ~ YYYY-MM-DD" />
+        </label>
+      </div>
+      <div class="actions">
+        <button id="applyBtn" class="btn btn-primary" type="button">筛选</button>
+        <button id="resetBtn" class="btn" type="button">重置</button>
+      </div>
+    </section>
+
+    <section class="panel summary-wrap">
+      <div class="summary" id="summary"></div>
+      <div class="status-switch status-switch--summary" id="statusSwitch">
+        <button type="button" class="status-btn" data-status="all">全部</button>
+        <button type="button" class="status-btn is-active" data-status="false">未结算</button>
+        <button type="button" class="status-btn" data-status="true">已结算</button>
+      </div>
+    </section>
+
+    <section class="panel table-panel">
+      <table>
+        <thead>
+          <tr>
+            <th>平台单号</th>
+            <th>平台</th>
+            <th>店铺</th>
+            <th>发货时间</th>
+            <th>预估收入</th>
+            <th>结算收入</th>
+            <th>预估利润</th>
+            <th>结算利润</th>
+            <th>结算时间</th>
+            <th>是否结算</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+      <p id="emptyState" class="empty hidden">当前筛选条件下无数据</p>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "prototypeId": "prototype-20260522-095358",
+  "title": "已发货订单结算匹配",
+  "businessSystem": "ERP",
+  "owner": "Favours-ff",
+  "sourcePath": "prototype\\order-settlement-reconciliation",
+  "createdAt": "2026-05-22T09:53:58+08:00",
+  "updatedAt": "2026-05-22T09:53:58+08:00"
+}

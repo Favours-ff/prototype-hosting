@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>包裹丢失赔付接口字段取值说明 v3</title>
+  <style>
+    :root{--blue:#1677ff;--line:#e6eaf0;--text:#1f2937;--muted:#6b7280;--bg:#f5f7fb;--card:#fff;--code:#f0f5ff}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:14px/1.65 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+    .layout{max-width:1440px;margin:0 auto;padding:28px 22px 56px}.hero{padding:30px 34px;border-radius:14px;background:linear-gradient(130deg,#125bd3,#4f46e5);color:#fff;margin-bottom:20px}.hero h1{font-size:28px;margin:0 0 8px}.hero p{margin:0;opacity:.92}.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.badges span{padding:3px 10px;background:#ffffff25;border:1px solid #ffffff35;border-radius:99px;font-size:12px}
+    nav{position:sticky;top:0;z-index:2;display:flex;gap:4px;flex-wrap:wrap;padding:12px 0;background:var(--bg)}nav a{color:#245bba;text-decoration:none;padding:7px 11px;border-radius:7px;background:#fff;border:1px solid var(--line);font-size:12px}nav a:hover{background:#e6f4ff}
+    section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;margin-top:18px;box-shadow:0 1px 2px #00000005}h2{margin:0;font-size:20px;border-left:4px solid var(--blue);padding-left:10px}.section-desc,.desc{margin:7px 0 18px;color:var(--muted)}
+    .table-wrap{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:8px}table{width:100%;border-collapse:collapse;min-width:880px}th,td{padding:11px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}th{position:sticky;top:0;z-index:1;background:#f8fafc;color:#475569;font-size:12px;white-space:nowrap;box-shadow:0 1px 0 var(--line)}tbody tr:last-child td{border-bottom:0}td{min-width:130px}td:nth-child(4),td:nth-child(5),td:nth-child(6){min-width:240px}code{padding:1px 5px;border-radius:4px;background:var(--code);color:#0f4ea1;font:12px Consolas,"SF Mono",monospace}a{color:#1677ff}
+    details{border:1px solid var(--line);border-radius:9px;background:#fff;margin:10px 0;overflow:hidden}summary{cursor:pointer;padding:13px 16px;font-weight:600;list-style:none}summary::-webkit-details-marker{display:none}summary span{display:inline-block;background:#e6f4ff;color:#0958d9;border-radius:4px;padding:1px 6px;margin-right:9px;font-size:12px}summary em{float:right;font-style:normal;font-size:12px;color:#667085}.endpoint{padding:0 16px 12px;color:#475569;font:12px Consolas,"SF Mono",monospace;overflow-wrap:anywhere}pre{margin:0;padding:16px;max-height:680px;overflow:auto;background:#101828;color:#e6edf3;font:12px/1.55 Consolas,"SF Mono",monospace;white-space:pre-wrap}
+    @media(max-width:760px){.layout{padding:15px 10px}.hero{padding:24px 20px}.hero h1{font-size:22px}section{padding:18px 14px}th{top:47px}}
+  </style>
+</head>
+<body>
+  <main class="layout">
+    <header class="hero"><h1>包裹丢失赔付接口字段取值说明</h1><p>Shopee / TikTok Shop · 接口总览、字段映射、判断逻辑与脱敏完整返回参数</p><div class="badges"><span>版本 v3</span><span>两段式 TikTok 财务核验</span><span>后台结算核验兜底</span><span>不包含授权与隐私数据</span></div></header>
+    <nav><a href="#section-1">1. 接口总览</a><a href="#section-2">2. 字段取值逻辑</a><a href="#section-3">3. 判断逻辑</a><a href="#section-4">4. 历史核验样例</a><a href="#section-5">5. 完整返回参数</a><a href="#section-6">6. 说明</a></nav>
+    <section id="section-1"><h2>1. 接口总览</h2><p class="section-desc">按平台与业务目的列出接口地址、权限和调用位置。</p><div class="table-wrap"><table><thead><tr><th>平台</th><th>业务目的</th><th>方法</th><th>接口地址</th><th>官方文档</th><th>必要权限/鉴权</th><th>主查询入参</th><th>结果使用说明</th></tr></thead><tbody><tr><td>Shopee</td><td>取订单基础信息</td><td>GET</td><td>https://partner.shopeemobile.com/api/v2/order/get_order_list</td><td>https://open.shopee.com/documents/v2/v2.order.get_order_list</td><td>订单权限；partner_id、timestamp、access_token、shop_id、sign</td><td>time_range_field/create_time_from/create_time_to、page_size、cursor</td><td>返回订单号、状态、下单及发货相关时间；再以 order_sn 查轨迹和财务。</td></tr><tr><td>Shopee</td><td>识别丢件/损坏轨迹</td><td>GET</td><td>https://partner.shopeemobile.com/api/v2/logistics/get_tracking_info</td><td>https://open.shopee.com/documents/v2/v2.logistics.get_tracking_info</td><td>物流权限；partner_id、timestamp、access_token、shop_id、sign</td><td>order_sn</td><td>取最新轨迹，命中 lost/loss/missing/damaged/damage 等词后进入丢件池。损坏归类为丢件，另保留命中关键词。</td></tr><tr><td>Shopee</td><td>确认赔付金额及原因</td><td>GET</td><td>https://partner.shopeemobile.com/api/v2/payment/get_escrow_detail</td><td>https://open.shopee.com/documents/v2/v2.payment.get_escrow_detail?module=97&amp;type=1</td><td>财务权限；partner_id、timestamp、access_token、shop_id、sign</td><td>order_sn</td><td>先检查 order_adjustment 的正向赔付调整；部分站点再兼容 seller_lost_compensation。</td></tr><tr><td>TikTok</td><td>取订单基础信息</td><td>POST</td><td>https://open-api.tiktokglobalshop.com/order/202309/orders/search</td><td>https://partner.tiktokshop.com/docv2/page/get-order-list-202309</td><td>订单权限；x-tts-access-token；app_key、timestamp、sign、shop_cipher</td><td>body.create_time_ge/create_time_lt；query.page_size/page_token</td><td>返回订单 ID、订单状态、创建及发货相关时间。</td></tr><tr><td>TikTok</td><td>识别丢件/损坏轨迹</td><td>GET</td><td>https://open-api.tiktokglobalshop.com/fulfillment/202309/orders/{order_id}/tracking</td><td>https://partner.tiktokshop.com/docv2/page/get-tracking-202309</td><td>物流权限；x-tts-access-token；app_key、timestamp、sign、shop_cipher</td><td>path.order_id</td><td>取最新轨迹；命中 lost/loss/missing/damaged/damage 后进入丢件池。</td></tr><tr><td>TikTok</td><td>取得订单的结算单号</td><td>GET</td><td>https://open-api.tiktokglobalshop.com/finance/202501/orders/{order_id}/statement_transactions</td><td>https://partner.tiktokshop.com/docv2/page/get-transactions-by-order-202501</td><td>seller.finance.info；x-tts-access-token；app_key、timestamp、sign、shop_cipher</td><td>path.order_id</td><td>v202501 订单接口提供 sku_transactions[].statement_id，但不再直接返回 adjustment_amount 或交易类型。</td></tr><tr><td>TikTok</td><td>确认物流赔付交易</td><td>GET</td><td>https://open-api.tiktokglobalshop.com/finance/202501/statements/{statement_id}/statement_transactions</td><td>https://partner.tiktokshop.com/docv2/page/get-transactions-by-statement-202501</td><td>seller.finance.info；x-tts-access-token；app_key、timestamp、sign、shop_cipher</td><td>path.statement_id；page_size/page_token；sort_field=order_create_time；sort_order</td><td>遍历 transactions[]，筛选 type=LOGISTICS_REIMBURSEMENT 且 adjustment_order_id/order_id 对应订单。</td></tr></tbody></table></div></section>
+<section id="section-2"><h2>2. 字段取值逻辑</h2><p class="section-desc">结果表字段与平台返回字段的对应关系，以及兼容回退规则。</p><div class="table-wrap"><table><thead><tr><th>结果字段</th><th>平台</th><th>来源接口</th><th>返回 JSON 路径</th><th>取值/判定逻辑</th><th>字段属性</th></tr></thead><tbody><tr><td>平台、站点、国家、店铺</td><td>Shopee/TikTok</td><td>运行任务的店铺配置</td><td>非平台响应字段</td><td>使用本次任务传入的 platform/site/country_code/store；不是接口返回。</td><td>直接取输入配置</td></tr><tr><td>订单号</td><td>Shopee</td><td>get_order_list</td><td>response.order_list[].order_sn</td><td>作为轨迹及财务明细的 order_sn 入参。</td><td>直接返回</td></tr><tr><td>订单号</td><td>TikTok</td><td>orders/search</td><td>data.orders[].id（兼容 order_id）</td><td>作为轨迹、订单财务接口的 path.order_id。</td><td>直接返回</td></tr><tr><td>订单状态</td><td>Shopee</td><td>get_order_list</td><td>response.order_list[].order_status</td><td>展示原始订单状态，不参与赔付完成判定。</td><td>直接返回</td></tr><tr><td>订单状态</td><td>TikTok</td><td>orders/search</td><td>data.orders[].status（兼容 order_status）</td><td>展示原始订单状态，不参与赔付完成判定。</td><td>直接返回</td></tr><tr><td>运单号</td><td>Shopee</td><td>get_tracking_info</td><td>response.tracking_number；回退 tracking_no；再回退最新 tracking_info[].tracking_number</td><td>按优先级取第一个非空值。</td><td>直接返回/兼容回退</td></tr><tr><td>物流渠道</td><td>Shopee</td><td>get_tracking_info</td><td>response.shipping_carrier；回退 response.carrier；再回退最新 tracking_info[].shipping_carrier</td><td>按优先级取第一个非空值。</td><td>直接返回/兼容回退</td></tr><tr><td>最新丢件轨迹时间</td><td>Shopee</td><td>get_tracking_info</td><td>response.tracking_info[] 中 update_time/ctime 最大的记录</td><td>将 Unix 秒级时间戳转为本地日期时间。</td><td>程序推导</td></tr><tr><td>最新丢件轨迹状态</td><td>Shopee</td><td>get_tracking_info</td><td>最新 tracking_info[].logistics_status；回退 status</td><td>与轨迹描述拼接后做丢件关键词匹配。</td><td>直接返回/兼容回退</td></tr><tr><td>最新丢件轨迹描述</td><td>Shopee</td><td>get_tracking_info</td><td>最新 tracking_info[].description；回退 tracking_info/message</td><td>与轨迹状态拼接后做丢件关键词匹配。</td><td>直接返回/兼容回退</td></tr><tr><td>运单号</td><td>TikTok</td><td>fulfillment tracking</td><td>data.tracking_number；回退 tracking_no/package.tracking_number/最新轨迹 tracking_number</td><td>按优先级取第一个非空值。</td><td>直接返回/兼容回退</td></tr><tr><td>物流渠道</td><td>TikTok</td><td>fulfillment tracking</td><td>data.shipping_provider_name；回退 carrier/package.shipping_provider_name</td><td>按优先级取第一个非空值。</td><td>直接返回/兼容回退</td></tr><tr><td>最新丢件轨迹时间</td><td>TikTok</td><td>fulfillment tracking</td><td>data.tracking[] 中 update_time/event_time/create_time 最大的记录</td><td>将 Unix 秒级时间戳转为本地日期时间。</td><td>程序推导</td></tr><tr><td>最新丢件轨迹状态</td><td>TikTok</td><td>fulfillment tracking</td><td>最新 tracking[].status；回退 tracking_status/event</td><td>与轨迹描述拼接后做丢件关键词匹配。</td><td>直接返回/兼容回退</td></tr><tr><td>最新丢件轨迹描述</td><td>TikTok</td><td>fulfillment tracking</td><td>最新 tracking[].description；回退 message/tracking_info</td><td>与轨迹状态拼接后做丢件关键词匹配。</td><td>直接返回/兼容回退</td></tr><tr><td>丢件命中</td><td>Shopee/TikTok</td><td>对应物流轨迹接口</td><td>最新状态 + 最新描述</td><td>转小写后匹配：lost、loss、missing、damaged、damage；命中 damaged/damage 记为“包裹损坏”，但统一进入丢件赔付池。</td><td>程序推导</td></tr><tr><td>丢件类型</td><td>Shopee/TikTok</td><td>对应物流轨迹接口</td><td>命中关键词</td><td>命中 lost/loss/missing 为“物流丢失”；命中 damaged/damage 为“包裹损坏”；其他丢件语义进入人工核验。</td><td>程序推导</td></tr><tr><td>赔付状态</td><td>Shopee</td><td>get_escrow_detail</td><td>response.order_income.order_adjustment[]；兼容 seller_lost_compensation</td><td>存在 amount&gt;0 且 reason/adjustment_reason 同时符合赔付和 lost/parcel/damage 语义，或 seller_lost_compensation&gt;0，则“已完成赔付”；否则“待申请赔付”。</td><td>程序推导</td></tr><tr><td>实际赔付金额</td><td>Shopee</td><td>get_escrow_detail</td><td>response.order_income.order_adjustment[].amount；兼容 seller_lost_compensation</td><td>对符合赔付条件的正数 amount 求和；若只有 seller_lost_compensation&gt;0，取该字段。</td><td>程序推导</td></tr><tr><td>赔付币种</td><td>Shopee</td><td>get_escrow_detail</td><td>response.order_income.order_adjustment[].currency</td><td>赔付调整记录币种去重后拼接；仅有 seller_lost_compensation 时当前接口未提供该字段，按订单站点币种补充并标记推导。</td><td>直接返回/必要时推导</td></tr><tr><td>赔付时间</td><td>Shopee</td><td>get_escrow_detail</td><td>response.order_income.order_adjustment[].date；回退 create_time/ctime</td><td>取符合赔付条件的调整记录时间，Unix 秒级转本地日期时间。seller_lost_compensation 直出且无调整时间时留空，不虚构时间。</td><td>直接返回/兼容回退</td></tr><tr><td>赔付原因</td><td>Shopee</td><td>get_escrow_detail</td><td>response.order_income.order_adjustment[].adjustment_reason；回退 reason</td><td>拼接所有符合赔付条件的调整原因。</td><td>直接返回/兼容回退</td></tr><tr><td>应赔付金额</td><td>Shopee</td><td>get_escrow_detail</td><td>同“实际赔付金额”</td><td>已完成时等于已记账实际赔付金额；未赔付时接口没有“应赔金额”字段，必须留空并走平台规则/人工申诉确认。</td><td>程序推导</td></tr><tr><td>订单收入参考</td><td>Shopee</td><td>get_escrow_detail</td><td>response.order_income.escrow_amount</td><td>仅供核验，不用来推导未赔付应赔金额。</td><td>直接返回</td></tr><tr><td>订单售价参考</td><td>Shopee</td><td>get_escrow_detail</td><td>response.order_income.order_selling_price</td><td>仅供核验。</td><td>直接返回</td></tr><tr><td>结算单号</td><td>TikTok</td><td>Get Transactions by Order</td><td>data.sku_transactions[].statement_id</td><td>一个订单可能有多个 SKU/结算单号，去重后逐个调用“Get Transactions by Statement”。</td><td>直接返回</td></tr><tr><td>赔付交易筛选</td><td>TikTok</td><td>Get Transactions by Statement</td><td>data.transactions[]</td><td>筛选 type = LOGISTICS_REIMBURSEMENT，且 adjustment_order_id = 当前订单号；兼容订单交易以 order_id = 当前订单号关联。必须翻页直至 next_page_token 为空。</td><td>程序推导</td></tr><tr><td>赔付状态</td><td>TikTok</td><td>Get Transactions by Statement</td><td>data.transactions[].type、adjustment_amount</td><td>存在命中的 LOGISTICS_REIMBURSEMENT 且 adjustment_amount&gt;0 为“已完成赔付”；无命中为“待申请赔付”。data.status=SETTLED 是结算单状态，不直接等于索赔状态。</td><td>程序推导</td></tr><tr><td>实际赔付金额</td><td>TikTok</td><td>Get Transactions by Statement</td><td>data.transactions[].adjustment_amount</td><td>对命中的 LOGISTICS_REIMBURSEMENT adjustment_amount 求和。</td><td>程序推导</td></tr><tr><td>赔付币种</td><td>TikTok</td><td>Get Transactions by Statement</td><td>data.transactions[].currency；回退 data.currency</td><td>取交易币种；无交易时仅可参考订单财务 data.currency。</td><td>直接返回/兼容回退</td></tr><tr><td>赔付时间</td><td>TikTok</td><td>Get Transactions by Statement</td><td>data.create_time</td><td>该字段是结算单生成/入账时间；接口不提供报销申请流转的“创建/审核/成功”三段明细，因此结果表字段应命名为“赔付入账时间”。</td><td>直接返回</td></tr><tr><td>赔付原因</td><td>TikTok</td><td>Get Transactions by Statement</td><td>data.transactions[].type</td><td>固定取命中的 LOGISTICS_REIMBURSEMENT；表示物流丢失、损坏等物流责任退款后的平台报销。</td><td>直接返回</td></tr><tr><td>应赔付金额</td><td>TikTok</td><td>Get Transactions by Statement</td><td>同“实际赔付金额”</td><td>已完成时等于已入账实际金额；待申请时平台接口未返回应赔金额，留空，不把 0 误当应赔 0。</td><td>程序推导</td></tr><tr><td>赔付记录/下一步动作</td><td>Shopee/TikTok</td><td>对应财务接口</td><td>上述赔付状态、金额、时间、原因</td><td>已完成：输出“已记账：金额 币种；原因”，下一步“无需索赔”；待申请：输出“未发现赔付记录”，下一步“需要发起/跟进索赔”。</td><td>程序推导</td></tr><tr><td>赔付状态（后台核验）</td><td>TikTok</td><td>Seller Center 后台结算展示 + 财务接口补证</td><td>非公开 Finance 交易字段；后台展示结算日期和金额</td><td>若 Seller Center 已明确展示该丢件订单的结算日期与赔付金额，而两段 Finance 接口尚未返回可关联交易，则状态为“已完成赔付（后台核验）”，不列入待申请；保留接口补证任务。</td><td>人工后台核验/程序状态</td></tr></tbody></table></div></section>
+<section id="section-3"><h2>3. 判断逻辑</h2><p class="section-desc">赔付状态的判断前提、禁止误判的边界和异常处理规则。</p><div class="table-wrap"><table><thead><tr><th>规则编号</th><th>规则</th><th>处理结果</th><th>注意事项</th></tr></thead><tbody><tr><td>R01</td><td>先由物流轨迹命中丢失或损坏关键词，才进入赔付核验。</td><td>丢失和损坏都归入丢件池，保留“丢件类型”区分。</td><td>不要以取消状态或退款状态直接替代物流丢件判断。</td></tr><tr><td>R02</td><td>Shopee 赔付只取财务明细中正向的、与丢件/损坏赔付有关的调整。</td><td>避免把普通佣金、服务费、退款、运费补贴误计为赔付。</td><td>reason/adjustment_reason 需含 compensation/claim/lost/parcel/damage 等语义组合。</td></tr><tr><td>R03</td><td>Shopee 的 seller_lost_compensation 是站点兼容兜底字段。</td><td>字段大于 0 且没有已筛出的 order_adjustment 时，可认定为已赔付。</td><td>该直出字段没有赔付时间时必须留空。</td></tr><tr><td>R04</td><td>TikTok v202501 先从订单财务接口取 statement_id，再调结算单交易明细。</td><td>以交易 type=LOGISTICS_REIMBURSEMENT 和关联订单号确认赔付。</td><td>不能仅用订单接口的 settlement_amount 或 shipping_cost_amount 判断。</td></tr><tr><td>R05</td><td>待申请记录的 actual_compensation_amount=0 是“没有已入账赔付”的展示值。</td><td>应赔付金额必须为空，等平台规则或人工索赔结果确认。</td><td>不得把 0 当成应赔金额或赔付完成。</td></tr><tr><td>R06</td><td>完整查询必须处理 TikTok 的 page_token/next_page_token。</td><td>防止赔付调整在结算单后续页而漏判为未赔付。</td><td>每个 statement_id 需遍历到 next_page_token 为空。</td></tr><tr><td>R07</td><td>结果表“赔付时间”对 TikTok 指结算单生成/入账时间。</td><td>可用于确认财务入账，但不等于后台报销流程的“已创建/处理中/成功”每个节点时间。</td><td>若需要申诉节点，需另取后台报销流程接口或导出，当前公开 Finance 接口不含完整节点历史。</td></tr><tr><td>R08</td><td>TikTok 待申请赔付的前提是订单结算单接口、结算单交易接口全部成功，且每个 statement_id 已遍历到 next_page_token 为空。</td><td>仅在完整查询后未找到 LOGISTICS_REIMBURSEMENT 时，才可标记为待申请赔付。</td><td>429、超时、权限不足、token 失效或分页中断，一律标记接口重试/财务待复核。</td></tr><tr><td>R09</td><td>Seller Center 明确展示丢件订单的结算日期和赔付金额，但开放 Finance 接口未返回关联交易。</td><td>标记已完成赔付（后台核验），不重复发起索赔。</td><td>保留后台截图/导出证据及接口补证任务；不得把订单 settlement_amount 直接当作接口赔付金额。</td></tr></tbody></table></div></section>
+<section id="section-4"><h2>4. 历史核验样例</h2><p class="section-desc">已核验订单的取数路径，用于联调与回归验证。</p><div class="table-wrap"><table><thead><tr><th>订单号</th><th>平台</th><th>历史核验结论</th><th>接口定位</th><th>金额</th><th>币种</th><th>时间</th><th>原因</th><th>说明</th></tr></thead><tbody><tr><td>260526DKHRV36U</td><td>Shopee</td><td>已完成赔付</td><td>get_escrow_detail -&gt; response.order_income.order_adjustment[]</td><td>296.51</td><td>PHP</td><td>2026-06-09 18:57:14</td><td>Compensation as Parcel was Lost</td><td>历史已核验样例；金额、时间、原因来自赔付调整记录。</td></tr><tr><td>584198598825773041</td><td>TikTok</td><td>已完成赔付</td><td>订单财务 -&gt; statement_id -&gt; 结算单 transactions[]</td><td>30</td><td>MYR</td><td>2026-06-13 00:52:28</td><td>LOGISTICS_REIMBURSEMENT</td><td>历史已核验样例；最终应按 v202501 两段接口链路取值。</td></tr><tr><td>584217288484226737</td><td>TikTok</td><td>已完成赔付（后台核验）</td><td>后台“你赚取的金额”显示 2026-06-15 结算 RM30；待以 statement_id -&gt; transactions[] 补取交易类型</td><td>30</td><td>MYR</td><td>2026-06-15（后台仅展示日期）</td><td>包裹丢失（后台物流标签）</td><td>此前仅查订单级财务接口而误判为待申请；当前已按后台结算记录修正。</td></tr></tbody></table></div></section>
+<section id="section-5"><h2>5. 完整返回参数</h2><p class="section-desc">接口响应结构的脱敏完整示例。</p>
+      <p class="desc">以下为完整字段结构的脱敏示例。授权信息、签名、店铺 cipher 和买家隐私均未写入。也可直接打开 <a href="./包裹丢失赔付接口脱敏完整返回参数_20260716_v3.json">JSON 文件</a>。</p>
+      <div class="responses">
+        <details>
+          <summary><span>Shopee</span>订单清单 / v2.order.get_order_list <em>GET</em></summary>
+          <div class="endpoint">https://partner.shopeemobile.com/api/v2/order/get_order_list</div>
+          <pre>{
+  &quot;error&quot;: &quot;&quot;,
+  &quot;message&quot;: &quot;&quot;,
+  &quot;request_id&quot;: &quot;&lt;request_id&gt;&quot;,
+  &quot;response&quot;: {
+    &quot;more&quot;: false,
+    &quot;next_cursor&quot;: &quot;&quot;,
+    &quot;order_list&quot;: [
+      {
+        &quot;order_sn&quot;: &quot;&lt;Shopee订单号&gt;&quot;,
+        &quot;order_status&quot;: &quot;&lt;订单状态&gt;&quot;,
+        &quot;create_time&quot;: 0,
+        &quot;ship_by_date&quot;: 0,
+        &quot;pickup_done_time&quot;: 0
+      }
+    ]
+  }
+}</pre>
+        </details>
+        <details>
+          <summary><span>Shopee</span>物流轨迹 / v2.logistics.get_tracking_info <em>GET</em></summary>
+          <div class="endpoint">https://partner.shopeemobile.com/api/v2/logistics/get_tracking_info</div>
+          <pre>{
+  &quot;error&quot;: &quot;&quot;,
+  &quot;message&quot;: &quot;&quot;,
+  &quot;request_id&quot;: &quot;&lt;request_id&gt;&quot;,
+  &quot;response&quot;: {
+    &quot;tracking_number&quot;: &quot;&lt;运单号&gt;&quot;,
+    &quot;shipping_carrier&quot;: &quot;&lt;物流渠道&gt;&quot;,
+    &quot;tracking_info&quot;: [
+      {
+        &quot;update_time&quot;: 0,
+        &quot;logistics_status&quot;: &quot;&lt;轨迹状态&gt;&quot;,
+        &quot;description&quot;: &quot;&lt;轨迹描述&gt;&quot;,
+        &quot;tracking_number&quot;: &quot;&lt;可能按站点返回&gt;&quot;,
+        &quot;shipping_carrier&quot;: &quot;&lt;可能按站点返回&gt;&quot;
+      }
+    ]
+  }
+}</pre>
+        </details>
+        <details>
+          <summary><span>Shopee</span>财务/赔付 / v2.payment.get_escrow_detail <em>GET</em></summary>
+          <div class="endpoint">https://partner.shopeemobile.com/api/v2/payment/get_escrow_detail</div>
+          <pre>{
+  &quot;error&quot;: &quot;&quot;,
+  &quot;message&quot;: &quot;&quot;,
+  &quot;request_id&quot;: &quot;&lt;request_id&gt;&quot;,
+  &quot;response&quot;: {
+    &quot;order_sn&quot;: &quot;&lt;Shopee订单号&gt;&quot;,
+    &quot;return_order_sn_list&quot;: [],
+    &quot;buyer_user_name&quot;: &quot;&lt;已脱敏，不入结果表&gt;&quot;,
+    &quot;buyer_payment_info&quot;: {
+      &quot;buyer_paid_extended_warranty&quot;: 0,
+      &quot;buyer_paid_installation_fee&quot;: 0,
+      &quot;buyer_payment_method&quot;: &quot;&lt;支付方式&gt;&quot;,
+      &quot;buyer_service_fee&quot;: 0,
+      &quot;buyer_tax_amount&quot;: 0,
+      &quot;buyer_total_amount&quot;: 0,
+      &quot;credit_card_promotion&quot;: 0,
+      &quot;footwear_tax&quot;: 0,
+      &quot;icms_tax_amount&quot;: 0,
+      &quot;import_tax_amount&quot;: 0,
+      &quot;initial_buyer_txn_fee&quot;: 0,
+      &quot;insurance_premium&quot;: 0,
+      &quot;iof_tax_amount&quot;: 0,
+      &quot;is_paid_by_credit_card&quot;: false,
+      &quot;merchant_subtotal&quot;: 0,
+      &quot;seller_voucher&quot;: 0,
+      &quot;shipping_fee&quot;: 0,
+      &quot;shipping_fee_sst_amount&quot;: 0,
+      &quot;shopee_coins_redeemed&quot;: 0,
+      &quot;shopee_voucher&quot;: 0,
+      &quot;trade_in_discount&quot;: 0
+    },
+    &quot;order_income&quot;: {
+      &quot;actual_installation_fee&quot;: 0,
+      &quot;actual_shipping_fee&quot;: 0,
+      &quot;buyer_paid_extended_warranty&quot;: 0,
+      &quot;buyer_paid_shipping_fee&quot;: 0,
+      &quot;buyer_payment_method&quot;: &quot;&lt;支付方式&gt;&quot;,
+      &quot;buyer_total_amount&quot;: 0,
+      &quot;buyer_transaction_fee&quot;: 0,
+      &quot;campaign_fee&quot;: 0,
+      &quot;coins&quot;: 0,
+      &quot;commission_fee&quot;: 0,
+      &quot;cost_of_goods_sold&quot;: 0,
+      &quot;credit_card_promotion&quot;: 0,
+      &quot;credit_card_transaction_fee&quot;: 0,
+      &quot;cross_border_tax&quot;: 0,
+      &quot;delivery_seller_protection_fee_premium_amount&quot;: 0,
+      &quot;drc_adjustable_refund&quot;: 0,
+      &quot;escrow_amount&quot;: 0,
+      &quot;escrow_amount_after_adjustment&quot;: 0,
+      &quot;escrow_import_tax&quot;: 0,
+      &quot;escrow_tax&quot;: 0,
+      &quot;estimated_shipping_fee&quot;: 0,
+      &quot;final_escrow_product_gst&quot;: 0,
+      &quot;final_escrow_shipping_gst&quot;: 0,
+      &quot;final_product_protection&quot;: 0,
+      &quot;final_product_vat_tax&quot;: 0,
+      &quot;final_return_to_seller_shipping_fee&quot;: 0,
+      &quot;final_shipping_fee&quot;: 0,
+      &quot;final_shipping_vat_tax&quot;: 0,
+      &quot;fsf_seller_protection_fee_claim_amount&quot;: 0,
+      &quot;installation_fee_paid_by_buyer&quot;: 0,
+      &quot;instalment_plan&quot;: &quot;&lt;分期计划&gt;&quot;,
+      &quot;items&quot;: [
+        {
+          &quot;activity_id&quot;: 0,
+          &quot;activity_type&quot;: &quot;&quot;,
+          &quot;ams_commission_fee&quot;: 0,
+          &quot;buyer_paid_extended_warranty&quot;: 0,
+          &quot;discount_from_coin&quot;: 0,
+          &quot;discount_from_voucher_seller&quot;: 0,
+          &quot;discount_from_voucher_shopee&quot;: 0,
+          &quot;discounted_price&quot;: 0,
+          &quot;installation_fee_paid_by_buyer&quot;: 0,
+          &quot;is_b2c_shop_item&quot;: false,
+          &quot;is_main_item&quot;: false,
+          &quot;item_id&quot;: 0,
+          &quot;item_name&quot;: &quot;&lt;商品名称&gt;&quot;,
+          &quot;item_sku&quot;: &quot;&lt;商品SKU&gt;&quot;,
+          &quot;model_id&quot;: 0,
+          &quot;model_name&quot;: &quot;&lt;规格&gt;&quot;,
+          &quot;model_sku&quot;: &quot;&lt;规格SKU&gt;&quot;,
+          &quot;original_price&quot;: 0,
+          &quot;quantity_purchased&quot;: 0,
+          &quot;seller_discount&quot;: 0,
+          &quot;selling_price&quot;: 0,
+          &quot;shopee_discount&quot;: 0
+        }
+      ],
+      &quot;order_adjustment&quot;: [
+        {
+          &quot;amount&quot;: 0,
+          &quot;currency&quot;: &quot;&lt;币种&gt;&quot;,
+          &quot;adjustment_reason&quot;: &quot;&lt;调整原因&gt;&quot;,
+          &quot;date&quot;: 0,
+          &quot;create_time&quot;: 0,
+          &quot;ctime&quot;: 0,
+          &quot;reason&quot;: &quot;&lt;部分站点兼容字段&gt;&quot;
+        }
+      ],
+      &quot;order_ams_commission_fee&quot;: 0,
+      &quot;order_chargeable_weight&quot;: 0,
+      &quot;order_discounted_price&quot;: 0,
+      &quot;order_original_price&quot;: 0,
+      &quot;order_seller_discount&quot;: 0,
+      &quot;order_selling_price&quot;: 0,
+      &quot;original_cost_of_goods_sold&quot;: 0,
+      &quot;original_price&quot;: 0,
+      &quot;original_shopee_discount&quot;: 0,
+      &quot;overseas_return_service_fee&quot;: 0,
+      &quot;payment_promotion&quot;: 0,
+      &quot;prorated_coins_value_offset_return_items&quot;: 0,
+      &quot;prorated_payment_channel_promo_bank_offset_return_items&quot;: 0,
+      &quot;prorated_payment_channel_promo_shopee_offset_return_items&quot;: 0,
+      &quot;prorated_seller_voucher_offset_return_items&quot;: 0,
+      &quot;prorated_shopee_voucher_offset_return_items&quot;: 0,
+      &quot;reverse_shipping_fee&quot;: 0,
+      &quot;reverse_shipping_fee_sst&quot;: 0,
+      &quot;rsf_seller_protection_fee_claim_amount&quot;: 0,
+      &quot;sales_tax_on_lvg&quot;: 0,
+      &quot;seller_coin_cash_back&quot;: 0,
+      &quot;seller_discount&quot;: 0,
+      &quot;seller_lost_compensation&quot;: 0,
+      &quot;seller_return_refund&quot;: 0,
+      &quot;seller_shipping_discount&quot;: 0,
+      &quot;seller_transaction_fee&quot;: 0,
+      &quot;seller_voucher_code&quot;: [],
+      &quot;service_fee&quot;: 0,
+      &quot;shipping_fee_discount_from_3pl&quot;: 0,
+      &quot;shipping_fee_sst&quot;: 0,
+      &quot;shipping_seller_protection_fee_amount&quot;: 0,
+      &quot;shopee_discount&quot;: 0,
+      &quot;shopee_shipping_rebate&quot;: 0,
+      &quot;tenure_info_list&quot;: [
+        {
+          &quot;instalment_plan&quot;: &quot;&lt;分期计划&gt;&quot;
+        }
+      ],
+      &quot;total_adjustment_amount&quot;: 0,
+      &quot;vat_on_imported_goods&quot;: 0,
+      &quot;voucher_from_seller&quot;: 0,
+      &quot;voucher_from_shopee&quot;: 0,
+      &quot;withholding_pit_tax&quot;: 0,
+      &quot;withholding_tax&quot;: 0,
+      &quot;withholding_vat_tax&quot;: 0
+    }
+  }
+}</pre>
+        </details>
+        <details>
+          <summary><span>TikTok</span>订单清单 / Get Order List <em>POST</em></summary>
+          <div class="endpoint">https://open-api.tiktokglobalshop.com/order/202309/orders/search</div>
+          <pre>{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;Success&quot;,
+  &quot;request_id&quot;: &quot;&lt;request_id&gt;&quot;,
+  &quot;data&quot;: {
+    &quot;next_page_token&quot;: &quot;&quot;,
+    &quot;orders&quot;: [
+      {
+        &quot;id&quot;: &quot;&lt;TikTok订单号&gt;&quot;,
+        &quot;status&quot;: &quot;&lt;订单状态&gt;&quot;,
+        &quot;create_time&quot;: 0,
+        &quot;rts_time&quot;: 0,
+        &quot;shipping_due_time&quot;: 0
+      }
+    ]
+  }
+}</pre>
+        </details>
+        <details>
+          <summary><span>TikTok</span>物流轨迹 / Get Tracking <em>GET</em></summary>
+          <div class="endpoint">https://open-api.tiktokglobalshop.com/fulfillment/202309/orders/{order_id}/tracking</div>
+          <pre>{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;Success&quot;,
+  &quot;request_id&quot;: &quot;&lt;request_id&gt;&quot;,
+  &quot;data&quot;: {
+    &quot;tracking_number&quot;: &quot;&lt;运单号&gt;&quot;,
+    &quot;shipping_provider_name&quot;: &quot;&lt;物流渠道&gt;&quot;,
+    &quot;package&quot;: {
+      &quot;tracking_number&quot;: &quot;&lt;运单号&gt;&quot;,
+      &quot;shipping_provider_name&quot;: &quot;&lt;物流渠道&gt;&quot;
+    },
+    &quot;tracking&quot;: [
+      {
+        &quot;update_time&quot;: 0,
+        &quot;event_time&quot;: 0,
+        &quot;create_time&quot;: 0,
+        &quot;status&quot;: &quot;&lt;轨迹状态&gt;&quot;,
+        &quot;tracking_status&quot;: &quot;&lt;兼容状态字段&gt;&quot;,
+        &quot;event&quot;: &quot;&lt;兼容事件字段&gt;&quot;,
+        &quot;description&quot;: &quot;&lt;轨迹描述&gt;&quot;,
+        &quot;message&quot;: &quot;&lt;兼容描述字段&gt;&quot;
+      }
+    ]
+  }
+}</pre>
+        </details>
+        <details>
+          <summary><span>TikTok</span>订单财务/结算单号 / Get Transactions by Order <em>GET</em></summary>
+          <div class="endpoint">https://open-api.tiktokglobalshop.com/finance/202501/orders/{order_id}/statement_transactions</div>
+          <pre>{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;Success&quot;,
+  &quot;request_id&quot;: &quot;&lt;request_id&gt;&quot;,
+  &quot;data&quot;: {
+    &quot;order_id&quot;: &quot;&lt;TikTok订单号&gt;&quot;,
+    &quot;order_create_time&quot;: 0,
+    &quot;currency&quot;: &quot;&lt;币种&gt;&quot;,
+    &quot;revenue_amount&quot;: &quot;0&quot;,
+    &quot;fee_and_tax_amount&quot;: &quot;0&quot;,
+    &quot;shipping_cost_amount&quot;: &quot;0&quot;,
+    &quot;settlement_amount&quot;: &quot;0&quot;,
+    &quot;sku_transactions&quot;: [
+      {
+        &quot;sku_id&quot;: &quot;&lt;SKU ID&gt;&quot;,
+        &quot;sku_name&quot;: &quot;&lt;SKU名称&gt;&quot;,
+        &quot;statement_id&quot;: &quot;&lt;结算单号&gt;&quot;,
+        &quot;product_name&quot;: &quot;&lt;商品名称&gt;&quot;,
+        &quot;quantity&quot;: &quot;0&quot;,
+        &quot;settlement_amount&quot;: &quot;0&quot;,
+        &quot;revenue_amount&quot;: &quot;0&quot;,
+        &quot;shipping_cost_amount&quot;: &quot;0&quot;,
+        &quot;fee_tax_amount&quot;: &quot;0&quot;,
+        &quot;revenue_breakdown&quot;: {},
+        &quot;shipping_cost_breakdown&quot;: {},
+        &quot;fee_tax_breakdown&quot;: {}
+      }
+    ]
+  }
+}</pre>
+        </details>
+        <details>
+          <summary><span>TikTok</span>赔付交易明细 / Get Transactions by Statement <em>GET</em></summary>
+          <div class="endpoint">https://open-api.tiktokglobalshop.com/finance/202501/statements/{statement_id}/statement_transactions</div>
+          <pre>{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;Success&quot;,
+  &quot;request_id&quot;: &quot;&lt;request_id&gt;&quot;,
+  &quot;data&quot;: {
+    &quot;next_page_token&quot;: &quot;&quot;,
+    &quot;id&quot;: &quot;&lt;结算单号&gt;&quot;,
+    &quot;create_time&quot;: 0,
+    &quot;status&quot;: &quot;SETTLED&quot;,
+    &quot;currency&quot;: &quot;&lt;币种&gt;&quot;,
+    &quot;payable_amount&quot;: &quot;0&quot;,
+    &quot;total_reserve_amount&quot;: &quot;0&quot;,
+    &quot;total_settlement_amount&quot;: &quot;0&quot;,
+    &quot;total_settlement_breakdown&quot;: {
+      &quot;total_revenue_amount&quot;: &quot;0&quot;,
+      &quot;total_shipping_cost_amount&quot;: &quot;0&quot;,
+      &quot;total_fee_tax_amount&quot;: &quot;0&quot;,
+      &quot;total_adjustment_amount&quot;: &quot;0&quot;
+    },
+    &quot;total_count&quot;: 0,
+    &quot;transactions&quot;: [
+      {
+        &quot;id&quot;: &quot;&lt;交易ID&gt;&quot;,
+        &quot;type&quot;: &quot;LOGISTICS_REIMBURSEMENT&quot;,
+        &quot;adjustment_id&quot;: &quot;&lt;调整ID&gt;&quot;,
+        &quot;adjustment_order_id&quot;: &quot;&lt;关联订单号&gt;&quot;,
+        &quot;order_id&quot;: &quot;&lt;订单交易时可能使用的关联订单号&gt;&quot;,
+        &quot;adjustment_amount&quot;: &quot;0&quot;,
+        &quot;currency&quot;: &quot;&lt;币种&gt;&quot;,
+        &quot;revenue_amount&quot;: &quot;0&quot;,
+        &quot;shipping_cost_amount&quot;: &quot;0&quot;,
+        &quot;fee_tax_amount&quot;: &quot;0&quot;,
+        &quot;settlement_amount&quot;: &quot;0&quot;,
+        &quot;revenue_breakdown&quot;: {},
+        &quot;shipping_cost_breakdown&quot;: {},
+        &quot;fee_tax_breakdown&quot;: {},
+        &quot;supplementary_component&quot;: {}
+      }
+    ]
+  }
+}</pre>
+        </details>
+      </div></section>
+<section id="section-6"><h2>6. 说明</h2><p class="section-desc">数据范围、安全边界与版本注意事项。</p><div class="table-wrap"><table><thead><tr><th>说明项</th><th>内容</th></tr></thead><tbody><tr><td>文件用途</td><td>对应“包裹丢失赔付待申请与已完成清单_20260716.xlsx”的可追溯字段说明。</td></tr><tr><td>历史数据时间范围</td><td>当前核验结果来自 2026-07-03 的历史查询缓存；它不是实时重跑结果。</td></tr><tr><td>安全处理</td><td>完整响应示例已替换订单号、商品、买家和鉴权信息。Token、refresh token、app_secret、partner_key、sign 不写入文件。</td></tr><tr><td>TikTok 版本提醒</td><td>历史结果中记录为 LOGISTICS_REIMBURSEMENT adjustment_amount；官方 v202501 已将订单级 adjustment_amount 移除，生产实现必须通过 statement_id 查询结算单 transactions[]。</td></tr><tr><td>Shopee 站点差异</td><td>不同站点可能返回不同的可选字段。程序采用 documented 主字段 + 兼容回退字段；缺失时留空，不用猜测值覆盖。</td></tr><tr><td>v3 新增口径</td><td>赔付状态分为：接口直接核验、后台结算核验、待申请赔付、财务待复核和接口重试。TikTok 实际赔付金额只累计匹配交易的 adjustment_amount。</td></tr><tr><td>完整返回参数</td><td>对应脱敏文件“包裹丢失赔付接口脱敏完整返回参数_20260716_v3.json”，不含任何授权、签名或买家隐私字段。</td></tr></tbody></table></div></section>
+  </main>
+</body>
+</html>

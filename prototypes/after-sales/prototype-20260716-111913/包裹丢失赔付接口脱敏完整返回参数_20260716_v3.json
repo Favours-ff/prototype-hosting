@@ -1,0 +1,353 @@
+{
+  "title": "包裹丢失赔付校验接口脱敏完整返回参数",
+  "generated_at": "2026-07-16",
+  "notice": "以下为赔付校验接口的完整字段结构脱敏示例，不含 access_token、refresh_token、partner_key、app_secret、sign、shop_cipher 及买家隐私信息。TikTok 赔付必须按订单结算单接口取得 statement_id 后，再查询结算单交易明细并完成全部分页。",
+  "responses": [
+    {
+      "platform": "Shopee",
+      "purpose": "订单清单",
+      "method": "GET",
+      "endpoint": "https://partner.shopeemobile.com/api/v2/order/get_order_list",
+      "api_name": "v2.order.get_order_list",
+      "response": {
+        "error": "",
+        "message": "",
+        "request_id": "<request_id>",
+        "response": {
+          "more": false,
+          "next_cursor": "",
+          "order_list": [
+            {
+              "order_sn": "<Shopee订单号>",
+              "order_status": "<订单状态>",
+              "create_time": 0,
+              "ship_by_date": 0,
+              "pickup_done_time": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "platform": "Shopee",
+      "purpose": "物流轨迹",
+      "method": "GET",
+      "endpoint": "https://partner.shopeemobile.com/api/v2/logistics/get_tracking_info",
+      "api_name": "v2.logistics.get_tracking_info",
+      "response": {
+        "error": "",
+        "message": "",
+        "request_id": "<request_id>",
+        "response": {
+          "tracking_number": "<运单号>",
+          "shipping_carrier": "<物流渠道>",
+          "tracking_info": [
+            {
+              "update_time": 0,
+              "logistics_status": "<轨迹状态>",
+              "description": "<轨迹描述>",
+              "tracking_number": "<可能按站点返回>",
+              "shipping_carrier": "<可能按站点返回>"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "platform": "Shopee",
+      "purpose": "财务/赔付",
+      "method": "GET",
+      "endpoint": "https://partner.shopeemobile.com/api/v2/payment/get_escrow_detail",
+      "api_name": "v2.payment.get_escrow_detail",
+      "response": {
+        "error": "",
+        "message": "",
+        "request_id": "<request_id>",
+        "response": {
+          "order_sn": "<Shopee订单号>",
+          "return_order_sn_list": [],
+          "buyer_user_name": "<已脱敏，不入结果表>",
+          "buyer_payment_info": {
+            "buyer_paid_extended_warranty": 0,
+            "buyer_paid_installation_fee": 0,
+            "buyer_payment_method": "<支付方式>",
+            "buyer_service_fee": 0,
+            "buyer_tax_amount": 0,
+            "buyer_total_amount": 0,
+            "credit_card_promotion": 0,
+            "footwear_tax": 0,
+            "icms_tax_amount": 0,
+            "import_tax_amount": 0,
+            "initial_buyer_txn_fee": 0,
+            "insurance_premium": 0,
+            "iof_tax_amount": 0,
+            "is_paid_by_credit_card": false,
+            "merchant_subtotal": 0,
+            "seller_voucher": 0,
+            "shipping_fee": 0,
+            "shipping_fee_sst_amount": 0,
+            "shopee_coins_redeemed": 0,
+            "shopee_voucher": 0,
+            "trade_in_discount": 0
+          },
+          "order_income": {
+            "actual_installation_fee": 0,
+            "actual_shipping_fee": 0,
+            "buyer_paid_extended_warranty": 0,
+            "buyer_paid_shipping_fee": 0,
+            "buyer_payment_method": "<支付方式>",
+            "buyer_total_amount": 0,
+            "buyer_transaction_fee": 0,
+            "campaign_fee": 0,
+            "coins": 0,
+            "commission_fee": 0,
+            "cost_of_goods_sold": 0,
+            "credit_card_promotion": 0,
+            "credit_card_transaction_fee": 0,
+            "cross_border_tax": 0,
+            "delivery_seller_protection_fee_premium_amount": 0,
+            "drc_adjustable_refund": 0,
+            "escrow_amount": 0,
+            "escrow_amount_after_adjustment": 0,
+            "escrow_import_tax": 0,
+            "escrow_tax": 0,
+            "estimated_shipping_fee": 0,
+            "final_escrow_product_gst": 0,
+            "final_escrow_shipping_gst": 0,
+            "final_product_protection": 0,
+            "final_product_vat_tax": 0,
+            "final_return_to_seller_shipping_fee": 0,
+            "final_shipping_fee": 0,
+            "final_shipping_vat_tax": 0,
+            "fsf_seller_protection_fee_claim_amount": 0,
+            "installation_fee_paid_by_buyer": 0,
+            "instalment_plan": "<分期计划>",
+            "items": [
+              {
+                "activity_id": 0,
+                "activity_type": "",
+                "ams_commission_fee": 0,
+                "buyer_paid_extended_warranty": 0,
+                "discount_from_coin": 0,
+                "discount_from_voucher_seller": 0,
+                "discount_from_voucher_shopee": 0,
+                "discounted_price": 0,
+                "installation_fee_paid_by_buyer": 0,
+                "is_b2c_shop_item": false,
+                "is_main_item": false,
+                "item_id": 0,
+                "item_name": "<商品名称>",
+                "item_sku": "<商品SKU>",
+                "model_id": 0,
+                "model_name": "<规格>",
+                "model_sku": "<规格SKU>",
+                "original_price": 0,
+                "quantity_purchased": 0,
+                "seller_discount": 0,
+                "selling_price": 0,
+                "shopee_discount": 0
+              }
+            ],
+            "order_adjustment": [
+              {
+                "amount": 0,
+                "currency": "<币种>",
+                "adjustment_reason": "<调整原因>",
+                "date": 0,
+                "create_time": 0,
+                "ctime": 0,
+                "reason": "<部分站点兼容字段>"
+              }
+            ],
+            "order_ams_commission_fee": 0,
+            "order_chargeable_weight": 0,
+            "order_discounted_price": 0,
+            "order_original_price": 0,
+            "order_seller_discount": 0,
+            "order_selling_price": 0,
+            "original_cost_of_goods_sold": 0,
+            "original_price": 0,
+            "original_shopee_discount": 0,
+            "overseas_return_service_fee": 0,
+            "payment_promotion": 0,
+            "prorated_coins_value_offset_return_items": 0,
+            "prorated_payment_channel_promo_bank_offset_return_items": 0,
+            "prorated_payment_channel_promo_shopee_offset_return_items": 0,
+            "prorated_seller_voucher_offset_return_items": 0,
+            "prorated_shopee_voucher_offset_return_items": 0,
+            "reverse_shipping_fee": 0,
+            "reverse_shipping_fee_sst": 0,
+            "rsf_seller_protection_fee_claim_amount": 0,
+            "sales_tax_on_lvg": 0,
+            "seller_coin_cash_back": 0,
+            "seller_discount": 0,
+            "seller_lost_compensation": 0,
+            "seller_return_refund": 0,
+            "seller_shipping_discount": 0,
+            "seller_transaction_fee": 0,
+            "seller_voucher_code": [],
+            "service_fee": 0,
+            "shipping_fee_discount_from_3pl": 0,
+            "shipping_fee_sst": 0,
+            "shipping_seller_protection_fee_amount": 0,
+            "shopee_discount": 0,
+            "shopee_shipping_rebate": 0,
+            "tenure_info_list": [
+              {
+                "instalment_plan": "<分期计划>"
+              }
+            ],
+            "total_adjustment_amount": 0,
+            "vat_on_imported_goods": 0,
+            "voucher_from_seller": 0,
+            "voucher_from_shopee": 0,
+            "withholding_pit_tax": 0,
+            "withholding_tax": 0,
+            "withholding_vat_tax": 0
+          }
+        }
+      }
+    },
+    {
+      "platform": "TikTok",
+      "purpose": "订单清单",
+      "method": "POST",
+      "endpoint": "https://open-api.tiktokglobalshop.com/order/202309/orders/search",
+      "api_name": "Get Order List",
+      "response": {
+        "code": 0,
+        "message": "Success",
+        "request_id": "<request_id>",
+        "data": {
+          "next_page_token": "",
+          "orders": [
+            {
+              "id": "<TikTok订单号>",
+              "status": "<订单状态>",
+              "create_time": 0,
+              "rts_time": 0,
+              "shipping_due_time": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "platform": "TikTok",
+      "purpose": "物流轨迹",
+      "method": "GET",
+      "endpoint": "https://open-api.tiktokglobalshop.com/fulfillment/202309/orders/{order_id}/tracking",
+      "api_name": "Get Tracking",
+      "response": {
+        "code": 0,
+        "message": "Success",
+        "request_id": "<request_id>",
+        "data": {
+          "tracking_number": "<运单号>",
+          "shipping_provider_name": "<物流渠道>",
+          "package": {
+            "tracking_number": "<运单号>",
+            "shipping_provider_name": "<物流渠道>"
+          },
+          "tracking": [
+            {
+              "update_time": 0,
+              "event_time": 0,
+              "create_time": 0,
+              "status": "<轨迹状态>",
+              "tracking_status": "<兼容状态字段>",
+              "event": "<兼容事件字段>",
+              "description": "<轨迹描述>",
+              "message": "<兼容描述字段>"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "platform": "TikTok",
+      "purpose": "订单财务/结算单号",
+      "method": "GET",
+      "endpoint": "https://open-api.tiktokglobalshop.com/finance/202501/orders/{order_id}/statement_transactions",
+      "api_name": "Get Transactions by Order",
+      "response": {
+        "code": 0,
+        "message": "Success",
+        "request_id": "<request_id>",
+        "data": {
+          "order_id": "<TikTok订单号>",
+          "order_create_time": 0,
+          "currency": "<币种>",
+          "revenue_amount": "0",
+          "fee_and_tax_amount": "0",
+          "shipping_cost_amount": "0",
+          "settlement_amount": "0",
+          "sku_transactions": [
+            {
+              "sku_id": "<SKU ID>",
+              "sku_name": "<SKU名称>",
+              "statement_id": "<结算单号>",
+              "product_name": "<商品名称>",
+              "quantity": "0",
+              "settlement_amount": "0",
+              "revenue_amount": "0",
+              "shipping_cost_amount": "0",
+              "fee_tax_amount": "0",
+              "revenue_breakdown": {},
+              "shipping_cost_breakdown": {},
+              "fee_tax_breakdown": {}
+            }
+          ]
+        }
+      }
+    },
+    {
+      "platform": "TikTok",
+      "purpose": "赔付交易明细",
+      "method": "GET",
+      "endpoint": "https://open-api.tiktokglobalshop.com/finance/202501/statements/{statement_id}/statement_transactions",
+      "api_name": "Get Transactions by Statement",
+      "response": {
+        "code": 0,
+        "message": "Success",
+        "request_id": "<request_id>",
+        "data": {
+          "next_page_token": "",
+          "id": "<结算单号>",
+          "create_time": 0,
+          "status": "SETTLED",
+          "currency": "<币种>",
+          "payable_amount": "0",
+          "total_reserve_amount": "0",
+          "total_settlement_amount": "0",
+          "total_settlement_breakdown": {
+            "total_revenue_amount": "0",
+            "total_shipping_cost_amount": "0",
+            "total_fee_tax_amount": "0",
+            "total_adjustment_amount": "0"
+          },
+          "total_count": 0,
+          "transactions": [
+            {
+              "id": "<交易ID>",
+              "type": "LOGISTICS_REIMBURSEMENT",
+              "adjustment_id": "<调整ID>",
+              "adjustment_order_id": "<关联订单号>",
+              "order_id": "<订单交易时可能使用的关联订单号>",
+              "adjustment_amount": "0",
+              "currency": "<币种>",
+              "revenue_amount": "0",
+              "shipping_cost_amount": "0",
+              "fee_tax_amount": "0",
+              "settlement_amount": "0",
+              "revenue_breakdown": {},
+              "shipping_cost_breakdown": {},
+              "fee_tax_breakdown": {},
+              "supplementary_component": {}
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

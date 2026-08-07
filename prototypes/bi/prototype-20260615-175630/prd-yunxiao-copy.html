@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>销售运营概况趋势对比 - 云效富文本复制版</title>
+  <style>
+    :root { --blue:#1677ff; --border:#d9e2ef; --head:#eef5ff; --text:#1f2937; --muted:#667085; }
+    body { margin:0; background:#f5f7fb; color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif; line-height:1.65; }
+    .toolbar { position:sticky; top:0; z-index:10; display:flex; gap:12px; align-items:center; padding:14px 24px; background:#fff; border-bottom:1px solid var(--border); box-shadow:0 4px 14px rgba(15,23,42,.06); }
+    .toolbar button { border:0; border-radius:6px; padding:9px 16px; background:var(--blue); color:#fff; font-size:14px; cursor:pointer; }
+    .toolbar span { color:var(--muted); font-size:13px; }
+    .page { max-width:1080px; margin:24px auto 60px; background:#fff; padding:34px 42px; border:1px solid var(--border); border-radius:8px; box-shadow:0 8px 24px rgba(15,23,42,.07); }
+    h1 { margin:0 0 8px; color:#123d7a; font-size:26px; }
+    h2 { margin:28px 0 12px; color:#174a91; font-size:20px; border-left:4px solid var(--blue); padding-left:10px; }
+    h3 { margin:20px 0 10px; color:#1f5fbf; font-size:16px; }
+    p { margin:8px 0; }
+    table { width:100%; border-collapse:collapse; margin:10px 0 18px; table-layout:auto; }
+    th, td { border:1px solid var(--border); padding:8px 10px; text-align:left; vertical-align:top; font-size:14px; }
+    th { background:var(--head); color:#123d7a; font-weight:700; }
+    .note { background:#f7faff; border:1px solid #cfe1ff; padding:10px 12px; border-radius:6px; color:#36536f; margin:12px 0 18px; }
+    .color-list { letter-spacing:.2px; }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <button id="copyRich">复制富文本到剪贴板</button>
+    <span id="copyStatus">点击后粘贴到云效需求描述，标题与表格样式会保留。</span>
+  </div>
+
+  <main id="prdContent" class="page">
+    <h1>销售运营概况：增加趋势对比</h1>
+    <p class="note">本文档仅说明本次增量调整，不重复描述销售运营概况页现有功能。</p>
+
+    <h2>1. 调整目的</h2>
+    <p>当前趋势图仅展示顶部筛选条件下的汇总走势。本次增加分组对比能力，支持业务对比不同事业部、店铺、运营人员的业绩走势。</p>
+
+    <h2>2. 调整范围</h2>
+    <table>
+      <tbody>
+        <tr><th>区域</th><th>本次调整</th></tr>
+        <tr><td>趋势图</td><td>增加“汇总趋势 / 分组对比”切换</td></tr>
+        <tr><td>汇总趋势</td><td>支持选择最多 4 个业务指标</td></tr>
+        <tr><td>分组对比</td><td>支持按事业部、店铺、运营维度选择对象进行趋势对比</td></tr>
+        <tr><td>多折线样式</td><td>优化 10 条折线同时展示时的颜色和视觉层级</td></tr>
+        <tr><td>销售员排名</td><td>销售员姓名旁增加入职信息悬浮展示</td></tr>
+      </tbody>
+    </table>
+
+    <h2>3. 功能规则</h2>
+    <h3>3.1 汇总趋势</h3>
+    <table>
+      <tbody>
+        <tr><th>规则项</th><th>规则</th></tr>
+        <tr><td>默认模式</td><td>页面默认展示汇总趋势</td></tr>
+        <tr><td>指标数量</td><td>最少选择 1 个，最多选择 4 个</td></tr>
+        <tr><td>指标选择</td><td>点击顶部业务指标卡增加或取消指标</td></tr>
+        <tr><td>多指标展示</td><td>选择多个指标时，纵轴使用趋势指数；悬浮数据点展示原始业务值</td></tr>
+        <tr><td>超限处理</td><td>已选择 4 个指标后，点击其他指标时提示“汇总趋势最多选择 4 个指标”</td></tr>
+      </tbody>
+    </table>
+
+    <h3>3.2 分组对比</h3>
+    <table>
+      <tbody>
+        <tr><th>规则项</th><th>规则</th></tr>
+        <tr><td>指标数量</td><td>每次只支持选择 1 个业务指标</td></tr>
+        <tr><td>指标切换</td><td>点击顶部业务指标卡切换当前对比指标</td></tr>
+        <tr><td>默认维度</td><td>默认按照事业部对比</td></tr>
+        <tr><td>可选维度</td><td>事业部、店铺、运营</td></tr>
+        <tr><td>同级限制</td><td>只能选择当前维度的同级对象，不能跨维度混合选择</td></tr>
+        <tr><td>切换维度</td><td>清空原维度已选对象，并加载新维度对象</td></tr>
+        <tr><td>选择上限</td><td>每次最多选择 10 个同级对象</td></tr>
+        <tr><td>运营展示</td><td>运营对象展示人员姓名，并展示所属事业部和小组路径</td></tr>
+        <tr><td>总计口径</td><td>总计趋势按顶部完整筛选条件计算，不仅汇总已选对象</td></tr>
+        <tr><td>总计开关</td><td>事业部、店铺维度默认开启；运营维度默认关闭，用户可手动开启</td></tr>
+      </tbody>
+    </table>
+
+    <h2>4. 交互与 UI 调整</h2>
+    <table>
+      <tbody>
+        <tr><th>场景</th><th>调整要求</th></tr>
+        <tr><td>模式切换</td><td>使用 Segmented 展示“汇总趋势 / 分组对比”</td></tr>
+        <tr><td>维度切换</td><td>使用 Segmented 展示“事业部 / 店铺 / 运营”</td></tr>
+        <tr><td>对象选择</td><td>使用多选控件；展示已选数量；达到 10 个后禁用其他未选对象</td></tr>
+        <tr><td>已选对象</td><td>使用可移除标签展示；标签增加与对应折线一致的颜色点</td></tr>
+        <tr><td>对象折线</td><td>最多展示 10 条；标签、图例、折线颜色保持一致</td></tr>
+        <tr><td>密集折线</td><td>超过 4 条序列时不展示面积填充，避免颜色叠加</td></tr>
+        <tr><td>总计折线</td><td>使用深灰色虚线，与对象折线区分</td></tr>
+        <tr><td>图例交互</td><td>点击图例隐藏或恢复对应折线</td></tr>
+        <tr><td>数据点</td><td>悬浮后展示时间、对象名称和原始指标值</td></tr>
+        <tr><td>销售员入职信息</td><td>姓名旁展示信息入口；悬浮展示姓名、入职时间、司龄</td></tr>
+      </tbody>
+    </table>
+
+    <h3>4.1 折线色板</h3>
+    <p>对象折线按选择顺序使用以下颜色，颜色仅用于对象区分，不表示成功、警告或异常状态。</p>
+    <table>
+      <tbody>
+        <tr><th>顺序</th><th>颜色</th></tr>
+        <tr><td>1-5</td><td class="color-list">#1677ff、#13a8a8、#d48806、#d84a49、#078287</td></tr>
+        <tr><td>6-10</td><td class="color-list">#6f42c1、#c41d7f、#d46b08、#3158c9、#6f9e12</td></tr>
+      </tbody>
+    </table>
+
+    <h2>5. 数据要求</h2>
+    <table>
+      <tbody>
+        <tr><th>数据项</th><th>要求</th></tr>
+        <tr><td>对比对象列表</td><td>按当前维度和用户数据权限返回</td></tr>
+        <tr><td>对比趋势数据</td><td>按顶部筛选条件、对比维度、对象 ID、业务指标查询</td></tr>
+        <tr><td>总计趋势数据</td><td>按顶部完整筛选条件计算</td></tr>
+        <tr><td>运营路径</td><td>返回运营所属事业部和小组名称</td></tr>
+        <tr><td>入职信息</td><td>返回销售员入职时间；司龄可由前端或后端计算</td></tr>
+        <tr><td>数据权限</td><td>不返回用户无权限查看的事业部、店铺或运营数据</td></tr>
+      </tbody>
+    </table>
+
+    <h2>6. 异常与提示</h2>
+    <table>
+      <tbody>
+        <tr><th>场景</th><th>系统处理</th></tr>
+        <tr><td>汇总趋势取消最后 1 个指标</td><td>阻止取消，提示“汇总趋势至少保留 1 个指标”</td></tr>
+        <tr><td>汇总趋势选择第 5 个指标</td><td>阻止选择，提示“汇总趋势最多选择 4 个指标”</td></tr>
+        <tr><td>分组对比选择第 11 个对象</td><td>阻止选择，提示“已达到 10 个{维度}上限”</td></tr>
+        <tr><td>切换对比维度</td><td>清空原维度已选对象</td></tr>
+        <tr><td>当前范围无可选对象</td><td>展示空状态，不绘制折线</td></tr>
+        <tr><td>趋势数据加载失败</td><td>保留筛选条件，展示错误提示和重试入口</td></tr>
+        <tr><td>销售员无人员归属</td><td>入职信息展示“暂无人员归属”</td></tr>
+      </tbody>
+    </table>
+
+    <h2>7. 验收标准</h2>
+    <table>
+      <tbody>
+        <tr><th>编号</th><th>验收场景</th><th>预期结果</th></tr>
+        <tr><td>1</td><td>汇总趋势选择 1 至 4 个业务指标</td><td>展示对应指标趋势；多指标时纵轴使用趋势指数；悬浮展示原始业务值</td></tr>
+        <tr><td>2</td><td>选择事业部、店铺或运营维度</td><td>对象选择器只展示当前维度同级对象；最多选择 10 个；分组对比只展示 1 个指标</td></tr>
+        <tr><td>3</td><td>从事业部切换为运营维度</td><td>清空事业部选择；加载运营姓名及所属路径；默认关闭筛选范围总计</td></tr>
+        <tr><td>4</td><td>选择 10 个同级对象</td><td>展示 10 条对象折线；不展示面积填充；标签、图例和折线颜色一一对应</td></tr>
+        <tr><td>5</td><td>开启“显示筛选范围总计”</td><td>增加深灰色虚线；总计数据按顶部完整筛选条件计算</td></tr>
+        <tr><td>6</td><td>悬浮销售员姓名旁的信息入口</td><td>展示销售员姓名、入职时间和司龄</td></tr>
+      </tbody>
+    </table>
+
+    <h2>8. 本次不调整</h2>
+    <table>
+      <tbody>
+        <tr><th>不调整项</th><th>说明</th></tr>
+        <tr><td>顶部筛选条件</td><td>沿用现有筛选项和查询逻辑</td></tr>
+        <tr><td>业务指标口径</td><td>沿用现有销售额、订单数、利润、利润率计算口径</td></tr>
+        <tr><td>销售员排名规则</td><td>不调整排名计算和排序逻辑</td></tr>
+        <tr><td>页面权限体系</td><td>沿用销售运营概况页现有权限</td></tr>
+        <tr><td>其他页面</td><td>不新增页面，不调整其他 BI 报表</td></tr>
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    const button = document.getElementById('copyRich');
+    const status = document.getElementById('copyStatus');
+
+    function fallbackRichCopy(content) {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(content);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      const copied = document.execCommand('copy');
+      selection.removeAllRanges();
+      return copied;
+    }
+
+    button.addEventListener('click', async () => {
+      const content = document.getElementById('prdContent');
+      const html = content.innerHTML;
+      const text = content.innerText;
+
+      try {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'text/html': new Blob([html], { type: 'text/html' }),
+            'text/plain': new Blob([text], { type: 'text/plain' })
+          })
+        ]);
+        status.textContent = '已复制富文本。现在粘贴到云效需求描述即可。';
+        status.style.color = '#15803d';
+      } catch (error) {
+        if (fallbackRichCopy(content)) {
+          status.textContent = '已复制富文本。现在粘贴到云效需求描述即可。';
+          status.style.color = '#15803d';
+        } else {
+          status.textContent = '浏览器未允许自动复制，请手动选中正文复制后粘贴到云效。';
+          status.style.color = '#b45309';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

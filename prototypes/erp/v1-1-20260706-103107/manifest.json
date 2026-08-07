@@ -1,0 +1,9 @@
+{
+  "prototypeId": "v1-1-20260706-103107",
+  "title": "售后挽损模块-包裹丢失与运费多扣最终逻辑-v1.1",
+  "businessSystem": "ERP售后挽损",
+  "owner": "Favours-ff",
+  "sourcePath": "prototype\\after-sales-loss-recovery-logistics",
+  "createdAt": "2026-07-06T10:31:07+08:00",
+  "updatedAt": "2026-07-06T10:31:07+08:00"
+}
