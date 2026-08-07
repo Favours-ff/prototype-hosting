@@ -1,0 +1,227 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>折扣管理 PRD - 云效富文本复制版</title>
+  <style>
+    :root { --blue:#1f5fbf; --border:#d9e2ef; --head:#eef5ff; --text:#1f2937; --muted:#667085; }
+    body { margin:0; background:#f5f7fb; color:var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", Arial, sans-serif; line-height:1.65; }
+    .toolbar { position:sticky; top:0; z-index:10; display:flex; gap:12px; align-items:center; padding:14px 24px; background:#fff; border-bottom:1px solid var(--border); box-shadow:0 4px 14px rgba(15,23,42,.06); }
+    .toolbar button { border:0; border-radius:8px; padding:9px 16px; background:#1f5fbf; color:#fff; font-size:14px; cursor:pointer; }
+    .toolbar span { color:var(--muted); font-size:13px; }
+    .page { max-width:1080px; margin:24px auto 60px; background:#fff; padding:34px 42px; border:1px solid var(--border); border-radius:12px; box-shadow:0 10px 30px rgba(15,23,42,.08); }
+    h1 { margin:0 0 18px; color:#123d7a; font-size:26px; }
+    h2 { margin:30px 0 12px; color:#174a91; font-size:20px; border-left:5px solid #1f5fbf; padding-left:10px; }
+    h3 { margin:22px 0 10px; color:#1f5fbf; font-size:16px; }
+    p { margin:8px 0; }
+    table { width:100%; border-collapse:collapse; margin:10px 0 18px; table-layout:auto; }
+    th, td { border:1px solid var(--border); padding:8px 10px; text-align:left; vertical-align:top; font-size:14px; }
+    th { background:var(--head); color:#123d7a; font-weight:700; }
+    ul, ol { margin:8px 0 18px 22px; padding:0; }
+    li { margin:4px 0; }
+    .note { background:#fff8e6; border:1px solid #ffe2a8; padding:10px 12px; border-radius:8px; color:#7a4b00; margin:12px 0 18px; }
+    .ok { color:#15803d; font-weight:700; }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <button id="copyRich">复制富文本到剪贴板</button>
+    <span id="copyStatus">点击后再粘贴到云效需求描述，会保留表格样式。</span>
+  </div>
+
+  <main id="prdContent" class="page">
+    <h1>折扣管理 PRD</h1>
+    <table>
+      <tbody>
+        <tr><th>项目</th><th>内容</th></tr>
+        <tr><td>需求名称</td><td>折扣管理</td></tr>
+        <tr><td>版本</td><td>V1.0</td></tr>
+        <tr><td>适用平台</td><td>Shopee、TikTok</td></tr>
+        <tr><td>适用系统</td><td>ERP</td></tr>
+        <tr><td>需求类型</td><td>新功能</td></tr>
+        <tr><td>本期范围</td><td>产品折扣、多买多省、买X送Y</td></tr>
+        <tr><td>不做范围</td><td>代金券、限时抢购、运费折扣、平台活动、活动级删除</td></tr>
+      </tbody>
+    </table>
+
+    <h2>1. 背景与目标</h2>
+    <table>
+      <tbody>
+        <tr><th>模块</th><th>内容</th></tr>
+        <tr><td>业务背景</td><td>当前运营需要分别进入 Shopee、TikTok 后台配置折扣活动。不同平台的活动类型、字段、状态和异常反馈不统一，导致配置成本高、失败后不易追踪。</td></tr>
+        <tr><td>产品目标</td><td>在 ERP 中提供统一折扣活动管理入口，支持活动创建、审核、商品绑定、状态查看和异常追踪。</td></tr>
+        <tr><td>本期定位</td><td>不做完整营销中心，只聚焦 Shopee 与 TikTok 都具备共性的折扣活动能力。</td></tr>
+      </tbody>
+    </table>
+    <h3>1.1 目标明细</h3>
+    <table>
+      <tbody>
+        <tr><th>目标</th><th>说明</th></tr>
+        <tr><td>统一入口</td><td>运营在 ERP 内创建 Shopee / TikTok 折扣活动</td></tr>
+        <tr><td>统一类型</td><td>将平台折扣活动收敛为 3 个 ERP 统一类型</td></tr>
+        <tr><td>统一状态</td><td>页面只展示 5 个 ERP 统一状态</td></tr>
+        <tr><td>审核管理</td><td>待审核、已拒绝由 ERP 内部审核流产生</td></tr>
+        <tr><td>异常追踪</td><td>接口失败时记录 code、message、request_id</td></tr>
+        <tr><td>范围收敛</td><td>非本期类型不展示、不创建、不查询</td></tr>
+      </tbody>
+    </table>
+
+    <h2>2. 需求范围</h2>
+    <h3>2.1 本期支持类型</h3>
+    <table>
+      <tbody>
+        <tr><th>ERP统一类型</th><th>Shopee对应类型</th><th>TikTok对应类型</th><th>是否支持</th></tr>
+        <tr><td>产品折扣</td><td>促销折扣</td><td>固定价格产品折扣、百分比折扣</td><td class="ok">是</td></tr>
+        <tr><td>多买多省</td><td>捆绑优惠</td><td>多买多省折扣</td><td class="ok">是</td></tr>
+        <tr><td>买X送Y</td><td>附加交易</td><td>买X送Y活动</td><td class="ok">是</td></tr>
+      </tbody>
+    </table>
+    <h3>2.2 本期不支持类型</h3>
+    <table>
+      <tbody>
+        <tr><th>类型</th><th>页面处理</th><th>接口处理</th></tr>
+        <tr><td>代金券 / 优惠券</td><td>不展示</td><td>不创建、不查询</td></tr>
+        <tr><td>限时抢购</td><td>不展示</td><td>不创建、不查询</td></tr>
+        <tr><td>运费折扣</td><td>完全隐藏</td><td>不进入本期接口范围</td></tr>
+        <tr><td>平台活动</td><td>不展示</td><td>不纳入本期</td></tr>
+        <tr><td>活动级删除</td><td>不提供入口</td><td>不对接删除接口</td></tr>
+      </tbody>
+    </table>
+
+    <h2>3. 用户角色与权限</h2>
+    <table>
+      <tbody>
+        <tr><th>角色</th><th>核心操作</th><th>权限说明</th></tr>
+        <tr><td>运营</td><td>创建活动、编辑草稿、提交审核、查看状态</td><td>可创建和维护自己负责的活动</td></tr>
+        <tr><td>运营主管</td><td>审核活动、拒绝活动、关闭活动、查看异常</td><td>可处理待审核和异常活动</td></tr>
+        <tr><td>管理员</td><td>查看接口日志、排查平台错误</td><td>可查看 request_id 和平台原始返回</td></tr>
+      </tbody>
+    </table>
+
+    <h2>4. 业务流程</h2>
+    <h3>4.1 活动创建主流程</h3>
+    <table>
+      <tbody>
+        <tr><th>步骤</th><th>操作</th><th>成功结果</th><th>失败处理</th></tr>
+        <tr><td>1</td><td>选择平台</td><td>加载对应店铺和类型</td><td>平台不可用时提示错误</td></tr>
+        <tr><td>2</td><td>选择 ERP 折扣类型</td><td>展示对应动态表单</td><td>非本期类型不展示</td></tr>
+        <tr><td>3</td><td>填写基础信息</td><td>完成名称、时间、店铺配置</td><td>缺必填项阻止提交</td></tr>
+        <tr><td>4</td><td>选择商品 / SKU</td><td>商品进入待绑定列表</td><td>不符合平台规则时提示</td></tr>
+        <tr><td>5</td><td>保存草稿</td><td>活动状态为草稿</td><td>保存失败提示错误</td></tr>
+        <tr><td>6</td><td>提交审核</td><td>活动状态为待审核</td><td>提交失败提示错误</td></tr>
+        <tr><td>7</td><td>审核通过</td><td>调用平台创建接口</td><td>创建失败记录接口异常</td></tr>
+        <tr><td>8</td><td>绑定商品</td><td>活动创建完成</td><td>绑定失败支持重试</td></tr>
+        <tr><td>9</td><td>查询状态</td><td>回写 ERP 统一状态</td><td>查询失败记录日志</td></tr>
+      </tbody>
+    </table>
+    <h3>4.2 审核流程</h3>
+    <table>
+      <tbody>
+        <tr><th>当前状态</th><th>触发动作</th><th>目标状态</th><th>说明</th></tr>
+        <tr><td>草稿</td><td>提交审核</td><td>待审核</td><td>运营提交主管审核</td></tr>
+        <tr><td>待审核</td><td>审核通过</td><td>执行中</td><td>审核通过后调用平台接口</td></tr>
+        <tr><td>待审核</td><td>审核拒绝</td><td>已拒绝</td><td>记录拒绝原因</td></tr>
+        <tr><td>已拒绝</td><td>修改后重新提交</td><td>待审核</td><td>重新进入审核流</td></tr>
+        <tr><td>执行中</td><td>活动到期</td><td>结束</td><td>平台自然结束</td></tr>
+        <tr><td>执行中</td><td>主动关闭 / 停用</td><td>结束</td><td>ERP 发起关闭或停用</td></tr>
+      </tbody>
+    </table>
+    <h3>4.3 异常处理流程</h3>
+    <table>
+      <tbody>
+        <tr><th>异常场景</th><th>处理方式</th><th>记录内容</th></tr>
+        <tr><td>创建活动失败</td><td>不生成有效平台活动</td><td>code、message、request_id</td></tr>
+        <tr><td>创建成功但商品绑定失败</td><td>保存 activity_id，允许重试绑定</td><td>失败商品、失败 SKU、request_id</td></tr>
+        <tr><td>平台状态查询失败</td><td>保留上一次 ERP 状态</td><td>查询失败日志</td></tr>
+        <tr><td>活动关闭失败</td><td>保持原状态，提示主管或管理员处理</td><td>code、message、request_id</td></tr>
+        <tr><td>审核拒绝</td><td>活动状态变为已拒绝</td><td>审批人、审批时间、拒绝原因</td></tr>
+      </tbody>
+    </table>
+
+    <h2>5. 折扣类型说明</h2>
+    <h3>5.1 产品折扣</h3>
+    <table>
+      <tbody>
+        <tr><th>项目</th><th>内容</th></tr>
+        <tr><td>ERP类型</td><td>产品折扣</td></tr>
+        <tr><td>使用场景</td><td>对单个商品或 SKU 设置固定价格或百分比折扣</td></tr>
+        <tr><td>Shopee对应</td><td>促销折扣</td></tr>
+        <tr><td>TikTok对应</td><td>固定价格产品折扣、百分比折扣</td></tr>
+        <tr><td>示例</td><td>清仓商品统一设置为 5 折，或指定 SKU 促销价 99 元</td></tr>
+      </tbody>
+    </table>
+    <table><tbody><tr><th>子类型</th><th>说明</th><th>示例</th></tr><tr><td>固定价格</td><td>直接指定商品折后最终价</td><td>原价 199 元，活动价 99 元</td></tr><tr><td>百分比折扣</td><td>按原价百分比计算折扣</td><td>商品统一 5 折</td></tr></tbody></table>
+    <table><tbody><tr><th>字段</th><th>是否必填</th><th>说明</th></tr><tr><td>活动名称</td><td>是</td><td>折扣活动名称</td></tr><tr><td>开始时间</td><td>是</td><td>活动开始时间</td></tr><tr><td>结束时间</td><td>是</td><td>活动结束时间</td></tr><tr><td>商品 / SKU</td><td>是</td><td>参与活动的商品或 SKU</td></tr><tr><td>折后价</td><td>条件必填</td><td>固定价格折扣时填写</td></tr><tr><td>折扣比例</td><td>条件必填</td><td>百分比折扣时填写</td></tr><tr><td>活动库存</td><td>否</td><td>可选</td></tr><tr><td>买家限购</td><td>否</td><td>可选</td></tr></tbody></table>
+
+    <h3>5.2 多买多省</h3>
+    <table><tbody><tr><th>项目</th><th>内容</th></tr><tr><td>ERP类型</td><td>多买多省</td></tr><tr><td>使用场景</td><td>买多件享受阶梯优惠</td></tr><tr><td>Shopee对应</td><td>捆绑优惠</td></tr><tr><td>TikTok对应</td><td>多买多省折扣</td></tr><tr><td>示例</td><td>买 5 件立减 20 元，买 10 件享 88 折</td></tr></tbody></table>
+    <table><tbody><tr><th>配置项</th><th>规则</th><th>示例</th></tr><tr><td>阶梯数量</td><td>最多 3 层</td><td>1 层、2 层、3 层</td></tr><tr><td>阶梯关系</td><td>后一层购买数量必须大于前一层</td><td>买 10 件必须大于买 5 件</td></tr><tr><td>优惠方式</td><td>固定金额、百分比、固定套装价</td><td>立减 20 元、88 折、套装价 199 元</td></tr></tbody></table>
+    <table><tbody><tr><th>字段</th><th>是否必填</th><th>说明</th></tr><tr><td>活动名称</td><td>是</td><td>折扣活动名称</td></tr><tr><td>开始时间</td><td>是</td><td>活动开始时间</td></tr><tr><td>结束时间</td><td>是</td><td>活动结束时间</td></tr><tr><td>商品 / SKU</td><td>是</td><td>参与活动的商品或 SKU</td></tr><tr><td>阶梯数量</td><td>是</td><td>最多 3 层</td></tr><tr><td>购买件数</td><td>是</td><td>每层触发优惠的数量</td></tr><tr><td>优惠值</td><td>是</td><td>折扣比例、立减金额或套装价</td></tr><tr><td>买家限购</td><td>否</td><td>可选</td></tr></tbody></table>
+
+    <h3>5.3 买X送Y</h3>
+    <table><tbody><tr><th>项目</th><th>内容</th></tr><tr><td>ERP类型</td><td>买X送Y</td></tr><tr><td>使用场景</td><td>购买指定商品后获得赠品或指定 Y 商品优惠</td></tr><tr><td>Shopee对应</td><td>附加交易</td></tr><tr><td>TikTok对应</td><td>买X送Y活动</td></tr><tr><td>示例</td><td>买 2 件洗护套装，送 1 件旅行装赠品</td></tr></tbody></table>
+    <table><tbody><tr><th>配置项</th><th>说明</th><th>示例</th></tr><tr><td>X 商品</td><td>购买商品</td><td>洗护套装</td></tr><tr><td>X 数量</td><td>触发赠送的购买数量</td><td>买 2 件</td></tr><tr><td>Y 商品</td><td>赠品或附加商品</td><td>旅行装赠品</td></tr><tr><td>Y 数量</td><td>可获得的赠品数量</td><td>送 1 件</td></tr></tbody></table>
+    <table><tbody><tr><th>字段</th><th>是否必填</th><th>说明</th></tr><tr><td>活动名称</td><td>是</td><td>折扣活动名称</td></tr><tr><td>开始时间</td><td>是</td><td>活动开始时间</td></tr><tr><td>结束时间</td><td>是</td><td>活动结束时间</td></tr><tr><td>购买商品 / SKU</td><td>是</td><td>X 商品</td></tr><tr><td>购买数量</td><td>是</td><td>X 数量</td></tr><tr><td>赠品商品 / SKU</td><td>是</td><td>Y 商品</td></tr><tr><td>赠送数量</td><td>是</td><td>Y 数量</td></tr><tr><td>优惠方式</td><td>是</td><td>免费赠送、金额优惠或比例优惠</td></tr><tr><td>优惠值</td><td>条件必填</td><td>非免费赠送时填写</td></tr></tbody></table>
+
+    <h2>6. 状态机</h2>
+    <h3>6.1 ERP统一状态</h3>
+    <table><tbody><tr><th>状态</th><th>含义</th><th>来源</th></tr><tr><td>草稿</td><td>活动未提交审核或仍在编辑</td><td>ERP本地</td></tr><tr><td>待审核</td><td>ERP内部审核中</td><td>ERP审核流</td></tr><tr><td>执行中</td><td>平台活动已生效</td><td>平台状态映射</td></tr><tr><td>已拒绝</td><td>ERP内部审核拒绝</td><td>ERP审核流</td></tr><tr><td>结束</td><td>活动自然结束、关闭或停用</td><td>平台状态映射 / ERP关闭</td></tr></tbody></table>
+    <h3>6.2 状态映射</h3>
+    <table><tbody><tr><th>ERP状态</th><th>Shopee状态</th><th>TikTok状态</th><th>映射说明</th></tr><tr><td>草稿</td><td>ERP本地态</td><td>DRAFT</td><td>Shopee草稿态按ERP本地草稿处理</td></tr><tr><td>待审核</td><td>ERP内部审核态</td><td>ERP内部审核态</td><td>不依赖平台状态</td></tr><tr><td>执行中</td><td>ongoing / ONGOING</td><td>ONGOING</td><td>平台活动已生效</td></tr><tr><td>已拒绝</td><td>ERP内部审核态</td><td>ERP内部审核态</td><td>不依赖平台状态</td></tr><tr><td>结束</td><td>expired / EXPIRED / 已关闭</td><td>EXPIRED / DEACTIVATED / NOT_EFFECTIVE</td><td>自然过期、卖家停用、平台终止均归入结束</td></tr></tbody></table>
+
+    <h2>7. 页面需求</h2>
+    <h3>7.1 活动列表页</h3>
+    <table><tbody><tr><th>区域</th><th>功能</th><th>说明</th></tr><tr><td>筛选区</td><td>平台筛选</td><td>Shopee、TikTok</td></tr><tr><td>筛选区</td><td>店铺筛选</td><td>按授权店铺筛选</td></tr><tr><td>筛选区</td><td>类型筛选</td><td>产品折扣、多买多省、买X送Y</td></tr><tr><td>筛选区</td><td>状态筛选</td><td>草稿、待审核、执行中、已拒绝、结束</td></tr><tr><td>筛选区</td><td>活动名称</td><td>支持模糊搜索</td></tr><tr><td>筛选区</td><td>时间筛选</td><td>支持创建时间或活动时间</td></tr><tr><td>列表区</td><td>活动信息</td><td>活动名称、平台、类型、状态、时间、商品数</td></tr><tr><td>操作区</td><td>查看详情</td><td>查看活动详情</td></tr><tr><td>操作区</td><td>编辑草稿</td><td>草稿状态可编辑</td></tr><tr><td>操作区</td><td>提交审核</td><td>草稿可提交审核</td></tr><tr><td>操作区</td><td>关闭活动</td><td>执行中活动可关闭</td></tr><tr><td>操作区</td><td>重试失败绑定</td><td>绑定失败时展示</td></tr></tbody></table>
+    <h3>7.2 创建活动页</h3>
+    <table><tbody><tr><th>区域</th><th>功能</th><th>说明</th></tr><tr><td>基础信息</td><td>平台</td><td>只支持 Shopee、TikTok</td></tr><tr><td>基础信息</td><td>店铺</td><td>选择授权店铺</td></tr><tr><td>基础信息</td><td>活动名称</td><td>必填</td></tr><tr><td>基础信息</td><td>开始时间</td><td>必填</td></tr><tr><td>基础信息</td><td>结束时间</td><td>必填</td></tr><tr><td>类型选择</td><td>产品折扣</td><td>展示说明和示例</td></tr><tr><td>类型选择</td><td>多买多省</td><td>展示说明和示例</td></tr><tr><td>类型选择</td><td>买X送Y</td><td>展示说明和示例</td></tr><tr><td>商品选择</td><td>商品 / SKU</td><td>按平台和店铺加载</td></tr><tr><td>规则配置</td><td>动态表单</td><td>根据折扣类型展示字段</td></tr><tr><td>提交区</td><td>保存草稿</td><td>保存为草稿</td></tr><tr><td>提交区</td><td>提交审核</td><td>进入待审核状态</td></tr></tbody></table>
+    <h3>7.3 创建页类型说明</h3>
+    <table><tbody><tr><th>ERP类型</th><th>页面说明</th><th>示例</th></tr><tr><td>产品折扣</td><td>对单个商品或 SKU 设置固定价格或百分比折扣</td><td>清仓商品统一设置为 5 折，或指定 SKU 促销价 99 元</td></tr><tr><td>多买多省</td><td>按购买件数设置阶梯优惠，适合提升客单件数</td><td>买 5 件立减 20 元，买 10 件享 88 折</td></tr><tr><td>买X送Y</td><td>购买指定商品后，获得赠品或指定 Y 商品优惠</td><td>买 2 件洗护套装，送 1 件旅行装赠品</td></tr></tbody></table>
+    <h3>7.4 活动详情页</h3>
+    <table><tbody><tr><th>区域</th><th>内容</th><th>说明</th></tr><tr><td>活动信息</td><td>活动 ID</td><td>ERP活动ID、平台活动ID</td></tr><tr><td>活动信息</td><td>平台 / 店铺</td><td>Shopee或TikTok及店铺</td></tr><tr><td>活动信息</td><td>活动类型</td><td>ERP统一类型</td></tr><tr><td>状态信息</td><td>ERP统一状态</td><td>页面主展示状态</td></tr><tr><td>状态信息</td><td>平台原始状态</td><td>详情或日志中展示</td></tr><tr><td>商品信息</td><td>商品 / SKU</td><td>展示活动商品</td></tr><tr><td>规则信息</td><td>折扣配置</td><td>展示折扣、阶梯或赠品规则</td></tr><tr><td>异常信息</td><td>code</td><td>平台错误码</td></tr><tr><td>异常信息</td><td>message</td><td>平台错误信息</td></tr><tr><td>异常信息</td><td>request_id</td><td>平台请求追踪ID</td></tr><tr><td>审批信息</td><td>审批记录</td><td>审批人、审批时间、审批意见</td></tr></tbody></table>
+    <h3>7.5 审批详情页</h3>
+    <table><tbody><tr><th>区域</th><th>内容</th><th>说明</th></tr><tr><td>活动摘要</td><td>活动名称</td><td>展示被审批活动</td></tr><tr><td>活动摘要</td><td>平台 / 类型</td><td>展示平台和ERP类型</td></tr><tr><td>提交信息</td><td>提交人</td><td>运营</td></tr><tr><td>提交信息</td><td>提交时间</td><td>提交审核时间</td></tr><tr><td>审批结果</td><td>审批状态</td><td>待审核、已拒绝、通过</td></tr><tr><td>审批结果</td><td>审批人</td><td>运营主管</td></tr><tr><td>审批结果</td><td>审批时间</td><td>审批操作时间</td></tr><tr><td>审批意见</td><td>通过 / 拒绝原因</td><td>拒绝时必填</td></tr><tr><td>操作记录</td><td>流转记录</td><td>提交、通过、拒绝、重新提交</td></tr></tbody></table>
+
+    <h2>8. 接口范围</h2>
+    <h3>8.1 Shopee 产品折扣接口</h3>
+    <table><tbody><tr><th>操作</th><th>Endpoint</th></tr><tr><td>获取折扣列表</td><td>GET /api/v2/discount/get_discount_list</td></tr><tr><td>获取折扣详情</td><td>GET /api/v2/discount/get_discount</td></tr><tr><td>创建折扣活动</td><td>POST /api/v2/discount/add_discount</td></tr><tr><td>添加折扣商品</td><td>POST /api/v2/discount/add_discount_item</td></tr><tr><td>更新折扣活动</td><td>POST /api/v2/discount/update_discount</td></tr><tr><td>更新折扣商品</td><td>POST /api/v2/discount/update_discount_item</td></tr><tr><td>关闭折扣活动</td><td>POST /api/v2/discount/end_discount</td></tr><tr><td>移除折扣商品</td><td>POST /api/v2/discount/delete_discount_item</td></tr></tbody></table>
+    <h3>8.2 Shopee 多买多省接口</h3>
+    <table><tbody><tr><th>操作</th><th>Endpoint</th></tr><tr><td>获取捆绑优惠列表</td><td>GET /api/v2/bundle_deal/get_bundle_deal_list</td></tr><tr><td>获取捆绑优惠详情</td><td>GET /api/v2/bundle_deal/get_bundle_deal</td></tr><tr><td>获取捆绑优惠商品</td><td>POST /api/v2/bundle_deal/get_bundle_deal_item</td></tr><tr><td>创建捆绑优惠</td><td>POST /api/v2/bundle_deal/add_bundle_deal</td></tr><tr><td>添加捆绑优惠商品</td><td>POST /api/v2/bundle_deal/add_bundle_deal_item</td></tr><tr><td>更新捆绑优惠</td><td>POST /api/v2/bundle_deal/update_bundle_deal</td></tr><tr><td>更新捆绑优惠商品</td><td>POST /api/v2/bundle_deal/update_bundle_deal_item</td></tr><tr><td>关闭捆绑优惠</td><td>POST /api/v2/bundle_deal/end_bundle_deal</td></tr><tr><td>移除捆绑优惠商品</td><td>POST /api/v2/bundle_deal/delete_bundle_deal_item</td></tr></tbody></table>
+    <h3>8.3 Shopee 买X送Y接口</h3>
+    <table><tbody><tr><th>操作</th><th>Endpoint</th></tr><tr><td>获取附加交易列表</td><td>POST /api/v2/add_on_deal/get_add_on_deal_list</td></tr><tr><td>获取附加交易详情</td><td>POST /api/v2/add_on_deal/get_add_on_deal</td></tr><tr><td>获取主商品</td><td>POST /api/v2/add_on_deal/get_add_on_deal_main_item</td></tr><tr><td>获取子商品</td><td>POST /api/v2/add_on_deal/get_add_on_deal_sub_item</td></tr><tr><td>创建附加交易</td><td>POST /api/v2/add_on_deal/add_add_on_deal</td></tr><tr><td>添加主商品</td><td>POST /api/v2/add_on_deal/add_add_on_deal_main_item</td></tr><tr><td>添加子商品</td><td>POST /api/v2/add_on_deal/add_add_on_deal_sub_item</td></tr><tr><td>更新附加交易</td><td>POST /api/v2/add_on_deal/update_add_on_deal</td></tr><tr><td>更新主商品</td><td>POST /api/v2/add_on_deal/update_add_on_deal_main_item</td></tr><tr><td>更新子商品</td><td>POST /api/v2/add_on_deal/update_add_on_deal_sub_item</td></tr><tr><td>关闭附加交易</td><td>POST /api/v2/add_on_deal/end_add_on_deal</td></tr><tr><td>移除主商品</td><td>POST /api/v2/add_on_deal/delete_add_on_deal_main_item</td></tr><tr><td>移除子商品</td><td>POST /api/v2/add_on_deal/delete_add_on_deal_sub_item</td></tr></tbody></table>
+    <h3>8.4 TikTok 折扣活动接口</h3>
+    <table><tbody><tr><th>操作</th><th>Endpoint</th></tr><tr><td>创建活动</td><td>POST /promotion/202309/activities</td></tr><tr><td>查询活动列表</td><td>POST /promotion/202309/activities/search</td></tr><tr><td>获取活动详情</td><td>GET /promotion/202309/activities/{activity_id}</td></tr><tr><td>更新活动基础信息</td><td>PUT /promotion/202309/activities/{activity_id}</td></tr><tr><td>停用活动</td><td>POST /promotion/202309/activities/deactivate</td></tr><tr><td>更新活动商品 / SKU</td><td>PUT /promotion/202309/activities/{activity_id}/products</td></tr><tr><td>移除活动商品 / SKU</td><td>DELETE /promotion/202309/activities/{activity_id}/products</td></tr></tbody></table>
+    <h3>8.5 TikTok 买X送Y字段映射</h3>
+    <table><tbody><tr><th>ERP字段</th><th>TikTok字段</th></tr><tr><td>活动类型</td><td>activity_type = BUY_X_GET_Y</td></tr><tr><td>购买商品</td><td>products[].id</td></tr><tr><td>赠品 / Y商品</td><td>benefit_product_ids</td></tr><tr><td>排除商品</td><td>exclude_product_ids</td></tr><tr><td>购买数量X</td><td>discount.bxgy_discount.threshold_value</td></tr><tr><td>赠品数量Y</td><td>discount.bxgy_discount.benefit_max_applicable_quantity</td></tr><tr><td>优惠方式</td><td>discount.bxgy_discount.discount_type</td></tr><tr><td>优惠值</td><td>discount.bxgy_discount.discount_value</td></tr></tbody></table>
+
+    <h2>9. 校验规则</h2>
+    <table><tbody><tr><th>规则</th><th>校验要求</th></tr><tr><td>时间校验</td><td>开始时间必须早于结束时间</td></tr><tr><td>类型校验</td><td>只允许产品折扣、多买多省、买X送Y</td></tr><tr><td>状态校验</td><td>只允许草稿、待审核、执行中、已拒绝、结束</td></tr><tr><td>多买多省</td><td>阶梯数量最多 3 层，且数量递增</td></tr><tr><td>买X送Y</td><td>购买商品和赠品商品均不能为空</td></tr><tr><td>活动删除</td><td>不支持活动级删除</td></tr><tr><td>接口失败</td><td>必须记录 code、message、request_id</td></tr><tr><td>审批记录</td><td>待审核、已拒绝活动必须有审批记录</td></tr></tbody></table>
+
+    <h2>10. 验收标准</h2>
+    <table><tbody><tr><th>编号</th><th>验收项</th><th>预期结果</th></tr><tr><td>1</td><td>创建活动时展示类型</td><td>只展示产品折扣、多买多省、买X送Y</td></tr><tr><td>2</td><td>类型说明</td><td>每个类型旁展示说明和示例</td></tr><tr><td>3</td><td>非本期类型</td><td>运费折扣、限时抢购、代金券完全不可见</td></tr><tr><td>4</td><td>产品折扣映射</td><td>正确映射 Shopee 促销折扣和 TikTok 产品折扣</td></tr><tr><td>5</td><td>多买多省映射</td><td>正确映射 Shopee 捆绑优惠和 TikTok 多买多省</td></tr><tr><td>6</td><td>买X送Y映射</td><td>正确映射 Shopee 附加交易和 TikTok 买X送Y</td></tr><tr><td>7</td><td>状态展示</td><td>活动列表只展示 5 个 ERP 状态</td></tr><tr><td>8</td><td>审核状态</td><td>待审核和已拒绝只由 ERP 内部审核流产生</td></tr><tr><td>9</td><td>结束状态映射</td><td>EXPIRED、DEACTIVATED、NOT_EFFECTIVE 统一展示为结束</td></tr><tr><td>10</td><td>异常追踪</td><td>接口失败时展示或记录 code、message、request_id</td></tr><tr><td>11</td><td>删除入口</td><td>页面不提供活动级删除入口</td></tr><tr><td>12</td><td>审批记录</td><td>待审核和已拒绝活动必须有审批记录</td></tr><tr><td>13</td><td>审批详情</td><td>可查看审批人、审批时间和审批意见</td></tr><tr><td>14</td><td>绑定失败</td><td>商品绑定失败时保留 activity_id，并支持重试绑定</td></tr><tr><td>15</td><td>历史保留</td><td>关闭活动后历史活动数据必须保留</td></tr></tbody></table>
+  </main>
+
+  <script>
+    const button = document.getElementById('copyRich');
+    const status = document.getElementById('copyStatus');
+    button.addEventListener('click', async () => {
+      const content = document.getElementById('prdContent');
+      const html = content.innerHTML;
+      const text = content.innerText;
+      try {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'text/html': new Blob([html], { type: 'text/html' }),
+            'text/plain': new Blob([text], { type: 'text/plain' })
+          })
+        ]);
+        status.textContent = '已复制富文本。现在粘贴到云效需求描述，应显示为表格。';
+        status.style.color = '#15803d';
+      } catch (error) {
+        status.textContent = '浏览器未允许自动复制。请手动选中正文内容复制，再粘贴到云效。';
+        status.style.color = '#b45309';
+      }
+    });
+  </script>
+</body>
+</html>
