@@ -1,51 +1,7 @@
 {
-  "generatedAt": "2026-07-28T17:37:22+08:00",
-  "count": 15,
+  "generatedAt": "2026-08-07T15:34:15+08:00",
+  "count": 2,
   "prototypes": [
-    {
-      "prototypeId": "prototype-20260716-111913",
-      "title": "包裹丢失赔付接口字段取值说明",
-      "businessSystem": "after-sales",
-      "owner": "Favours-ff",
-      "sourcePath": "prototype\\lost-compensation-api-reference",
-      "createdAt": "2026-07-16T11:19:13+08:00",
-      "updatedAt": "2026-07-16T11:19:13+08:00",
-      "path": "prototypes/after-sales/prototype-20260716-111913",
-      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/after-sales/prototype-20260716-111913/"
-    },
-    {
-      "prototypeId": "prototype-20260606-141530",
-      "title": "销售运营概况趋势对比",
-      "businessSystem": "BI",
-      "owner": "Favours-ff",
-      "sourcePath": "prototype\\sales-trend-comparison",
-      "createdAt": "2026-06-06T14:15:30+08:00",
-      "updatedAt": "2026-06-06T14:15:30+08:00",
-      "path": "prototypes/bi/prototype-20260606-141530",
-      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/bi/prototype-20260606-141530/"
-    },
-    {
-      "prototypeId": "prototype-20260615-175630",
-      "title": "销售运营概况趋势对比",
-      "businessSystem": "BI",
-      "owner": "Favours-ff",
-      "sourcePath": "prototype\\sales-trend-comparison",
-      "createdAt": "2026-06-15T17:56:30+08:00",
-      "updatedAt": "2026-06-15T17:56:30+08:00",
-      "path": "prototypes/bi/prototype-20260615-175630",
-      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/bi/prototype-20260615-175630/"
-    },
-    {
-      "prototypeId": "prototype-20260716-111847",
-      "title": "售后挽损模块-包裹丢失与运费多扣最终逻辑",
-      "businessSystem": "售后挽损模块",
-      "owner": "Favours-ff",
-      "sourcePath": "prototype\\after-sales-lost-shipping-logic",
-      "createdAt": "2026-07-16T11:18:47+08:00",
-      "updatedAt": "2026-07-16T11:18:47+08:00",
-      "path": "prototypes/business-system/prototype-20260716-111847",
-      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/business-system/prototype-20260716-111847/"
-    },
     {
       "prototypeId": "prototype-20260728-173719",
       "title": "发货确认收入导入与同步记录",
@@ -53,119 +9,20 @@
       "owner": "Favours-ff",
       "sourcePath": "prototype\\finance-delivery-income-import",
       "createdAt": "2026-07-28T17:37:19+08:00",
-      "updatedAt": "2026-07-28T17:37:19+08:00",
+      "updatedAt": "2026-07-29T18:37:45+08:00",
       "path": "prototypes/business-system/prototype-20260728-173719",
       "url": "https://favours-ff.github.io/prototype-hosting/prototypes/business-system/prototype-20260728-173719/"
     },
     {
-      "prototypeId": "prototype-20260522-094401",
-      "title": "已发货订单结算匹配",
-      "businessSystem": "ERP",
-      "owner": "Favours-ff",
-      "sourcePath": "prototype\\order-settlement-reconciliation",
-      "createdAt": "2026-05-22T09:44:01+08:00",
-      "updatedAt": "2026-05-22T09:44:01+08:00",
-      "path": "prototypes/erp/prototype-20260522-094401",
-      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260522-094401/"
-    },
-    {
-      "prototypeId": "prototype-20260522-095358",
-      "title": "已发货订单结算匹配",
-      "businessSystem": "ERP",
-      "owner": "Favours-ff",
-      "sourcePath": "prototype\\order-settlement-reconciliation",
-      "createdAt": "2026-05-22T09:53:58+08:00",
-      "updatedAt": "2026-05-22T09:53:58+08:00",
-      "path": "prototypes/erp/prototype-20260522-095358",
-      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260522-095358/"
-    },
-    {
-      "prototypeId": "prototype-20260527-144601",
-      "title": "已发货订单财务对账",
+      "prototypeId": "prototype-20260807-153411",
+      "title": "折扣管理原型",
       "businessSystem": "erp",
       "owner": "Favours-ff",
-      "sourcePath": "prototype\\order-settlement-reconciliation",
-      "createdAt": "2026-05-27T14:46:01+08:00",
-      "updatedAt": "2026-05-27T14:46:01+08:00",
-      "path": "prototypes/erp/prototype-20260527-144601",
-      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260527-144601/"
-    },
-    {
-      "prototypeId": "prototype-20260602-183445",
-      "title": "折扣管理原型",
-      "businessSystem": "ERP",
-      "owner": "Favours-ff",
-      "sourcePath": "prototype\\discount-management",
-      "createdAt": "2026-06-02T18:34:45+08:00",
-      "updatedAt": "2026-06-02T18:34:45+08:00",
-      "path": "prototypes/erp/prototype-20260602-183445",
-      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260602-183445/"
-    },
-    {
-      "prototypeId": "prototype-20260605-143245",
-      "title": "速卖通全托管商品管理与库存同步",
-      "businessSystem": "ERP",
-      "owner": "Favours-ff",
-      "sourcePath": "prototype\\ali-choice-products-v3",
-      "createdAt": "2026-06-05T14:32:45+08:00",
-      "updatedAt": "2026-06-18T00:00:00+08:00",
-      "path": "prototypes/erp/prototype-20260605-143245",
-      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260605-143245/"
-    },
-    {
-      "prototypeId": "prototype-20260612-113950",
-      "title": "折扣管理",
-      "businessSystem": "ERP",
-      "owner": "Favours-ff",
-      "sourcePath": "prototype\\discount-management",
-      "createdAt": "2026-06-12T11:39:50+08:00",
-      "updatedAt": "2026-06-12T11:39:50+08:00",
-      "path": "prototypes/erp/prototype-20260612-113950",
-      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260612-113950/"
-    },
-    {
-      "prototypeId": "prototype-20260704-174519",
-      "title": "售后挽损模块-包裹丢失与运费多扣最终逻辑",
-      "businessSystem": "ERP售后挽损",
-      "owner": "Favours-ff",
-      "sourcePath": "prototype\\after-sales-loss-recovery-logistics",
-      "createdAt": "2026-07-04T17:45:19+08:00",
-      "updatedAt": "2026-07-04T17:45:19+08:00",
-      "path": "prototypes/erp/prototype-20260704-174519",
-      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260704-174519/"
-    },
-    {
-      "prototypeId": "v1-1-20260706-103107",
-      "title": "售后挽损模块-包裹丢失与运费多扣最终逻辑-v1.1",
-      "businessSystem": "ERP售后挽损",
-      "owner": "Favours-ff",
-      "sourcePath": "prototype\\after-sales-loss-recovery-logistics",
-      "createdAt": "2026-07-06T10:31:07+08:00",
-      "updatedAt": "2026-07-06T10:31:07+08:00",
-      "path": "prototypes/erp/v1-1-20260706-103107",
-      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/v1-1-20260706-103107/"
-    },
-    {
-      "prototypeId": "prototype-20260720-155746",
-      "title": "发货确认收入-导入与同步记录",
-      "businessSystem": "finance-system",
-      "owner": "Favours-ff",
-      "sourcePath": "prototype\\finance-delivery-income-import",
-      "createdAt": "2026-07-20T15:57:46+08:00",
-      "updatedAt": "2026-07-20T15:57:46+08:00",
-      "path": "prototypes/finance-system/prototype-20260720-155746",
-      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/finance-system/prototype-20260720-155746/"
-    },
-    {
-      "prototypeId": "shunde-daliang-2d1n-2-1-20260724-173552",
-      "title": "Shunde Daliang 2D1N - 顺德大良2天1夜行程",
-      "businessSystem": "Travel Guide - 旅行攻略",
-      "owner": "Favours-ff",
-      "sourcePath": "prototype\\shunde-daliang-2d1n",
-      "createdAt": "2026-07-24T17:35:52+08:00",
-      "updatedAt": "2026-07-24T17:35:52+08:00",
-      "path": "prototypes/travel-guide/shunde-daliang-2d1n-2-1-20260724-173552",
-      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/travel-guide/shunde-daliang-2d1n-2-1-20260724-173552/"
+      "sourcePath": "prototype\\erp-20260602-183445-adjusted",
+      "createdAt": "2026-08-07T15:34:11+08:00",
+      "updatedAt": "2026-08-07T15:34:11+08:00",
+      "path": "prototypes/erp/prototype-20260807-153411",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/prototype-20260807-153411/"
     }
   ]
 }
