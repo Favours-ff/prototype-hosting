@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>规则配置 · ERP</title>
+  <link rel="stylesheet" href="../../ui-library/tokens.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="c-shell" data-collapsed="false">
+    <aside class="c-shell__sider" aria-label="主导航">
+      <div class="c-shell__brand">
+        <span class="c-shell__brand-logo">E</span>
+        <span class="c-shell__brand-text">ERP 后台</span>
+      </div>
+      <ul class="c-shell__menu" role="menu">
+        <li class="c-shell__menu-item" role="menuitem"><span class="c-shell__menu-icon">⌂</span><span class="c-shell__menu-label">首页</span></li>
+        <li class="c-shell__menu-group">系统管理</li>
+        <li class="c-shell__menu-item" role="menuitem"><span class="c-shell__menu-icon">▤</span><span class="c-shell__menu-label">字典管理</span></li>
+        <li class="c-shell__menu-item c-shell__menu-item--active" role="menuitem"><span class="c-shell__menu-icon">⇄</span><span class="c-shell__menu-label">规则配置</span></li>
+      </ul>
+    </aside>
+
+    <header class="c-shell__header">
+      <button class="btn btn--text c-shell__collapse-btn" type="button" data-action="collapse" aria-label="折叠侧边栏">☰</button>
+      <div class="c-shell__header-search">
+        <span class="c-shell__header-search-icon">⌕</span>
+        <input class="input" placeholder="搜索菜单…" aria-label="搜索菜单" />
+      </div>
+      <div class="c-shell__header-actions">
+        <button class="btn btn--text c-shell__icon-btn" type="button" aria-label="帮助">?</button>
+        <button class="btn btn--text c-shell__icon-btn" type="button" aria-label="通知">♢</button>
+        <span class="c-shell__avatar">管</span>
+        <span class="c-shell__user-name">系统管理员</span>
+      </div>
+    </header>
+
+    <nav class="c-shell__crumb" aria-label="面包屑">
+      <a href="#">首页</a><span class="c-shell__crumb-sep">/</span>
+      <a href="#">系统管理</a><span class="c-shell__crumb-sep">/</span>
+      <a href="#">规则配置</a><span class="c-shell__crumb-sep">/</span>
+      <span class="c-shell__crumb-current" data-bind="crumb-current">平台仓库映射规则</span>
+    </nav>
+
+    <main class="c-shell__content">
+      <header class="c-page-header">
+        <div>
+          <h1 class="c-page-header__title">规则配置 <span class="c-page-header__extra">共 7 个页签</span></h1>
+          <p class="c-page-header__desc" data-bind="page-desc">按店铺后台仓库编码匹配系统仓库，统一供订单处理服务读取。</p>
+        </div>
+        <button class="btn btn--solid btn--color-primary" type="button" data-action="create-current">＋ <span data-bind="create-current-label">新增仓库映射</span></button>
+      </header>
+
+      <nav class="c-rule-tabs surface-panel" role="tablist" aria-label="规则类型">
+        <button type="button" role="tab" class="is-active" data-action="switch-tab" data-tab="warehouse">平台仓库映射规则</button>
+        <button type="button" role="tab" data-action="switch-tab" data-tab="exchange">换货处理规则</button>
+        <button type="button" role="tab" data-action="switch-tab" data-tab="audit">审单规则</button>
+        <button type="button" role="tab" data-action="switch-tab" data-tab="logistics">物流规则</button>
+        <button type="button" role="tab" data-action="switch-tab" data-tab="allocation">分仓规则</button>
+        <button type="button" role="tab" data-action="switch-tab" data-tab="declaration">申报规则</button>
+        <button type="button" role="tab" data-action="switch-tab" data-tab="semiHosted">半托管发货规则</button>
+      </nav>
+
+      <div data-view="exchange" hidden>
+      <section class="c-filter surface-panel" aria-label="筛选条件">
+        <div class="c-filter__grid">
+          <label class="c-field">
+            <span>规则名称</span>
+            <input class="input" data-filter="keyword" placeholder="请输入规则名称" />
+          </label>
+          <label class="c-field">
+            <span>审单方式</span>
+            <span class="c-select" data-select data-filter="mode" data-value="">
+              <button class="c-select__trigger" type="button"><span data-select-label>全部</span><span>⌄</span></button>
+              <span class="c-select__menu">
+                <button type="button" data-role="option" data-value="">全部</button>
+                <button type="button" data-role="option" data-value="manual">人工审单</button>
+                <button type="button" data-role="option" data-value="auto">自动审单</button>
+              </span>
+            </span>
+          </label>
+          <label class="c-field">
+            <span>平台</span>
+            <span class="c-select" data-select data-filter="platform" data-value="">
+              <button class="c-select__trigger" type="button"><span data-select-label>全部</span><span>⌄</span></button>
+              <span class="c-select__menu">
+                <button type="button" data-role="option" data-value="">全部</button>
+                <button type="button" data-role="option" data-value="Shopee">Shopee</button>
+                <button type="button" data-role="option" data-value="TikTok Shop">TikTok Shop</button>
+              </span>
+            </span>
+          </label>
+          <label class="c-field">
+            <span>状态</span>
+            <span class="c-select" data-select data-filter="status" data-value="">
+              <button class="c-select__trigger" type="button"><span data-select-label>全部</span><span>⌄</span></button>
+              <span class="c-select__menu">
+                <button type="button" data-role="option" data-value="">全部</button>
+                <button type="button" data-role="option" data-value="enabled">启用</button>
+                <button type="button" data-role="option" data-value="disabled">停用</button>
+              </span>
+            </span>
+          </label>
+        </div>
+        <div class="c-filter__actions">
+          <button class="btn" type="button" data-action="reset-filter">重置</button>
+          <button class="btn btn--solid btn--color-primary" type="button" data-action="search">查询</button>
+        </div>
+      </section>
+
+      <section class="c-table-panel surface-panel" aria-label="换货规则列表">
+        <div class="c-table-panel__toolbar">
+          <span>共 <strong data-bind="result-count">0</strong> 条规则</span>
+          <button class="btn btn--sm" type="button" data-action="refresh">↻ 刷新</button>
+        </div>
+        <div class="c-table-scroll">
+          <table class="c-table c-table--exchange">
+            <thead>
+              <tr>
+                <th>规则类型</th>
+                <th>规则名称</th>
+                <th>规则详情</th>
+                <th>优先级</th>
+                <th>状态</th>
+                <th>执行次数</th>
+                <th>创建人/创建时间</th>
+                <th>更新人/更新时间</th>
+                <th class="c-table__actions">操作</th>
+              </tr>
+            </thead>
+            <tbody data-bind="rule-rows"></tbody>
+          </table>
+        </div>
+        <div class="c-empty" data-bind="empty" hidden>
+          <div class="c-empty__icon">⌕</div>
+          <strong>没有符合条件的规则</strong>
+          <span>请调整筛选条件后重新查询。</span>
+        </div>
+        <footer class="c-pagination">
+          <span>共 <strong data-bind="page-total">0</strong> 条</span>
+          <span class="c-pagination__size">20 条/页</span>
+          <button class="btn btn--sm" disabled>‹</button>
+          <button class="btn btn--sm btn--solid btn--color-primary">1</button>
+          <button class="btn btn--sm" disabled>›</button>
+        </footer>
+      </section>
+      </div>
+
+      <div data-view="warehouse">
+        <section class="c-filter surface-panel" data-component="QueryFilterBar" aria-label="仓库映射筛选条件">
+          <div class="c-filter__grid">
+            <label class="c-field">
+              <span>平台</span>
+              <span class="c-select" data-select data-warehouse-filter="platform" data-value="">
+                <button class="c-select__trigger" type="button"><span data-select-label>全部</span><span>⌄</span></button>
+                <span class="c-select__menu">
+                  <button type="button" data-role="option" data-value="">全部</button>
+                  <button type="button" data-role="option" data-value="TikTok Shop">TikTok Shop</button>
+                  <button type="button" data-role="option" data-value="Shopee">Shopee</button>
+                </span>
+              </span>
+            </label>
+            <label class="c-field">
+              <span>店铺</span>
+              <span class="c-select" data-select data-warehouse-filter="shop" data-value="">
+                <button class="c-select__trigger" type="button"><span data-select-label>全部</span><span>⌄</span></button>
+                <span class="c-select__menu">
+                  <button type="button" data-role="option" data-value="">全部</button>
+                  <button type="button" data-role="option" data-value="TIKTOK_08_us">TIKTOK_08_us</button>
+                  <button type="button" data-role="option" data-value="TIKTOK_09_us">TIKTOK_09_us</button>
+                  <button type="button" data-role="option" data-value="SPE015_ID_BT">SPE015_ID_BT</button>
+                </span>
+              </span>
+            </label>
+            <label class="c-field">
+              <span>后台仓库名称</span>
+              <input class="input" data-warehouse-filter="externalName" placeholder="请输入后台仓库名称" />
+            </label>
+            <label class="c-field">
+              <span>系统仓库名称</span>
+              <input class="input" data-warehouse-filter="internalName" placeholder="请输入系统仓库名称" />
+            </label>
+          </div>
+          <div class="c-filter__actions">
+            <button class="btn" type="button" data-action="reset-warehouse-filter">重置</button>
+            <button class="btn btn--solid btn--color-primary" type="button" data-action="search-warehouse">查询</button>
+          </div>
+        </section>
+        <section class="c-table-panel surface-panel" aria-label="平台仓库映射列表">
+          <div class="c-table-panel__toolbar">
+            <span>共 <strong data-bind="warehouse-count">0</strong> 条仓库映射</span>
+            <button class="btn btn--sm" type="button" data-action="refresh-warehouse">↻ 刷新</button>
+          </div>
+          <div class="c-table-scroll">
+            <table class="c-table c-table--warehouse">
+              <thead><tr><th>平台 / 站点</th><th>店铺</th><th>店铺后台仓库</th><th>后台仓库编码</th><th>系统仓库</th><th>状态</th><th>更新信息</th><th class="c-table__actions">操作</th></tr></thead>
+              <tbody data-bind="warehouse-rows"></tbody>
+            </table>
+          </div>
+          <footer class="c-pagination"><span>共 <strong data-bind="warehouse-total">0</strong> 条</span><span class="c-pagination__size">20 条/页</span><button class="btn btn--sm" disabled>‹</button><button class="btn btn--sm btn--solid btn--color-primary">1</button><button class="btn btn--sm" disabled>›</button></footer>
+        </section>
+      </div>
+
+      <div data-view="generic" hidden>
+        <section class="c-rule-filter surface-panel">
+          <input class="input" data-generic-filter="keyword" placeholder="规则名称" />
+          <input class="input" data-generic-filter="platform" placeholder="来源平台" />
+          <input class="input" data-generic-filter="priority-min" type="number" placeholder="最低优先级" />
+          <input class="input" data-generic-filter="priority-max" type="number" placeholder="最高优先级" />
+          <span class="c-select c-rule-filter__status" data-select data-generic-filter="status" data-value="">
+            <button class="c-select__trigger" type="button"><span data-select-label>全部状态</span><span>⌄</span></button>
+            <span class="c-select__menu"><button type="button" data-role="option" data-value="">全部状态</button><button type="button" data-role="option" data-value="enabled">启用</button><button type="button" data-role="option" data-value="disabled">停用</button></span>
+          </span>
+          <input class="input" data-generic-filter="updater" placeholder="更新人" />
+          <label class="c-date-filter"><span>更新开始日期</span><input class="input" data-generic-filter="updated-start" type="date" /></label>
+          <label class="c-date-filter"><span>更新结束日期</span><input class="input" data-generic-filter="updated-end" type="date" /></label>
+          <button class="btn" type="button" data-action="reset-generic-filter">重置</button>
+          <button class="btn btn--solid btn--color-primary" type="button" data-action="search-generic">查询</button>
+        </section>
+        <section class="c-table-panel surface-panel" aria-label="其他规则列表">
+          <div class="c-table-panel__toolbar">
+            <span>共 <strong data-bind="generic-count">0</strong> 条<span data-bind="generic-type-name">规则</span></span>
+            <button class="btn btn--sm" type="button" data-action="refresh-generic">↻ 刷新</button>
+          </div>
+          <div class="c-table-scroll">
+            <table class="c-table c-table--generic">
+              <thead><tr><th>规则类型</th><th>规则名称</th><th>规则详情</th><th>优先级</th><th>状态</th><th>执行次数</th><th>创建人/创建时间</th><th>更新人/更新时间</th><th class="c-table__actions">操作</th></tr></thead>
+              <tbody data-bind="generic-rows"></tbody>
+            </table>
+          </div>
+          <footer class="c-pagination"><span>共 <strong data-bind="generic-total">0</strong> 条</span><span class="c-pagination__size">20 条/页</span><button class="btn btn--sm" disabled>‹</button><button class="btn btn--sm btn--solid btn--color-primary">1</button><button class="btn btn--sm" disabled>›</button></footer>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="c-edit-mask" data-bind="drawer-mask" data-open="false" data-action="close-drawer"></div>
+  <aside class="c-edit-drawer" data-bind="drawer" data-open="false" aria-hidden="true">
+    <header class="c-edit-head">
+      <div>
+        <h2 class="c-edit-title" data-bind="drawer-title">新增换货规则</h2>
+        <p class="c-edit-subtitle">一条规则同时包含订单命中条件、审单方式和命中后的 SKU 替换动作。</p>
+      </div>
+      <button class="btn btn--text c-edit-close" type="button" data-action="close-drawer" aria-label="关闭">×</button>
+    </header>
+
+    <form class="c-edit-body" data-bind="rule-form" novalidate>
+      <input type="hidden" name="ruleId" />
+      <div class="c-form-alert c-form-alert--error" data-bind="form-error" hidden></div>
+
+      <section class="c-form-section">
+        <div class="c-form-section__head">
+          <span class="c-step">1</span>
+          <div><h3>基本信息与适用范围</h3><p>确定规则归属和生效店铺。</p></div>
+        </div>
+        <div class="c-form-grid">
+          <label class="c-field c-field--span-2"><span><i>*</i> 规则名称</span><input class="input" name="name" placeholder="例如：菲律宾测评订单换货" /></label>
+          <label class="c-field"><span><i>*</i> 优先级</span><input class="input" name="priority" type="number" min="1" max="999999" value="100" /></label>
+          <label class="c-field"><span>状态</span><span class="c-segmented" data-segmented="status"><button type="button" data-role="option" data-value="enabled" class="is-active">启用</button><button type="button" data-role="option" data-value="disabled">停用</button></span></label>
+          <label class="c-field"><span><i>*</i> 平台</span><span class="c-select" data-select data-form-select="platform" data-value="Shopee"><button class="c-select__trigger" type="button"><span data-select-label>Shopee</span><span>⌄</span></button><span class="c-select__menu"><button type="button" data-role="option" data-value="Shopee">Shopee</button><button type="button" data-role="option" data-value="TikTok Shop">TikTok Shop</button></span></span></label>
+          <label class="c-field"><span><i>*</i> 店铺</span><span class="c-select" data-select data-form-select="shop" data-value="SPE039_PH_BT"><button class="c-select__trigger" type="button"><span data-select-label>SPE039_PH_BT</span><span>⌄</span></button><span class="c-select__menu"><button type="button" data-role="option" data-value="SPE039_PH_BT">SPE039_PH_BT</button><button type="button" data-role="option" data-value="SPE015_ID_BT">SPE015_ID_BT</button><button type="button" data-role="option" data-value="SPE087_TH_BT">SPE087_TH_BT</button><button type="button" data-role="option" data-value="TIKTOK_08_us">TIKTOK_08_us</button></span></span></label>
+          <label class="c-field"><span><i>*</i> 站点</span><span class="c-select" data-select data-form-select="site" data-value="菲律宾"><button class="c-select__trigger" type="button"><span data-select-label>菲律宾</span><span>⌄</span></button><span class="c-select__menu"><button type="button" data-role="option" data-value="菲律宾">菲律宾</button><button type="button" data-role="option" data-value="印度尼西亚">印度尼西亚</button><button type="button" data-role="option" data-value="泰国">泰国</button><button type="button" data-role="option" data-value="美国">美国</button></span></span></label>
+          <label class="c-field"><span>备注</span><input class="input" name="remark" placeholder="选填" /></label>
+        </div>
+      </section>
+
+      <section class="c-form-section">
+        <div class="c-form-section__head">
+          <span class="c-step">2</span>
+          <div><h3>订单命中条件</h3><p>同一条件组内需全部满足（AND），任意一个条件组成立即可命中（OR）。</p></div>
+          <button class="btn btn--outlined btn--color-primary" type="button" data-action="add-condition-group">＋ 添加条件组（OR）</button>
+        </div>
+        <div class="c-condition-groups" data-bind="condition-groups"></div>
+      </section>
+
+      <section class="c-form-section">
+        <div class="c-form-section__head">
+          <span class="c-step">3</span>
+          <div><h3>命中后如何审单</h3><p>选择订单命中规则后，是等待人工审核，还是由系统自动通过审核。</p></div>
+        </div>
+        <div class="c-mode-cards" data-mode-cards>
+          <button class="c-mode-card is-active" type="button" data-mode="manual">
+            <span class="c-mode-card__radio"></span>
+            <span><strong>人工审单</strong><small>等待用户处理</small></span>
+            <p>订单将停留在待审核状态，等待用户操作“转待发货”。</p>
+          </button>
+          <button class="c-mode-card" type="button" data-mode="auto">
+            <span class="c-mode-card__radio"></span>
+            <span><strong>自动审单</strong><small>系统自动处理</small></span>
+            <p>系统自动通过待审核状态，将订单流转至待发货状态。</p>
+          </button>
+        </div>
+        <div class="c-flow-hint" data-bind="flow-hint">
+          <span>订单命中规则</span><b>→</b><span>停留待审核</span><b>→</b><span>用户操作“转待发货”</span><b>→</b><span>按规则替换 SKU</span>
+        </div>
+      </section>
+
+      <section class="c-form-section">
+        <div class="c-form-section__head">
+          <span class="c-step">4</span>
+          <div><h3>SKU 替换方案</h3><p>系统仅执行一次替换；用户后续手工修改时，以用户修改结果为准。</p></div>
+        </div>
+        <div class="c-field">
+          <span><i>*</i> 替换范围</span>
+          <span class="c-segmented c-segmented--wide" data-segmented="scope">
+            <button type="button" data-role="option" data-value="matched" class="is-active">只替换命中的 SKU</button>
+            <button type="button" data-role="option" data-value="all">替换全部发货 SKU</button>
+          </span>
+          <small class="c-field__help" data-bind="scope-help">需在订单命中条件中配置“平台 SKU”或“发货 SKU”。</small>
+        </div>
+        <div class="c-action-table">
+          <div class="c-action-table__head"><span>换货 SKU</span><span>固定数量</span><span></span></div>
+          <div data-bind="sku-rows"></div>
+        </div>
+        <button class="btn btn--text btn--color-primary c-add-row" type="button" data-action="add-sku">＋ 添加换货 SKU</button>
+      </section>
+    </form>
+
+    <footer class="c-edit-foot">
+      <button class="btn" type="button" data-action="close-drawer">取消</button>
+      <button class="btn btn--solid btn--color-primary" type="button" data-action="save-rule">保存规则</button>
+    </footer>
+  </aside>
+
+  <div class="c-edit-mask" data-bind="warehouse-drawer-mask" data-open="false" data-action="close-warehouse-drawer"></div>
+  <aside class="c-edit-drawer c-edit-drawer--compact" data-bind="warehouse-drawer" data-open="false" aria-hidden="true">
+    <header class="c-edit-head">
+      <div><h2 class="c-edit-title" data-bind="warehouse-drawer-title">新增仓库映射</h2><p class="c-edit-subtitle">维护店铺后台仓库与系统仓库的对应关系。</p></div>
+      <button class="btn btn--text c-edit-close" type="button" data-action="close-warehouse-drawer">×</button>
+    </header>
+    <form class="c-edit-body c-edit-body--compact" data-bind="warehouse-form" novalidate>
+      <input type="hidden" name="mappingId" />
+      <div class="c-form-alert c-form-alert--error" data-bind="warehouse-form-error" hidden></div>
+      <section class="c-form-section">
+        <div class="c-form-section__head"><span class="c-step">1</span><div><h3>店铺与后台仓库</h3><p>同一实体仓库在不同店铺下可以使用不同后台编码。</p></div></div>
+        <div class="c-form-grid c-form-grid--two">
+          <label class="c-field"><span><i>*</i> 平台</span><input class="input" name="platform" value="TikTok Shop" /></label>
+          <label class="c-field"><span><i>*</i> 店铺</span><input class="input" name="shop" placeholder="例如：TIKTOK_08_us" /></label>
+          <label class="c-field"><span><i>*</i> 站点</span><input class="input" name="site" value="美国" /></label>
+          <label class="c-field"><span><i>*</i> 店铺后台仓库名称</span><input class="input" name="externalName" placeholder="例如：顺友美东仓" /></label>
+          <label class="c-field c-field--span-2"><span><i>*</i> 店铺后台仓库编码</span><input class="input" name="externalCode" placeholder="例如：7654839757679560449" /></label>
+        </div>
+      </section>
+      <section class="c-form-section">
+        <div class="c-form-section__head"><span class="c-step">2</span><div><h3>匹配系统仓库</h3><p>选择该后台仓库实际对应的内部仓库。</p></div></div>
+        <div class="c-form-grid c-form-grid--two">
+          <label class="c-field"><span><i>*</i> 系统仓库名称</span><input class="input" name="internalName" placeholder="例如：顺友美东仓" /></label>
+          <label class="c-field"><span><i>*</i> 系统仓库 ID</span><input class="input" name="internalId" placeholder="例如：WH_US_EAST_01" /></label>
+          <label class="c-field"><span>状态</span><span class="c-segmented" data-segmented="warehouseStatus"><button type="button" data-role="option" data-value="enabled" class="is-active">启用</button><button type="button" data-role="option" data-value="disabled">停用</button></span></label>
+          <label class="c-field"><span>备注</span><input class="input" name="remark" placeholder="选填" /></label>
+        </div>
+      </section>
+    </form>
+    <footer class="c-edit-foot"><button class="btn" type="button" data-action="close-warehouse-drawer">取消</button><button class="btn btn--solid btn--color-primary" type="button" data-action="save-warehouse">保存映射</button></footer>
+  </aside>
+
+  <div class="c-edit-mask" data-bind="generic-drawer-mask" data-open="false" data-action="close-generic-drawer"></div>
+  <aside class="c-edit-drawer" data-bind="generic-drawer" data-open="false" aria-hidden="true">
+    <header class="c-edit-head">
+      <div><h2 class="c-edit-title" data-bind="generic-drawer-title">新增规则</h2><p class="c-edit-subtitle" data-bind="generic-drawer-subtitle">字段与动作来自 OMS 订单规则真实配置。</p></div>
+      <button class="btn btn--text c-edit-close" type="button" data-action="close-generic-drawer">×</button>
+    </header>
+    <form class="c-edit-body" data-bind="generic-form" novalidate>
+      <input type="hidden" name="genericId" />
+      <div class="c-form-alert c-form-alert--error" data-bind="generic-form-error" hidden></div>
+      <div data-bind="generic-form-content"></div>
+    </form>
+    <footer class="c-edit-foot"><button class="btn" type="button" data-action="close-generic-drawer">取消</button><button class="btn btn--solid btn--color-primary" type="button" data-action="save-generic">保存规则</button></footer>
+  </aside>
+
+  <div class="c-modal-mask" data-bind="modal-mask" data-open="false"></div>
+  <section class="c-confirm" data-bind="confirm-modal" data-open="false" role="dialog" aria-modal="true">
+    <h3>确认删除该规则？</h3>
+    <p data-bind="confirm-desc">删除后无法恢复，已命中订单仍保留当时的规则快照。</p>
+    <div class="c-confirm__actions">
+      <button class="btn" type="button" data-action="cancel-delete">取消</button>
+      <button class="btn btn--solid btn--color-danger" type="button" data-action="confirm-delete">确认删除</button>
+    </div>
+  </section>
+  <div class="c-message" data-bind="message" data-open="false" role="status"></div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
