@@ -43,7 +43,7 @@
 <body>
   <div class="layout">
     <aside>
-      <div class="brand">规则配置 PRD<span class="version">精简版 · V0.4</span></div>
+      <div class="brand">规则配置 PRD<span class="version">精简版 · V0.5</span></div>
       <nav>
         <a href="#overview">文档概览</a>
         <a href="#chapter-1">1. 背景与范围</a>
@@ -59,7 +59,7 @@
         <span class="tag ok">跨境电商 ERP · OMS</span>
         <h1>平台仓库映射与换货处理规则</h1>
         <p class="subtitle">统一维护店铺后台仓库与系统仓库的映射，以及订单换货判定与 SKU 替换方案。</p>
-        <div class="meta"><span>版本<strong>V0.4</strong></span><span>状态<strong>评审中</strong></span><span>日期<strong>2026-08-11</strong></span></div>
+        <div class="meta"><span>版本<strong>V0.5</strong></span><span>状态<strong>评审中</strong></span><span>日期<strong>2026-08-19</strong></span></div>
         <div class="scope"><strong>本期范围：</strong>仅包含平台仓库映射规则、换货处理规则；不包含其他订单规则。</div>
       </header>
 
@@ -135,9 +135,9 @@ flowchart TD
           <thead><tr><th style="width:20%">模块</th><th style="width:35%">字段/功能</th><th>规则</th></tr></thead>
           <tbody>
             <tr><td>筛选</td><td>平台、店铺、后台仓库名称、系统仓库名称</td><td>平台与店铺联动；查询后返回同时满足条件的数据。</td></tr>
-            <tr><td>列表</td><td>平台/站点、店铺、后台仓库、后台仓库编码、系统仓库、状态、更新信息、操作</td><td>系统仓库同时展示名称与 ID；本期提供编辑和启停。</td></tr>
-            <tr><td>编辑字段</td><td>平台、店铺、站点、后台仓库名称、后台仓库编码、系统仓库、状态、备注</td><td>除备注外必填；系统仓库从主数据选择并带出 ID；新增默认启用。</td></tr>
-            <tr><td>唯一键</td><td>平台 + 店铺 + 后台仓库编码</td><td>编码按字符串保存；重复配置时阻止提交。</td></tr>
+            <tr><td>列表</td><td>平台/站点、店铺、后台仓库、系统仓库、映射数量、状态、更新信息、操作</td><td>一行代表一家店铺；后台仓库与系统仓库分列展示，并按行一一对应。后台仓库展示名称/ID，系统仓库只展示名称。</td></tr>
+            <tr><td>编辑字段</td><td>平台、店铺、站点、状态、备注，以及多组后台仓库名称/ID、系统仓库名称</td><td>一个店铺只维护一条规则；支持添加、删除多行关系并一次保存。用户只需选择系统仓库名称，不填写系统仓库 ID。</td></tr>
+            <tr><td>唯一键</td><td>规则：平台 + 店铺；映射行：后台仓库 ID</td><td>同一平台店铺不可重复建规则；同一规则内后台仓库 ID 不可重复，编码按字符串保存。</td></tr>
             <tr><td>执行</td><td>新订单按唯一键匹配启用映射</td><td>匹配成功写入系统仓库；未匹配时订单直接报错，不使用默认仓库兜底，也不在规则配置模块增加异常处理功能。</td></tr>
           </tbody>
         </table>
@@ -163,7 +163,7 @@ flowchart TD
         <table>
           <thead><tr><th style="width:12%">编号</th><th>场景</th><th style="width:42%">预期结果</th></tr></thead>
           <tbody>
-            <tr><td>AC-01</td><td>保存重复仓库唯一键</td><td>阻止保存并提示映射已存在。</td></tr>
+            <tr><td>AC-01</td><td>同一平台店铺重复新建规则，或同一规则内重复填写后台仓库 ID</td><td>阻止保存，并分别提示编辑原规则或检查重复仓库 ID。</td></tr>
             <tr><td>AC-02</td><td>新订单无仓库映射</td><td>阻断订单并报错，不自动选择其他仓库。</td></tr>
             <tr><td>AC-03</td><td>条件组为“（A AND B）OR C”</td><td>A、B 同时满足或 C 满足时命中。</td></tr>
             <tr><td>AC-04</td><td>人工/自动审单规则命中</td><td>分别按人工等待操作、系统自动通过的流程完成 SKU 替换。</td></tr>
@@ -192,3 +192,4 @@ flowchart TD
   <script>if(window.mermaid){mermaid.initialize({startOnLoad:true,theme:"default",securityLevel:"strict"});}</script>
 </body>
 </html>
+
