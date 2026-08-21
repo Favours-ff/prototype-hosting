@@ -77,10 +77,11 @@ const warehouseMappings = [
     platform: "TikTok Shop",
     shop: "TIKTOK_08_us",
     site: "美国",
-    externalName: "顺友美东仓",
-    externalCode: "7654839757679560449",
-    internalName: "顺友美东仓",
-    internalId: "WH_US_EAST_01",
+    mappings: [
+      { externalName: "顺友美东仓", externalCode: "7654839757679560449", internalName: "顺友美东仓" },
+      { externalName: "顺友美西仓", externalCode: "7654839757679560572", internalName: "顺友美西仓" },
+      { externalName: "洛杉矶退换仓", externalCode: "7654839757679560618", internalName: "洛杉矶中心仓" }
+    ],
     status: "enabled",
     remark: "",
     updater: "系统管理员",
@@ -91,10 +92,10 @@ const warehouseMappings = [
     platform: "TikTok Shop",
     shop: "TIKTOK_09_us",
     site: "美国",
-    externalName: "顺友美东仓",
-    externalCode: "7654839757679561298",
-    internalName: "顺友美东仓",
-    internalId: "WH_US_EAST_01",
+    mappings: [
+      { externalName: "顺友美东仓", externalCode: "7654839757679561298", internalName: "顺友美东仓" },
+      { externalName: "纽约三方仓", externalCode: "7654839757679561336", internalName: "纽约中心仓" }
+    ],
     status: "enabled",
     remark: "同一实体仓库，不同店铺后台编码不同",
     updater: "系统管理员",
@@ -105,10 +106,10 @@ const warehouseMappings = [
     platform: "Shopee",
     shop: "SPE015_ID_BT",
     site: "印度尼西亚",
-    externalName: "Jakarta Hub",
-    externalCode: "ID-JKT-00318",
-    internalName: "雅加达中心仓",
-    internalId: "WH_ID_JKT_01",
+    mappings: [
+      { externalName: "Jakarta Hub", externalCode: "ID-JKT-00318", internalName: "雅加达中心仓" },
+      { externalName: "Surabaya Warehouse", externalCode: "ID-SUB-00127", internalName: "泗水仓" }
+    ],
     status: "disabled",
     remark: "",
     updater: "艾萍",
@@ -171,7 +172,7 @@ const ruleSchemas = {
 };
 
 const tabMeta = {
-  warehouse: { name: "平台仓库映射规则", create: "新增仓库映射", desc: "按店铺后台仓库编码匹配系统仓库，统一供订单处理服务读取。" },
+  warehouse: { name: "平台仓库映射规则", create: "新增仓库映射规则", desc: "按店铺集中维护多个后台仓库与系统仓库的对应关系，统一供订单处理服务读取。" },
   exchange: { name: "换货处理规则", create: "新增换货规则", desc: "统一配置哪些订单需要换货，以及命中后的审单方式和发货 SKU 替换方案。" },
   audit: { name: "审单规则", create: "新增审单规则", desc: "配置订单进入人工审核或自动审核的判断规则。" },
   logistics: { name: "物流规则", create: "新增物流规则", desc: "配置订单匹配物流渠道的优先级与适用范围。" },
@@ -186,6 +187,7 @@ const state = {
   visibleWarehouseMappings: [...warehouseMappings],
   editingId: null,
   editingWarehouseId: null,
+  warehouseMapRows: [],
   editingGenericId: null,
   genericDraft: null,
   pendingDeleteId: null,
@@ -228,9 +230,11 @@ function renderWarehouseMappings() {
     <tr>
       <td><span class="c-table__primary">${escapeHtml(mapping.platform)}</span><span class="c-table__secondary">${escapeHtml(mapping.site)}</span></td>
       <td><span class="c-table__primary">${escapeHtml(mapping.shop)}</span></td>
-      <td><span class="c-table__primary">${escapeHtml(mapping.externalName)}</span></td>
-      <td><code>${escapeHtml(mapping.externalCode)}</code></td>
-      <td><span class="c-table__primary">${escapeHtml(mapping.internalName)}</span><span class="c-table__secondary">${escapeHtml(mapping.internalId)}</span></td>
+      <td><div class="c-warehouse-stack">${mapping.mappings.map((item) => `
+        <div class="c-warehouse-stack__item"><b>${escapeHtml(item.externalName)}</b><code>${escapeHtml(item.externalCode)}</code></div>`).join("")}</div></td>
+      <td><div class="c-warehouse-stack">${mapping.mappings.map((item) => `
+        <div class="c-warehouse-stack__item"><b>${escapeHtml(item.internalName)}</b></div>`).join("")}</div></td>
+      <td><span class="tag tag--processing">${mapping.mappings.length} 个</span></td>
       <td><button class="c-switch" type="button" role="switch" aria-checked="${mapping.status === "enabled"}" data-action="toggle-warehouse-status" data-id="${mapping.id}"></button></td>
       <td><span class="c-table__primary">${escapeHtml(mapping.updater)}</span><span class="c-table__secondary">${escapeHtml(mapping.updatedAt)}</span></td>
       <td class="c-table__actions"><button class="btn btn--text btn--color-primary btn--sm" type="button" data-action="edit-warehouse" data-id="${mapping.id}">编辑</button></td>
@@ -238,6 +242,23 @@ function renderWarehouseMappings() {
   `).join("");
   $('[data-bind="warehouse-count"]').textContent = state.visibleWarehouseMappings.length;
   $('[data-bind="warehouse-total"]').textContent = state.visibleWarehouseMappings.length;
+}
+
+function renderWarehouseMapRows() {
+  $('[data-bind="warehouse-map-rows"]').innerHTML = state.warehouseMapRows.map((item, index) => `
+    <div class="c-warehouse-map-row">
+      <input class="input" data-warehouse-row-field="externalName" data-index="${index}" value="${escapeHtml(item.externalName)}" placeholder="例如：顺友美东仓" />
+      <input class="input" data-warehouse-row-field="externalCode" data-index="${index}" value="${escapeHtml(item.externalCode)}" placeholder="平台仓库 ID" />
+      <input class="input" data-warehouse-row-field="internalName" data-index="${index}" value="${escapeHtml(item.internalName)}" placeholder="请选择系统仓库" />
+      <button class="btn btn--text btn--color-danger c-icon-danger" type="button" data-action="remove-warehouse-map-row" data-index="${index}" aria-label="删除仓库映射" ${state.warehouseMapRows.length === 1 ? "disabled" : ""}>×</button>
+    </div>
+  `).join("");
+}
+
+function syncWarehouseMapRows() {
+  $$('[data-warehouse-row-field]').forEach((input) => {
+    state.warehouseMapRows[Number(input.dataset.index)][input.dataset.warehouseRowField] = input.value.trim();
+  });
 }
 
 function renderGenericRules() {
@@ -402,14 +423,12 @@ function openWarehouseDrawer(mapping) {
   form.elements.platform.value = mapping?.platform ?? "TikTok Shop";
   form.elements.shop.value = mapping?.shop ?? "";
   form.elements.site.value = mapping?.site ?? "美国";
-  form.elements.externalName.value = mapping?.externalName ?? "";
-  form.elements.externalCode.value = mapping?.externalCode ?? "";
-  form.elements.internalName.value = mapping?.internalName ?? "";
-  form.elements.internalId.value = mapping?.internalId ?? "";
   form.elements.remark.value = mapping?.remark ?? "";
+  state.warehouseMapRows = mapping?.mappings?.map((item) => ({ ...item })) ?? [{ externalName: "", externalCode: "", internalName: "" }];
   setSegmented("warehouseStatus", mapping?.status ?? "enabled");
+  renderWarehouseMapRows();
   $('[data-bind="warehouse-form-error"]').hidden = true;
-  $('[data-bind="warehouse-drawer-title"]').textContent = mapping ? "编辑仓库映射" : "新增仓库映射";
+  $('[data-bind="warehouse-drawer-title"]').textContent = mapping ? "编辑仓库映射规则" : "新增仓库映射规则";
   $('[data-bind="warehouse-drawer"]').dataset.open = "true";
   $('[data-bind="warehouse-drawer"]').setAttribute("aria-hidden", "false");
   $('[data-bind="warehouse-drawer-mask"]').dataset.open = "true";
@@ -422,36 +441,48 @@ function closeWarehouseDrawer() {
 }
 
 function saveWarehouseMapping() {
+  syncWarehouseMapRows();
   const form = $('[data-bind="warehouse-form"]');
   const payload = {
     id: state.editingWarehouseId ?? Math.max(...warehouseMappings.map((item) => item.id), 0) + 1,
     platform: form.elements.platform.value.trim(),
     shop: form.elements.shop.value.trim(),
     site: form.elements.site.value.trim(),
-    externalName: form.elements.externalName.value.trim(),
-    externalCode: form.elements.externalCode.value.trim(),
-    internalName: form.elements.internalName.value.trim(),
-    internalId: form.elements.internalId.value.trim(),
+    mappings: state.warehouseMapRows.map((item) => ({ ...item })),
     status: $('[data-segmented="warehouseStatus"] button.is-active').dataset.value,
     remark: form.elements.remark.value.trim(),
     updater: "系统管理员",
     updatedAt: "2026-07-30 16:10"
   };
   const error = $('[data-bind="warehouse-form-error"]');
-  const required = [payload.platform, payload.shop, payload.site, payload.externalName, payload.externalCode, payload.internalName, payload.internalId];
-  const duplicated = warehouseMappings.some((item) =>
+  const required = [payload.platform, payload.shop, payload.site];
+  const duplicatedShopRule = warehouseMappings.some((item) =>
     item.id !== payload.id &&
     item.platform === payload.platform &&
-    item.shop === payload.shop &&
-    item.externalCode === payload.externalCode
+    item.shop === payload.shop
+  );
+  const codes = payload.mappings.map((item) => item.externalCode).filter(Boolean);
+  const duplicatedCode = new Set(codes).size !== codes.length;
+  const incompleteRow = !payload.mappings.length || payload.mappings.some((item) =>
+    !item.externalName || !item.externalCode || !item.internalName
   );
   if (required.some((value) => !value)) {
-    error.textContent = "请完整填写平台、店铺、站点、后台仓库和系统仓库信息。";
+    error.textContent = "请完整填写平台、店铺和站点。";
     error.hidden = false;
     return;
   }
-  if (duplicated) {
-    error.textContent = "该平台、店铺和后台仓库编码已存在映射，请勿重复配置。";
+  if (duplicatedShopRule) {
+    error.textContent = "该平台和店铺已存在仓库映射规则，请直接编辑原规则。";
+    error.hidden = false;
+    return;
+  }
+  if (incompleteRow) {
+    error.textContent = "请至少完整填写一组后台仓库与系统仓库的对应关系。";
+    error.hidden = false;
+    return;
+  }
+  if (duplicatedCode) {
+    error.textContent = "同一店铺内后台仓库 ID 不可重复，请检查后再保存。";
     error.hidden = false;
     return;
   }
@@ -461,7 +492,7 @@ function saveWarehouseMapping() {
   state.visibleWarehouseMappings = [...warehouseMappings];
   renderWarehouseMappings();
   closeWarehouseDrawer();
-  showMessage(index >= 0 ? "仓库映射已更新" : "仓库映射已创建");
+  showMessage(index >= 0 ? "仓库映射规则已更新" : "仓库映射规则已创建");
 }
 
 function genericSelectMarkup(type, value, groupIndex, conditionIndex, options, disabled = false) {
@@ -816,6 +847,16 @@ document.addEventListener("click", (event) => {
   if (action.dataset.action === "edit-warehouse") openWarehouseDrawer(warehouseMappings.find((mapping) => mapping.id === id));
   if (action.dataset.action === "close-warehouse-drawer") closeWarehouseDrawer();
   if (action.dataset.action === "save-warehouse") saveWarehouseMapping();
+  if (action.dataset.action === "add-warehouse-map-row") {
+    syncWarehouseMapRows();
+    state.warehouseMapRows.push({ externalName: "", externalCode: "", internalName: "" });
+    renderWarehouseMapRows();
+  }
+  if (action.dataset.action === "remove-warehouse-map-row") {
+    syncWarehouseMapRows();
+    state.warehouseMapRows.splice(Number(action.dataset.index), 1);
+    renderWarehouseMapRows();
+  }
   if (action.dataset.action === "edit-generic") openGenericDrawer((genericRules[state.activeTab] || []).find((item) => item.id === id));
   if (action.dataset.action === "copy-generic") {
     const source = (genericRules[state.activeTab] || []).find((item) => item.id === id);
@@ -940,7 +981,7 @@ document.addEventListener("click", (event) => {
     applyFilters();
     showMessage("列表已刷新");
   }
-  if (action.dataset.action === "search-warehouse" || action.dataset.action === "refresh-warehouse") {
+  if (action.dataset.action === "search-warehouse") {
     const platform = $('[data-warehouse-filter="platform"]').dataset.value;
     const shop = $('[data-warehouse-filter="shop"]').dataset.value;
     const externalName = $('[data-warehouse-filter="externalName"]').value.trim().toLowerCase();
@@ -948,11 +989,10 @@ document.addEventListener("click", (event) => {
     state.visibleWarehouseMappings = warehouseMappings.filter((mapping) =>
       (!platform || mapping.platform === platform) &&
       (!shop || mapping.shop === shop) &&
-      (!externalName || mapping.externalName.toLowerCase().includes(externalName)) &&
-      (!internalName || mapping.internalName.toLowerCase().includes(internalName))
+      (!externalName || mapping.mappings.some((item) => item.externalName.toLowerCase().includes(externalName))) &&
+      (!internalName || mapping.mappings.some((item) => item.internalName.toLowerCase().includes(internalName)))
     );
     renderWarehouseMappings();
-    if (action.dataset.action === "refresh-warehouse") showMessage("仓库映射列表已刷新");
   }
   if (action.dataset.action === "reset-warehouse-filter") {
     $$('[data-warehouse-filter]').forEach((field) => {
@@ -986,3 +1026,4 @@ document.addEventListener("click", (event) => {
 
 renderRules();
 renderWarehouseMappings();
+
