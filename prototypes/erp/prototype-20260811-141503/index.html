@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>规则配置 · ERP</title>
-  <link rel="stylesheet" href="../../ui-library/tokens.css" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
@@ -49,7 +48,7 @@
           <h1 class="c-page-header__title">规则配置 <span class="c-page-header__extra">共 7 个页签</span></h1>
           <p class="c-page-header__desc" data-bind="page-desc">按店铺后台仓库编码匹配系统仓库，统一供订单处理服务读取。</p>
         </div>
-        <button class="btn btn--solid btn--color-primary" type="button" data-action="create-current">＋ <span data-bind="create-current-label">新增仓库映射</span></button>
+        <button class="btn btn--solid btn--color-primary" type="button" data-action="create-current">＋ <span data-bind="create-current-label">新增仓库映射规则</span></button>
       </header>
 
       <nav class="c-rule-tabs surface-panel" role="tablist" aria-label="规则类型">
@@ -189,12 +188,11 @@
         </section>
         <section class="c-table-panel surface-panel" aria-label="平台仓库映射列表">
           <div class="c-table-panel__toolbar">
-            <span>共 <strong data-bind="warehouse-count">0</strong> 条仓库映射</span>
-            <button class="btn btn--sm" type="button" data-action="refresh-warehouse">↻ 刷新</button>
+            <span>共 <strong data-bind="warehouse-count">0</strong> 条店铺映射规则</span>
           </div>
           <div class="c-table-scroll">
             <table class="c-table c-table--warehouse">
-              <thead><tr><th>平台 / 站点</th><th>店铺</th><th>店铺后台仓库</th><th>后台仓库编码</th><th>系统仓库</th><th>状态</th><th>更新信息</th><th class="c-table__actions">操作</th></tr></thead>
+              <thead><tr><th>平台 / 站点</th><th>店铺</th><th>后台仓库</th><th>系统仓库</th><th>映射数量</th><th>状态</th><th>更新信息</th><th class="c-table__actions">操作</th></tr></thead>
               <tbody data-bind="warehouse-rows"></tbody>
             </table>
           </div>
@@ -326,33 +324,32 @@
   <div class="c-edit-mask" data-bind="warehouse-drawer-mask" data-open="false" data-action="close-warehouse-drawer"></div>
   <aside class="c-edit-drawer c-edit-drawer--compact" data-bind="warehouse-drawer" data-open="false" aria-hidden="true">
     <header class="c-edit-head">
-      <div><h2 class="c-edit-title" data-bind="warehouse-drawer-title">新增仓库映射</h2><p class="c-edit-subtitle">维护店铺后台仓库与系统仓库的对应关系。</p></div>
+      <div><h2 class="c-edit-title" data-bind="warehouse-drawer-title">新增仓库映射规则</h2><p class="c-edit-subtitle">一个店铺维护一条规则，可批量配置多个后台仓库与系统仓库的对应关系。</p></div>
       <button class="btn btn--text c-edit-close" type="button" data-action="close-warehouse-drawer">×</button>
     </header>
     <form class="c-edit-body c-edit-body--compact" data-bind="warehouse-form" novalidate>
       <input type="hidden" name="mappingId" />
       <div class="c-form-alert c-form-alert--error" data-bind="warehouse-form-error" hidden></div>
       <section class="c-form-section">
-        <div class="c-form-section__head"><span class="c-step">1</span><div><h3>店铺与后台仓库</h3><p>同一实体仓库在不同店铺下可以使用不同后台编码。</p></div></div>
+        <div class="c-form-section__head"><span class="c-step">1</span><div><h3>适用店铺</h3><p>同一平台下，一个店铺只需维护一条仓库映射规则。</p></div></div>
         <div class="c-form-grid c-form-grid--two">
           <label class="c-field"><span><i>*</i> 平台</span><input class="input" name="platform" value="TikTok Shop" /></label>
           <label class="c-field"><span><i>*</i> 店铺</span><input class="input" name="shop" placeholder="例如：TIKTOK_08_us" /></label>
           <label class="c-field"><span><i>*</i> 站点</span><input class="input" name="site" value="美国" /></label>
-          <label class="c-field"><span><i>*</i> 店铺后台仓库名称</span><input class="input" name="externalName" placeholder="例如：顺友美东仓" /></label>
-          <label class="c-field c-field--span-2"><span><i>*</i> 店铺后台仓库编码</span><input class="input" name="externalCode" placeholder="例如：7654839757679560449" /></label>
+          <label class="c-field"><span>状态</span><span class="c-segmented" data-segmented="warehouseStatus"><button type="button" data-role="option" data-value="enabled" class="is-active">启用</button><button type="button" data-role="option" data-value="disabled">停用</button></span></label>
+          <label class="c-field c-field--span-2"><span>备注</span><input class="input" name="remark" placeholder="选填，例如：美区店铺全部发货仓库映射" /></label>
         </div>
       </section>
       <section class="c-form-section">
-        <div class="c-form-section__head"><span class="c-step">2</span><div><h3>匹配系统仓库</h3><p>选择该后台仓库实际对应的内部仓库。</p></div></div>
-        <div class="c-form-grid c-form-grid--two">
-          <label class="c-field"><span><i>*</i> 系统仓库名称</span><input class="input" name="internalName" placeholder="例如：顺友美东仓" /></label>
-          <label class="c-field"><span><i>*</i> 系统仓库 ID</span><input class="input" name="internalId" placeholder="例如：WH_US_EAST_01" /></label>
-          <label class="c-field"><span>状态</span><span class="c-segmented" data-segmented="warehouseStatus"><button type="button" data-role="option" data-value="enabled" class="is-active">启用</button><button type="button" data-role="option" data-value="disabled">停用</button></span></label>
-          <label class="c-field"><span>备注</span><input class="input" name="remark" placeholder="选填" /></label>
+        <div class="c-form-section__head"><span class="c-step">2</span><div><h3>仓库对应关系</h3><p>逐行维护店铺后台发货仓库与系统仓库，一次保存整家店铺的全部映射。</p></div></div>
+        <div class="c-warehouse-map-table">
+          <div class="c-warehouse-map-table__head"><span>后台仓库名称</span><span>后台仓库 ID</span><span>系统仓库名称</span><span></span></div>
+          <div data-bind="warehouse-map-rows"></div>
         </div>
+        <button class="btn btn--text btn--color-primary c-add-row" type="button" data-action="add-warehouse-map-row">＋ 添加仓库映射</button>
       </section>
     </form>
-    <footer class="c-edit-foot"><button class="btn" type="button" data-action="close-warehouse-drawer">取消</button><button class="btn btn--solid btn--color-primary" type="button" data-action="save-warehouse">保存映射</button></footer>
+    <footer class="c-edit-foot"><button class="btn" type="button" data-action="close-warehouse-drawer">取消</button><button class="btn btn--solid btn--color-primary" type="button" data-action="save-warehouse">保存规则</button></footer>
   </aside>
 
   <div class="c-edit-mask" data-bind="generic-drawer-mask" data-open="false" data-action="close-generic-drawer"></div>
@@ -383,3 +380,4 @@
   <script src="./script.js"></script>
 </body>
 </html>
+
