@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>店铺后台档案 - 销售运营管理</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand__mark">商</span><strong>销售运营管理</strong></div>
+      <nav class="side-nav" aria-label="系统导航">
+        <button class="side-nav__item is-active">▣ <span>店铺运营管理</span></button>
+        <button class="side-nav__item">▦ <span>业务单元管理</span></button>
+        <button class="side-nav__item">✓ <span>订单归属处理</span></button>
+        <button class="side-nav__item">◎ <span>销售目标制定</span></button>
+      </nav>
+      <div class="sidebar__foot">店铺运营</div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <button class="icon-button" aria-label="折叠菜单">☰</button>
+        <span class="topbar__crumb" data-bind="breadcrumb">店铺运营管理 / 平台后台管理</span>
+        <div class="topbar__user"><span class="avatar">管</span> 系统管理员</div>
+      </header>
+
+      <main class="page">
+        <section data-view="platform-list">
+          <div class="page-heading page-heading--intro">
+            <div><h1>店铺运营管理</h1><p>集中查看不同平台店铺的后台资料与物流配置。</p></div>
+          </div>
+          <section class="card management-card">
+            <div class="tabs tabs--primary" role="tablist">
+              <button>运营归属管理</button>
+              <button class="is-active">平台后台管理</button>
+            </div>
+            <div class="list-toolbar">
+              <input class="search-input" data-bind="shop-search" placeholder="搜索店铺名称或编号..." />
+              <button class="button button--primary" data-action="search-shops">查询</button>
+            </div>
+            <div class="platform-filters" role="tablist">
+              <button class="is-active" data-platform-filter="all">全部</button>
+              <button data-platform-filter="Shopee"><span class="platform-mark platform-mark--shopee">S</span>Shopee</button>
+              <button data-platform-filter="Lazada"><span class="platform-mark platform-mark--lazada">L</span>Lazada</button>
+              <button data-platform-filter="TikTok Shop"><span class="platform-mark platform-mark--tiktok">♪</span>TikTok Shop</button>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table shop-list-table">
+                <thead><tr><th>店铺名称</th><th>所属平台</th><th>站点</th><th>店铺类型</th><th>后台经营表现</th><th>操作</th></tr></thead>
+                <tbody data-bind="shop-rows"></tbody>
+              </table>
+            </div>
+            <div class="list-footer">共 <strong data-bind="shop-count">3</strong> 家店铺</div>
+          </section>
+        </section>
+
+        <section data-view="shop-detail" hidden>
+        <div class="page-heading">
+          <h1 data-bind="detail-title">店铺后台档案 · SPE055</h1>
+          <button class="button" data-action="back-to-list">‹&nbsp; 返回平台后台管理</button>
+        </div>
+
+        <section class="card shop-card">
+          <h2>店铺基本信息</h2>
+          <dl class="shop-meta">
+            <div><dt>店铺名称：</dt><dd data-bind="detail-shop">SPE055</dd></div>
+            <div><dt>所属平台：</dt><dd data-bind="detail-platform">Shopee</dd></div>
+            <div><dt>站点：</dt><dd data-bind="detail-site">泰国站</dd></div>
+            <div><dt>店铺类型：</dt><dd data-bind="detail-type">普通店</dd></div>
+          </dl>
+        </section>
+
+        <section class="card content-card">
+          <div class="tabs tabs--primary" role="tablist">
+            <button data-main-tab="performance">经营表现</button>
+            <button class="is-active" data-main-tab="settings">平台后台设置</button>
+            <button data-main-tab="logs">操作记录</button>
+          </div>
+
+          <div data-main-panel="performance" hidden>
+            <div class="empty-state"><div class="empty-state__icon">◫</div><p>当前店铺暂无已接入的平台后台经营指标</p></div>
+          </div>
+
+          <div data-main-panel="settings">
+            <div class="tabs tabs--secondary" role="tablist">
+              <button class="is-active" data-sub-tab="addresses">地址与仓库</button>
+              <button data-sub-tab="channels">物流渠道</button>
+            </div>
+
+            <div class="panel" data-sub-panel="addresses">
+              <div class="panel-toolbar">
+                <div class="panel-toolbar__summary">
+                  <strong>地址与仓库</strong>
+                  <span>平台数据与系统仓库映射在此集中维护</span>
+                </div>
+                <button class="button">同步地址与仓库</button>
+              </div>
+
+              <div class="table-wrap">
+                <table class="data-table address-table">
+                  <thead>
+                    <tr>
+                      <th>对象名称</th><th>系统仓库</th><th>联系人</th><th>电话</th><th>完整地址</th><th>地址角色</th><th>状态</th><th>最近成功同步</th><th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody data-bind="address-rows"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel" data-sub-panel="channels" hidden>
+              <div class="panel-toolbar"><div class="panel-toolbar__summary"><strong><span data-bind="channel-platform">Shopee</span> 物流渠道</strong><span>渠道按服务类型和渠道组展示</span></div><button class="button">同步物流渠道</button></div>
+              <div class="channel-group"><h3>Instant <span>1 个子渠道</span></h3><div class="channel-row"><div><strong>Instant Delivery - ส่งทันที</strong><small>最近成功同步：2026-08-10 10:24:36</small></div><label>启用渠道 <input type="checkbox" /></label><label>启用 COD <input type="checkbox" /></label></div></div>
+              <div class="channel-group"><h3>Standard <span>2 个子渠道</span></h3><div class="channel-row"><div><strong>Standard Delivery - ส่งธรรมดาในประเทศ</strong><small>最近成功同步：2026-08-10 10:24:36</small></div><label>启用渠道 <input type="checkbox" checked /></label><label>启用 COD <input type="checkbox" checked /></label></div><div class="channel-row"><div><strong>Standard Delivery Bulky - ส่งสินค้าขนาดใหญ่</strong><small>平台强制启用</small></div><label>启用渠道 <input type="checkbox" checked disabled /></label><label>启用 COD <input type="checkbox" /></label></div></div>
+            </div>
+          </div>
+
+          <div data-main-panel="logs" hidden>
+            <div class="table-wrap table-wrap--logs"><table class="data-table"><thead><tr><th>操作人</th><th>操作类型</th><th>操作对象</th><th>结果摘要</th><th>操作时间</th></tr></thead><tbody data-bind="log-rows"></tbody></table></div>
+          </div>
+        </section>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="drawer-mask" data-bind="drawer-mask" hidden></div>
+  <aside class="mapping-drawer" data-bind="mapping-drawer" aria-hidden="true">
+    <header class="drawer-head">
+      <div><h2 data-bind="drawer-title">匹配系统仓库 · 曼谷主仓</h2><p>为当前后台发货仓库选择对应的系统仓库。</p></div>
+      <button class="drawer-close" data-action="close-mapping" aria-label="关闭">×</button>
+    </header>
+    <div class="drawer-body drawer-body--compact">
+      <div class="form-error" data-bind="form-error" hidden></div>
+      <div class="shop-context" aria-label="适用店铺">
+        <div><span>平台</span><strong data-bind="mapping-platform">Shopee</strong></div>
+        <div><span>店铺</span><strong data-bind="mapping-shop">SPE055</strong></div>
+        <div><span>站点</span><strong data-bind="mapping-site">泰国站</strong></div>
+      </div>
+      <section class="single-mapping-section">
+        <h3>仓库对应关系</h3>
+        <p>当前后台仓库单独设置，只允许对应一个系统仓库。</p>
+        <div data-bind="mapping-rows"></div>
+      </section>
+    </div>
+    <footer class="drawer-foot"><button class="button" data-action="close-mapping">取消</button><button class="button button--primary" data-action="save-mapping">保存映射</button></footer>
+  </aside>
+
+  <div class="modal-mask" data-bind="modal-mask" hidden></div>
+  <div class="dialog" data-bind="dialog" hidden role="dialog" aria-modal="true">
+    <header><h3 data-bind="dialog-title">编辑地址</h3><button data-action="close-dialog">×</button></header>
+    <div class="dialog__body" data-bind="dialog-body"></div>
+    <footer><button class="button" data-action="close-dialog">取消</button><button class="button button--primary" data-action="close-dialog">确定</button></footer>
+  </div>
+
+  <div class="toast" data-bind="toast" hidden></div>
+  <script src="./script.js"></script>
+</body>
+</html>
