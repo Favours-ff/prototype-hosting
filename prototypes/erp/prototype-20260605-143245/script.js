@@ -24,6 +24,8 @@ const escapeHtml=value=>String(value).replace(/[&<>"\']/g,char=>({"&":"&amp;","<
 const tag=(text,type="default")=>`<span class="tag tag--${type}">${text}</span>`;
 const statusReason=p=>p.status==="审核不通过"?`<span class="c-status-reason c-status-reason--error" data-tooltip="${escapeHtml(p.statusText)}">${escapeHtml(p.statusText)}</span>`:`<span class="c-meta" title="${escapeHtml(p.statusText)}">${escapeHtml(p.statusText)}</span>`;
 const statusType=s=>s==="销售中"?"success":s==="审核中"?"warning":s==="审核不通过"?"error":"default";
+const itemStatusType=s=>s==="在线"?"success":s==="待审核"?"warning":s==="审核驳回"?"error":"default";
+const timeGroup=p=>`<div class="c-time-group"><span><em>后台创建</em><b>${escapeHtml(p.createdAt)}</b></span><span><em>系统更新</em><b>${escapeHtml(p.updatedAt)}</b></span></div>`;
 const bindingType=s=>s==="全部已绑定"?"success":s==="未绑定"?"error":"warning";
 const activityTag=active=>active?`<span class="c-activity-tag" data-tooltip="商品正在参与平台活动，活动期间库存只能增加，不能减少。">SALE</span>`:"";
 
@@ -51,13 +53,14 @@ function renderProducts(list=currentView){
       <td><b>${p.store}</b><span class="c-meta">运营：${p.operator}</span></td>
       <td>${tag(p.stocking)}</td>
       <td>${tag(p.status,statusType(p.status))}${statusReason(p)}</td>
+      <td>${tag(p.itemStatus,itemStatusType(p.itemStatus))}</td>
       <td><b>${p.price}</b><span class="c-meta">采购价：${p.purchase}</span></td>
       <td><div class="c-stock"><div><span>平台在售</span><b>${p.platformStock}</b></div><div><span>本地可用</span><b>${p.localStock}</b></div></div></td>
       <td><b>${p.sales}</b><span class="c-meta">${p.salesTrend}</span></td>
       <td>${tag(p.binding,bindingType(p.binding))}<span class="c-meta">${p.bindingText}</span></td>
-      <td>${tag(p.change,"warning")}<span class="c-meta">${p.changeTime}</span></td>
-      <td><div class="c-ops"><button class="btn btn--sm sku-btn" data-sku-product="${p.id}">SKU</button><button class="btn btn--sm log-btn">日志</button></div></td>
-    </tr>`).join(""):`<tr><td colspan="11"><div class="c-empty"><b>暂无符合条件的商品</b><span>请调整筛选条件后重新查询。</span></div></td></tr>`;
+      <td>${timeGroup(p)}</td>
+      <td><div class="c-ops"><button class="btn btn--sm log-btn">日志</button></div></td>
+    </tr>`).join(""):`<tr><td colspan="12"><div class="c-empty"><b>暂无符合条件的商品</b><span>请调整筛选条件后重新查询。</span></div></td></tr>`;
   bindRows();
   syncSelection();
 }
@@ -66,7 +69,7 @@ function bindRows(){
   document.querySelectorAll(".product-check").forEach(x=>x.onchange=syncSelection);
   document.querySelectorAll(".copy-id").forEach(btn=>btn.onclick=()=>{navigator.clipboard?.writeText(btn.dataset.copy).catch(()=>{});showMessage("商品 ID 已复制")});
   document.querySelectorAll(".log-btn").forEach(btn=>btn.onclick=()=>openLog(btn));
-  document.querySelectorAll(".sku-open,.sku-btn").forEach(btn=>btn.onclick=e=>{e.preventDefault();openSkuDrawer(btn)});
+  document.querySelectorAll(".sku-open").forEach(btn=>btn.onclick=e=>{e.preventDefault();openSkuDrawer(btn)});
 }
 
 function productFromButton(btn){
@@ -170,7 +173,7 @@ function logsForProduct(product){
   const operators=["系统任务",product.operator,"马丽","李明","张敏"];
   const contents=[
     product.lastWarehouseChange?`多仓库存：${product.lastWarehouseChange}；`:`平台在售库存：当前汇总为 ${product.platformStock}；`,
-    `商品状态：更新为 ${product.status}；`,
+    `商品状态：更新为 ${product.itemStatus}；`,
     `供货价：同步为 ${product.price}；`,
     `本地 SKU 绑定关系：完成校验；`,
     `最近 30 天销量：更新为 ${product.sales}；`,
@@ -257,11 +260,23 @@ function ruleMethodSelect(s,index){
   const id=`rowMethod${index}`;
   return `<div class="c-select"><button class="c-select__trigger" data-select="${id}"><span>${s.method}</span><i></i></button><div class="c-select__popup" data-popup="${id}" data-rule-index="${index}"><button class="c-action" data-value="本地可用库存">本地可用库存</button><button class="c-action" data-value="自定义数量">自定义数量</button><button class="c-action" data-value="无库存兜底">无库存兜底</button></div></div>`;
 }
+function ruleSyncSwitch(s,index){
+  if(typeof s.syncEnabled!=="boolean") s.syncEnabled=s.status!=="停售";
+  return `<button type="button" class="c-switch rule-sync${s.syncEnabled?" active":""}" role="switch" aria-checked="${s.syncEnabled}" aria-label="${s.name} 库存同步" data-rule-sync="${index}"><span></span></button>`;
+}
 function allRuleSkus(){return products.flatMap(p=>p.skus.map(s=>({p,s})))}
 function renderRules(){
   const ruleSkus=allRuleSkus();
-  document.getElementById("ruleRows").innerHTML=ruleSkus.map(({p,s},index)=>`<tr data-rule-index="${index}" data-mapping="${s.binding==="未绑定"?"未映射":"已映射"}" data-sync="开启" data-method="${s.method}"><td><button class="c-check-btn rule-check" aria-label="选择 ${s.name}"></button></td><td><div class="c-relation"><b>${s.name}</b><span>在线 SKU：${s.online}</span><span>本地 SKU：${s.local}　店铺：${p.store}</span></div></td><td><b>${s.platform}</b></td><td><b>${s.localStock}</b></td><td>${ruleMethodSelect(s,index)}</td><td><div class="c-rule-logic">${ruleLogic(s.method,s)}</div></td></tr>`).join("");
+  document.getElementById("ruleRows").innerHTML=ruleSkus.map(({p,s},index)=>{if(typeof s.syncEnabled!=="boolean")s.syncEnabled=s.status!=="停售";return `<tr data-rule-index="${index}" data-mapping="${s.binding==="未绑定"?"未映射":"已映射"}" data-sync="${s.syncEnabled?"开启":"关闭"}" data-method="${s.method}"><td><button class="c-check-btn rule-check" aria-label="选择 ${s.name}"></button></td><td><div class="c-relation"><b>${s.name}</b><span>在线 SKU：${s.online}</span><span>本地 SKU：${s.local}　店铺：${p.store}</span></div></td><td><b>${s.platform}</b></td><td><b>${s.localStock}</b></td><td>${ruleSyncSwitch(s,index)}</td><td>${ruleMethodSelect(s,index)}</td><td><div class="c-rule-logic">${ruleLogic(s.method,s)}</div></td></tr>`}).join("");
   document.querySelectorAll(".rule-check").forEach(x=>x.onclick=()=>{x.classList.toggle("active");syncRuleSelection()});
+  document.querySelectorAll(".rule-sync").forEach(x=>x.onclick=()=>{
+    const index=Number(x.dataset.ruleSync),item=allRuleSkus()[index];
+    item.s.syncEnabled=!item.s.syncEnabled;
+    x.classList.toggle("active",item.s.syncEnabled);
+    x.setAttribute("aria-checked",String(item.s.syncEnabled));
+    x.closest("tr").dataset.sync=item.s.syncEnabled?"开启":"关闭";
+    showMessage(`${item.s.name} 库存同步已${item.s.syncEnabled?"开启":"关闭"}`);
+  });
   setupSelects();
 }
 function ruleLogic(method,s){
@@ -342,13 +357,14 @@ function matchesFilters(p){
   const goodsWord=document.getElementById("goodsKeywordInput").value.trim().toLowerCase();
   const productHay=selectValues.productKeyword==="商品标题"?p.title:selectValues.productKeyword==="SKU 编码"?p.skus.map(s=>s.code).join(" "):p.id;
   const goodsHay=selectValues.goodsKeyword==="货品条码"?p.skus.map(s=>s.barcode).join(" "):selectValues.goodsKeyword==="本地 SKU"?p.skus.map(s=>s.local).join(" "):p.skus.map(s=>s.goodsId).join(" ");
-  const stockOk=selectValues.stock==="全部库存状态"||(selectValues.stock==="有库存"&&p.platformStock>0)||(selectValues.stock==="库存为 0"&&p.platformStock===0)||(selectValues.stock==="部分 SKU 售罄"&&p.skus.some(s=>s.platform===0)&&p.skus.some(s=>s.platform>0))||(selectValues.stock==="库存异常"&&p.localStock===0);
+  const stockOk=selectValues.stock==="全部库存状态"||(selectValues.stock==="有库存"&&p.platformStock>0)||(selectValues.stock==="库存为 0"&&p.platformStock===0);
   const activityOk=selectValues.activity==="全部活动状态"||(selectValues.activity==="参加活动"&&p.activity)||(selectValues.activity==="未参加活动"&&!p.activity);
   return matchesStatusTab(p)&&(!productWord||productHay.toLowerCase().includes(productWord))&&(!goodsWord||goodsHay.toLowerCase().includes(goodsWord))&&(selectValues.store==="全部全托管店铺"||p.store===selectValues.store)&&(selectValues.category==="全部类目"||p.category.includes(selectValues.category))&&(selectValues.stocking==="全部备货类型"||p.stocking===selectValues.stocking)&&stockOk&&(selectValues.binding==="全部绑定状态"||p.binding===selectValues.binding)&&activityOk;
 }
 function applyFilters(){
   currentView=products.filter(matchesFilters);
-  if(selectValues.sort==="创建时间正序") currentView.reverse();
+  if(selectValues.sort==="创建时间倒序") currentView.sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+  if(selectValues.sort==="创建时间正序") currentView.sort((a,b)=>a.createdAt.localeCompare(b.createdAt));
   if(selectValues.sort==="30 天销量从大到小") currentView.sort((a,b)=>b.sales-a.sales);
   if(selectValues.sort==="30 天销量从小到大") currentView.sort((a,b)=>a.sales-b.sales);
   resultTotal=currentView.length;

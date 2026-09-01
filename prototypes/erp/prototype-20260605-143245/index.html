@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>速卖通全托管商品</title>
-  <link rel="stylesheet" href="../../ui-library/tokens.css">
-  <link rel="stylesheet" href="./styles.css?v=20260805-tooltip-below">
+  <link rel="stylesheet" href="../../ui-library/tokens.css?v=20260901-product-fields">
+  <link rel="stylesheet" href="./styles.css?v=20260901-product-fields">
 </head>
 <body>
   <div class="c-shell" data-component="ErpShell">
@@ -69,7 +69,7 @@
           </div>
           <div class="c-filter__grid c-filter__advanced" id="advancedFilters">
             <div class="c-filter__field"><label>备货类型</label><div class="c-select"><button class="c-select__trigger" data-select="stocking"><span>全部备货类型</span><i></i></button><div class="c-select__popup" data-popup="stocking"><button class="c-action" data-value="全部备货类型">全部备货类型</button><button class="c-action" data-value="JIT 即时补货">JIT 即时补货</button><button class="c-action" data-value="仓发">仓发</button><button class="c-action" data-value="国内履约">国内履约</button><button class="c-action" data-value="海外仓">海外仓</button></div></div></div>
-            <div class="c-filter__field"><label>库存状态</label><div class="c-select"><button class="c-select__trigger" data-select="stock"><span>全部库存状态</span><i></i></button><div class="c-select__popup" data-popup="stock"><button class="c-action" data-value="全部库存状态">全部库存状态</button><button class="c-action" data-value="有库存">有库存</button><button class="c-action" data-value="库存为 0">库存为 0</button><button class="c-action" data-value="部分 SKU 售罄">部分 SKU 售罄</button><button class="c-action" data-value="库存异常">库存异常</button></div></div></div>
+            <div class="c-filter__field"><label>库存状态</label><div class="c-select"><button class="c-select__trigger" data-select="stock"><span>全部库存状态</span><i></i></button><div class="c-select__popup" data-popup="stock"><button class="c-action" data-value="全部库存状态">全部库存状态</button><button class="c-action" data-value="有库存">有库存</button><button class="c-action" data-value="库存为 0">库存为 0</button></div></div></div>
             <div class="c-filter__field"><label>货品绑定</label><div class="c-select"><button class="c-select__trigger" data-select="binding"><span>全部绑定状态</span><i></i></button><div class="c-select__popup" data-popup="binding"><button class="c-action" data-value="全部绑定状态">全部绑定状态</button><button class="c-action" data-value="全部已绑定">全部已绑定</button><button class="c-action" data-value="部分绑定中">部分绑定中</button><button class="c-action" data-value="未绑定">未绑定</button><button class="c-action" data-value="解绑拒绝">解绑拒绝</button></div></div></div>
             <div class="c-filter__field"><label>活动状态</label><div class="c-select"><button class="c-select__trigger" data-select="activity"><span>全部活动状态</span><i></i></button><div class="c-select__popup" data-popup="activity"><button class="c-action" data-value="全部活动状态">全部活动状态</button><button class="c-action" data-value="参加活动">参加活动</button><button class="c-action" data-value="未参加活动">未参加活动</button></div></div></div>
           </div>
@@ -94,7 +94,7 @@
           </div>
           <div class="c-table__scroll">
             <table class="c-table__main">
-              <thead><tr><th><input type="checkbox" id="checkAll"></th><th>商品</th><th>店铺</th><th>备货类型</th><th>审核状态</th><th>供货价 / 采购价</th><th>库存</th><th>近 30 天销量</th><th>货品绑定</th><th>最近变化</th><th>操作</th></tr></thead>
+              <thead><tr><th><input type="checkbox" id="checkAll"></th><th>商品</th><th>店铺</th><th>备货类型</th><th>审核状态</th><th>商品状态</th><th>供货价 / 采购价</th><th>库存</th><th>近 30 天销量</th><th>货品绑定</th><th>时间</th><th>操作</th></tr></thead>
               <tbody id="productRows"></tbody>
             </table>
           </div>
@@ -200,7 +200,7 @@
           <div><b>批量修改</b><span id="ruleSelectedText">请选择下方 SKU</span></div>
           <div class="c-rule-batch__form"><span>补货方式</span><div class="c-segmented" id="batchMethods"><button class="c-action active" data-method="local">本地可用库存</button><button class="c-action" data-method="custom">自定义数量</button><button class="c-action" data-method="fallback">无库存兜底</button></div><button class="btn btn--primary" id="applyRuleBtn" disabled>应用到已选 SKU</button></div>
         </section>
-        <div class="c-rule-table-wrap"><table class="c-rule-table"><thead><tr><th><button class="c-check-btn" id="ruleCheckAll" aria-label="全选 SKU"></button></th><th>SKU 信息</th><th>可售数量</th><th>本地可用</th><th>补货方式</th><th>补货逻辑</th></tr></thead><tbody id="ruleRows"></tbody></table></div>
+        <div class="c-rule-table-wrap"><table class="c-rule-table"><thead><tr><th><button class="c-check-btn" id="ruleCheckAll" aria-label="全选 SKU"></button></th><th>SKU 信息</th><th>可售数量</th><th>本地可用</th><th>库存同步</th><th>补货方式</th><th>补货逻辑</th></tr></thead><tbody id="ruleRows"></tbody></table></div>
       </div>
       <footer class="c-modal__footer"><button class="btn" data-close="rule">取消</button><button class="btn btn--primary" id="saveRuleBtn">保存规则</button></footer>
     </section>
@@ -259,7 +259,7 @@
     </aside>
   </div>
   <div class="c-message" id="message"></div>
-  <script src="./data.js?v=20260805-tooltip-below"></script>
-  <script src="./script.js?v=20260805-tooltip-below"></script>
+  <script src="./data.js?v=20260901-product-fields"></script>
+  <script src="./script.js?v=20260901-product-fields"></script>
 </body>
 </html>

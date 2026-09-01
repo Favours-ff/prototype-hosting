@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PRD - 速卖通全托管商品与库存同步</title>
+<title>PRD - 速卖通全托管商品管理与库存同步 V1.1</title>
 <style>
 :root{--blue:#1677ff;--ink:#172033;--sub:#667085;--line:#d9e2ef;--bg:#f5f7fa;--green:#389e0d;--orange:#d46b08;--red:#cf1322}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.7 "Microsoft YaHei","PingFang SC",sans-serif}.toolbar{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:12px 24px;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(16,24,40,.08)}.toolbar b{font-size:16px}.actions{display:flex;gap:8px}.btn{height:34px;border:1px solid #cbd6e4;border-radius:6px;background:#fff;color:#344054;padding:0 14px;font-weight:600;cursor:pointer}.btn.primary{color:#fff;background:var(--blue);border-color:var(--blue)}.status{color:var(--green);font-size:13px}.page{max-width:1120px;margin:24px auto;padding:0 16px 48px}.document{background:#fff;border:1px solid var(--line);border-radius:10px;padding:38px 46px;box-shadow:0 2px 8px rgba(16,24,40,.06)}h1{font-size:28px;margin:0 0 8px}h2{font-size:20px;border-bottom:1px solid var(--line);padding-bottom:8px;margin:34px 0 16px}h3{font-size:16px;margin:24px 0 10px}.meta{color:var(--sub);margin-bottom:24px}.callout{border-left:4px solid var(--blue);background:#f4f8ff;padding:12px 16px;margin:14px 0;border-radius:4px}.warning{border-left-color:var(--orange);background:#fff8ed}.danger{border-left-color:var(--red);background:#fff3f3}table{width:100%;border-collapse:collapse;margin:12px 0 20px}th,td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}th{background:#f7f9fc;color:#344054}code{background:#f2f4f7;border-radius:4px;padding:1px 5px;color:#344054}pre{white-space:pre-wrap;background:#101828;color:#d1e9ff;padding:14px;border-radius:8px;overflow:auto}.flow-img{display:block;width:100%;max-width:760px;margin:16px auto;border:1px solid var(--line);border-radius:8px}.tag{display:inline-block;border-radius:999px;padding:1px 8px;font-size:12px;font-weight:600}.green{background:#f6ffed;color:var(--green)}.orange{background:#fff7e6;color:var(--orange)}.red{background:#fff1f0;color:var(--red)}ul,ol{padding-left:22px}.copy-note{color:var(--sub);font-size:12px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.7 "Microsoft YaHei","PingFang SC",sans-serif}.toolbar{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:12px 24px;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(16,24,40,.08)}.toolbar b{font-size:16px}.actions{display:flex;gap:8px;align-items:center}.btn{height:34px;border:1px solid #cbd6e4;border-radius:6px;background:#fff;color:#344054;padding:0 14px;font-weight:600;cursor:pointer}.btn.primary{color:#fff;background:var(--blue);border-color:var(--blue)}.status{color:var(--green);font-size:13px}.page{max-width:1120px;margin:24px auto;padding:0 16px 48px}.document{background:#fff;border:1px solid var(--line);border-radius:10px;padding:38px 46px;box-shadow:0 2px 8px rgba(16,24,40,.06)}h1{font-size:28px;margin:0 0 8px}h2{font-size:20px;border-bottom:1px solid var(--line);padding-bottom:8px;margin:34px 0 16px}h3{font-size:16px;margin:24px 0 10px}.meta{color:var(--sub);margin-bottom:24px}.callout{border-left:4px solid var(--blue);background:#f4f8ff;padding:12px 16px;margin:14px 0;border-radius:4px}.warning{border-left-color:var(--orange);background:#fff8ed}.danger{border-left-color:var(--red);background:#fff3f3}table{width:100%;border-collapse:collapse;margin:12px 0 20px}th,td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}th{background:#f7f9fc;color:#344054}code{background:#f2f4f7;border-radius:4px;padding:1px 5px;color:#344054}pre{white-space:pre-wrap;background:#101828;color:#d1e9ff;padding:14px;border-radius:8px;overflow:auto}.tag{display:inline-block;border-radius:999px;padding:1px 8px;font-size:12px;font-weight:600}.green{background:#f6ffed;color:var(--green)}.orange{background:#fff7e6;color:var(--orange)}.red{background:#fff1f0;color:var(--red)}ul,ol{padding-left:22px}.copy-note{color:var(--sub);font-size:12px}.muted{color:var(--sub)}
 </style>
 </head>
 <body>
@@ -16,178 +16,277 @@
 </div>
 <main class="page">
 <article class="document" id="prdContent">
-  <h1>速卖通全托管商品管理与 JIT 库存同步 PRD</h1>
-  <div class="meta">版本：V1.0 · 产品范围：全托管商品只读管理 + JIT 库存同步规则配置 · 更新日期：2026-06-05</div>
+  <h1>速卖通全托管商品管理与库存同步 PRD</h1>
+  <div class="meta">版本：V1.2 · 产品范围：全托管商品只读管理 + SKU 多仓库存维护 + 库存同步规则 · 更新日期：2026-09-01</div>
 
   <h2>1. 项目背景</h2>
-  <p>自研 ERP 需要统一拉取并展示速卖通全托管店铺的商品、SKU、审核、供货价、平台库存、本地库存和货品绑定信息。同时，本期接入 JIT 库存同步能力，允许用户按 SKU 设置库存补货规则，由后台任务计算目标库存并更新平台。</p>
-  <div class="callout"><b>核心边界：</b>商品标题、价格、上下架、审核信息等仅拉取展示；本期唯一允许配置的业务能力为库存同步规则。</div>
+  <p>自研 ERP 需要统一拉取并展示速卖通全托管店铺的 Listing、SKU、审核状态、供货价、平台多仓库存、本地库存和货品绑定信息。考虑卖家 Listing 数量可达到十万级，列表以 Listing 为主体，不在主列表内展开 SKU；SKU 通过右侧抽屉集中查看和维护。</p>
+  <p>本期同时接入库存同步能力，允许用户按 SKU 独立启停库存同步并配置补货方式，系统后台按 SKU、平台仓库计算目标库存并执行同步。</p>
+  <div class="callout"><b>核心边界：</b>商品标题、价格、审核状态、上下架等商品信息仅拉取和展示；页面不提供商品编辑、发布、调价和上下架操作。可修改范围仅包括 SKU 平台仓库存数量及库存同步规则。</div>
 
   <h2>2. 产品目标与范围</h2>
   <table>
     <thead><tr><th>类型</th><th>内容</th></tr></thead>
     <tbody>
-      <tr><td>目标</td><td>完整展示全托管商品与 SKU 信息；支持筛选、状态切换、详情、日志和原始 JSON；支持配置 JIT 库存同步规则。</td></tr>
-      <tr><td>本期范围</td><td>全托管店铺识别、商品列表与详情同步、SKU 与本地 SKU 关系展示、平台与本地库存对照、库存同步规则配置、后台库存同步、同步日志。</td></tr>
-      <tr><td>不在本期</td><td>商品发布、编辑标题、调价、上下架、修改审核状态、编辑货品绑定、非 JIT 仓库库存更新。</td></tr>
+      <tr><td>产品目标</td><td>完整展示全托管 Listing 与 SKU 数据；支持多维筛选、状态切换、日志追溯、多仓库存维护及库存同步规则配置。</td></tr>
+      <tr><td>本期范围</td><td>全托管店铺识别、商品列表与详情同步、Listing 状态统计、SKU 抽屉、在线 SKU 与本地 SKU 关系、多仓库存、本地可用库存、活动标识、操作日志、SKU 库存同步开关及三类补货规则。</td></tr>
+      <tr><td>不在本期</td><td>商品发布、商品详情页、标题编辑、供货价调整、采购价调整、商品上下架、审核状态修改、货品绑定编辑、原始 JSON 查看。</td></tr>
     </tbody>
   </table>
 
-  <h2>3. 用户与使用场景</h2>
+  <h2>3. 用户角色与使用场景</h2>
   <table>
     <thead><tr><th>角色</th><th>核心场景</th><th>权限</th></tr></thead>
     <tbody>
-      <tr><td>运营</td><td>查看商品状态、审核原因、SKU、库存与最近变化；筛选并配置库存规则。</td><td>查看、筛选、导出、配置库存同步规则。</td></tr>
-      <tr><td>系统任务</td><td>定时拉取商品与库存，执行已启用的库存规则。</td><td>调用平台查询与库存更新接口，记录日志。</td></tr>
-      <tr><td>研发 / 支持</td><td>查看原始 JSON、接口错误和同步日志。</td><td>只读排查。</td></tr>
+      <tr><td>运营</td><td>按店铺、类目和状态查看商品；查看审核原因和 SKU；维护各平台仓库存；配置库存同步规则。</td><td>查看、筛选、导出、维护库存、配置规则、查看日志。</td></tr>
+      <tr><td>系统任务</td><td>定时同步商品、SKU 与仓库库存；执行已开启的库存同步规则；回查平台结果。</td><td>调用平台查询与库存更新接口，写入同步日志。</td></tr>
+      <tr><td>研发 / 支持</td><td>根据商品、SKU、仓库和任务标识排查同步异常。</td><td>查看操作日志和接口日志。</td></tr>
     </tbody>
   </table>
 
-  <h2>4. 页面结构</h2>
+  <h2>4. 页面信息架构</h2>
   <ol>
-    <li>页面标题区：展示页面名称和只读业务说明。</li>
-    <li>筛选区：两行四等分栅格，所有筛选控件宽度一致。</li>
-    <li>状态 Tab：全部、销售中、审核中、审核不通过、已下架。</li>
-    <li>商品列表：每页 10 条，支持勾选 listing、导出和配置库存同步规则。</li>
-    <li>SKU 展开行：展示在线 SKU、本地 SKU、库存对照、销售状态、供货价和货品绑定。</li>
-    <li>详情 / 日志 / JSON 抽屉：查看完整数据与历史变化。</li>
-    <li>库存同步规则弹窗：顶部筛选，支持批量修改和逐条修改。</li>
+    <li>页面标题区：展示“速卖通全托管商品”及业务说明，不展示左侧菜单。</li>
+    <li>筛选区：高频筛选默认展示，低频筛选通过“展开更多筛选”显示；同一行控件等宽对齐。</li>
+    <li>状态 Tab：仅展示全部、销售中、审核中、审核不通过、已下架。</li>
+    <li>商品列表：以 Listing 为分页单位，默认每页 100 条，支持切换 50、100、200、500 条/页。</li>
+    <li>SKU 明细：点击商品信息中的“SKU N 个”入口，从右向左打开宽抽屉，不在列表内展开。</li>
+    <li>操作日志：列表操作列仅保留“日志”，弹窗支持时间、操作模块和操作人筛选。</li>
+    <li>库存同步规则：勾选 Listing 后打开弹窗，按所选 Listing 下的 SKU 配置。</li>
   </ol>
 
-  <h2>5. 筛选与排序</h2>
+  <h2>5. 商品筛选与排序</h2>
   <table>
     <thead><tr><th>筛选项</th><th>控件</th><th>枚举 / 规则</th></tr></thead>
     <tbody>
       <tr><td>商品关键词</td><td>类型下拉 + 输入框</td><td>商品 ID、商品标题、SKU 编码。</td></tr>
-      <tr><td>货品关键词</td><td>类型下拉 + 输入框</td><td>货品 ID、货品条码、SKU 编码。</td></tr>
-      <tr><td>全托管店铺</td><td>下拉</td><td>展示 SMT01全托管 等 ERP 店铺名称，并展示运营负责人。</td></tr>
-      <tr><td>类目</td><td>下拉</td><td>按类目名称筛选，不展示类目 ID。</td></tr>
+      <tr><td>货品关键词</td><td>类型下拉 + 输入框</td><td>货品 ID、货品条码、本地 SKU。</td></tr>
+      <tr><td>全托管店铺</td><td>下拉</td><td>展示 ERP 店铺名称，如 SMT01全托管；筛选项和列表同时展示运营负责人。</td></tr>
+      <tr><td>类目</td><td>级联选择器</td><td>按一级、二级、三级类目逐层选择；以类目名称筛选，不展示类目 ID。</td></tr>
       <tr><td>备货类型</td><td>下拉</td><td>JIT 即时补货、仓发、国内履约、海外仓。</td></tr>
-      <tr><td>库存状态</td><td>下拉</td><td>有库存、库存为 0、部分 SKU 售罄、库存异常。</td></tr>
+      <tr><td>库存状态</td><td>下拉</td><td>有库存、库存为 0。</td></tr>
       <tr><td>货品绑定</td><td>下拉</td><td>全部已绑定、部分绑定中、未绑定、解绑拒绝。</td></tr>
+      <tr><td>活动状态</td><td>下拉</td><td>全部活动状态、参加活动、未参加活动。</td></tr>
       <tr><td>排序</td><td>下拉</td><td>创建时间倒序、创建时间正序、30 天销量从大到小、30 天销量从小到大。</td></tr>
     </tbody>
   </table>
 
-  <h2>6. 商品列表字段</h2>
+  <h2>6. 状态统计逻辑</h2>
+  <h3>6.1 主状态</h3>
+  <p>Listing 主状态互斥，一个 Listing 同一时间只能属于一个主状态：</p>
+  <pre>全部 Listing = 销售中 + 审核中 + 审核不通过 + 已下架</pre>
+  <table>
+    <thead><tr><th>状态</th><th>统计单位</th><th>判断规则</th></tr></thead>
+    <tbody>
+      <tr><td>全部</td><td>Listing</td><td>当前公共筛选范围内去重后的全部有效 Listing。</td></tr>
+      <tr><td>销售中</td><td>Listing</td><td>平台商品状态正常在线，且最新审核结果已通过。</td></tr>
+      <tr><td>审核中</td><td>Listing</td><td>已提交平台审核，尚未产生最终审核结果。</td></tr>
+      <tr><td>审核不通过</td><td>Listing</td><td>最新一次有效审核结果为不通过。</td></tr>
+      <tr><td>已下架</td><td>Listing</td><td>商品状态命中平台下架、删除或失效状态。</td></tr>
+    </tbody>
+  </table>
+  <h3>6.2 特征统计</h3>
+  <p>售罄和货品未绑定属于可重叠特征，不作为状态 Tab。页面汇总区域可继续展示“售罄 SKU”和“货品未绑定”数量。</p>
+  <ul>
+    <li>售罄 SKU：该 SKU 所有有效平台仓库库存合计小于或等于 0。</li>
+    <li>部分仓缺货：至少一个仓库库存为 0，但 SKU 所有仓库库存合计大于 0。</li>
+    <li>货品未绑定：SKU 不存在有效本地 SKU 绑定关系。</li>
+  </ul>
+  <div class="callout warning"><b>状态注意：</b>库存为 0 只能判断售罄，不能判断商品下架；单次列表接口未返回商品也不能直接判断下架。</div>
+
+  <h2>7. 商品列表字段</h2>
   <table>
     <thead><tr><th>字段</th><th>展示规则</th></tr></thead>
     <tbody>
-      <tr><td>商品</td><td>主图、标题、商品 ID、一键复制、类目名称、SKU 数量。标题和类目超长时单行省略，悬浮展示完整文本。</td></tr>
-      <tr><td>店铺</td><td>店铺名称与运营负责人独立展示，不与商品或 SKU 混排。</td></tr>
+      <tr><td>商品</td><td>主图、标题、活动 SALE 标签、商品 ID、一键复制、类目名称、SKU 数量及 SKU 风险摘要。标题和类目超长时省略，悬浮展示完整内容。</td></tr>
+      <tr><td>店铺</td><td>店铺名称和运营负责人独立展示。</td></tr>
       <tr><td>备货类型</td><td>展示 JIT 即时补货、仓发等类型。</td></tr>
-      <tr><td>审核状态</td><td><span class="tag green">销售中</span> 下方展示“处于正常销售状态”；<span class="tag orange">审核中</span> 展示“等待平台审核中”；<span class="tag red">审核不通过</span> 展示中文具体原因。</td></tr>
-      <tr><td>供货价</td><td>单 SKU 显示单价；多 SKU 价格不同时显示最低价至最高价区间。下方展示 ERP 系统采购价。</td></tr>
-      <tr><td>库存</td><td>并排展示平台在售库存与本地可用库存。</td></tr>
+      <tr><td>审核状态</td><td><span class="tag green">销售中</span> 展示“处于正常销售状态”；<span class="tag orange">审核中</span> 展示“等待平台审核中”；<span class="tag red">审核不通过</span> 展示中文具体原因，悬浮显示完整内容。</td></tr>
+      <tr><td>商品状态</td><td>展示平台商品当前状态的中文名称，例如“在线”“待审核”“审核驳回”；不展示英文状态码，并与审核状态分列展示。</td></tr>
+      <tr><td>供货价 / 采购价</td><td>单 SKU 显示单价；多 SKU 价格不同时显示最低价至最高价区间；下方展示 ERP 系统采购价。</td></tr>
+      <tr><td>库存</td><td>并排展示平台在售库存合计与本地可用库存。</td></tr>
       <tr><td>近 30 天销量</td><td>展示销量及环比变化。</td></tr>
-      <tr><td>货品绑定</td><td>展示 listing 下 SKU 绑定汇总。</td></tr>
-      <tr><td>最近变化</td><td>展示最近一次字段变化摘要和时间。</td></tr>
-      <tr><td>操作</td><td>详情、日志、JSON。除库存同步规则外，不提供编辑入口。</td></tr>
+      <tr><td>货品绑定</td><td>展示 Listing 下 SKU 的绑定汇总。</td></tr>
+      <tr><td>时间</td><td>同一列分两行展示“后台创建”和“系统更新”：后台创建为 Item 在平台后台的创建时间，也是列表创建时间排序依据；系统更新为 ERP 最近一次成功更新该 Item 数据的时间。统一格式为 YYYY-MM-DD HH:mm:ss。</td></tr>
+      <tr><td>操作</td><td>仅保留日志按钮，不展示详情、JSON 和独立 SKU 按钮。</td></tr>
     </tbody>
   </table>
 
-  <h2>7. SKU 明细</h2>
-  <p>一个 listing 可以包含多个 SKU。列表默认展开异常 SKU 与前若干 SKU，完整 SKU 通过抽屉查看。</p>
+  <h2>8. SKU 明细抽屉</h2>
+  <h3>8.1 进入与布局</h3>
+  <ul>
+    <li>点击商品信息下方“SKU N 个”打开右侧宽抽屉。</li>
+    <li>抽屉宽度应保证常用桌面分辨率下无需横向拖拽；SKU 数量较多时仅列表区域垂直滚动。</li>
+    <li>SKU 表头吸顶，垂直滚动时字段名称保持可见。</li>
+    <li>抽屉展示该 Listing 下全部 SKU，不限制只展示前三条。</li>
+    <li>每个 SKU 展示自己的封面图片。</li>
+  </ul>
+  <h3>8.2 商品头部</h3>
+  <p>展示商品主图、标题、商品 ID、店铺、运营和类目。字段使用独立信息块或间距分隔，不使用连续圆点。Listing 参加活动时仅在商品标题旁展示 SALE 标签；鼠标悬浮显示“商品正在参与平台活动”。</p>
+  <h3>8.3 SKU 字段</h3>
   <table>
     <thead><tr><th>字段</th><th>要求</th></tr></thead>
     <tbody>
-      <tr><td>SKU 关系</td><td>必须展示 SKU 名称、在线 SKU、本地 SKU、SKU 编码、货品条码、货品 ID。</td></tr>
-      <tr><td>规格</td><td>展示颜色、尺寸等变体属性。</td></tr>
+      <tr><td>SKU 信息</td><td>SKU 名称、在线 SKU、本地 SKU、SKU 编码、货品条码、货品 ID；货品 ID 固定完整换行展示，不截断。</td></tr>
+      <tr><td>规格</td><td>颜色、尺寸等变体属性。</td></tr>
       <tr><td>销售状态</td><td>销售中、停售等。</td></tr>
-      <tr><td>供货价</td><td>展示该 SKU 的平台供货价。</td></tr>
-      <tr><td>库存对照</td><td>平台在售库存与本地仓库可用库存并排展示。</td></tr>
-      <tr><td>货品绑定</td><td>展示绑定中、已绑定、未绑定、解绑拒绝及中文说明。</td></tr>
+      <tr><td>供货价</td><td>该 SKU 的平台供货价。</td></tr>
+      <tr><td>多仓库存</td><td>分别展示每个平台仓库名称、仓库编码和当前库存输入框。</td></tr>
+      <tr><td>本地可用</td><td>本地仓库编码和本地可用库存，作为平台库存维护和同步规则参考。</td></tr>
+      <tr><td>货品绑定</td><td>绑定中、已绑定、未绑定等。</td></tr>
+      <tr><td>补货方式</td><td>展示当前 SKU 已配置的库存补货方式。</td></tr>
     </tbody>
   </table>
 
-  <h2>8. 库存同步规则弹窗</h2>
-  <h3>8.1 进入方式</h3>
+  <h2>9. 多仓库存维护</h2>
+  <p>全托管店铺支持多个平台仓库，同一个 SKU 可以在不同仓库拥有独立库存。例如：</p>
+  <pre>SKU A
+├─ 东莞仓：10
+└─ 杭州仓：20
+
+平台总在售库存 = 10 + 20 = 30</pre>
   <ol>
-    <li>用户在商品列表勾选一个或多个 listing。</li>
-    <li>点击列表右上角“库存同步规则”。</li>
-    <li>弹窗展开所选 listing 下的 SKU。</li>
+    <li>库存读取和保存的最小粒度为“店铺 + Listing + SKU + 平台仓库”。</li>
+    <li>用户可以分别修改不同平台仓库的库存数量。</li>
+    <li>保存时仅提交发生变化的仓库库存。</li>
+    <li>保存成功后回查平台库存，并更新 Listing 平台库存合计。</li>
+    <li>每次修改记录旧库存、新库存、SKU、仓库、操作人和平台返回结果。</li>
   </ol>
-  <h3>8.2 弹窗筛选</h3>
+  <div class="callout danger"><b>活动库存保护：</b>Listing 参加平台活动时，各 SKU、各仓库的目标库存只能保持或增加，不能低于该仓库当前平台库存。校验必须按仓库分别执行，不能只比较仓库库存合计。</div>
+
+  <h2>10. 操作日志</h2>
+  <p>商品列表操作列仅提供“日志”入口，点击后打开操作日志弹窗。</p>
+  <table>
+    <thead><tr><th>筛选项</th><th>规则</th></tr></thead>
+    <tbody>
+      <tr><td>操作时间</td><td>使用一个时间范围输入框；点击后打开日历面板，选择开始日期和结束日期。</td></tr>
+      <tr><td>操作模块</td><td>全部模块、商品同步、库存同步、货品绑定、审核状态、库存同步规则、商品列表同步。</td></tr>
+      <tr><td>操作人</td><td>全部操作人、具体运营人员、系统任务。</td></tr>
+    </tbody>
+  </table>
+  <p>日志列表字段：操作时间、操作模块、操作内容、操作人。默认每页 10 条，支持切换每页条数、页码和跳页。</p>
+
+  <h2>11. 库存同步规则弹窗</h2>
+  <h3>11.1 进入方式</h3>
+  <ol>
+    <li>用户在商品列表勾选一个或多个 Listing。</li>
+    <li>“库存同步规则”按钮变为可点击。</li>
+    <li>点击后展开所选 Listing 下的全部 SKU。</li>
+  </ol>
+  <h3>11.2 顶部筛选</h3>
   <table>
     <thead><tr><th>筛选项</th><th>枚举</th></tr></thead>
     <tbody>
-      <tr><td>是否有映射关系</td><td>全部、已映射、未映射。</td></tr>
-      <tr><td>库存同步状态</td><td>全部、开启、关闭。</td></tr>
+      <tr><td>映射关系</td><td>全部、已映射、未映射。</td></tr>
+      <tr><td>同步状态</td><td>全部、开启、关闭。</td></tr>
       <tr><td>补货方式</td><td>全部、本地可用库存、自定义数量、无库存兜底。</td></tr>
     </tbody>
   </table>
-  <h3>8.3 批量修改与单独修改</h3>
-  <ul>
-    <li>每条 SKU 数据支持勾选，表头支持全选和半选状态。</li>
-    <li>顶部“批量修改”仅应用于弹窗内已勾选的 SKU；未选择时按钮禁用。</li>
-    <li>表格中的“补货方式、补货逻辑”支持每条 SKU 单独修改。</li>
-    <li>批量应用后，用户仍可继续单独调整某条 SKU。</li>
-  </ul>
-
-  <h2>9. 库存同步规则</h2>
-  <table>
-    <thead><tr><th>补货方式</th><th>触发与计算逻辑</th><th>风险</th></tr></thead>
-    <tbody>
-      <tr><td>本地可用库存</td><td><code>target_qty = local_available_qty</code>。本地仓库 SKU 有多少可用库存，就向平台设置多少目标库存。</td><td>目标库存低于平台当前库存时不得写入。</td></tr>
-      <tr><td>自定义数量</td><td>平台在线库存低于阈值时，补到自定义数量；支持“自定义数量”和“可售库存与自定义数量取最小值”。</td><td>需确保目标库存高于平台当前库存。</td></tr>
-      <tr><td>无库存兜底</td><td>平台库存低于阈值且系统无可用库存时，补到配置的兜底数量。</td><td>可能产生本地无货但平台可售，必须明确提示并记录日志。</td></tr>
-    </tbody>
-  </table>
-  <div class="callout warning"><b>JIT 约束：</b>平台 JIT 库存更新只能增加，不能减少。目标库存小于或等于当前平台库存时，不调用更新接口。</div>
-  <div class="callout danger"><b>活动 SKU 约束：</b>SKU 参加活动时，不允许将目标库存设置为低于当前在售库存。平台可能返回错误码 <code>200016</code>：<code>Product is in promotion. Stock could not be reduced</code>。</div>
-
-  <h2>10. 接口对接</h2>
-  <table>
-    <thead><tr><th>接口</th><th>名称 / 用途</th><th>调用时机</th></tr></thead>
-    <tbody>
-      <tr><td><code>global.seller.relation.query</code></td><td>获取商家账号列表，筛选 <code>ONE_STOP_SERVICE</code> 店铺。</td><td>店铺关系同步。</td></tr>
-      <tr><td><code>aliexpress.choice.products.list</code></td><td>商品列表查询，固定传 <code>version=2</code>。</td><td>按店铺分页同步。</td></tr>
-      <tr><td><code>aliexpress.choice.product.query</code></td><td>查询单个商品详情，补齐 SKU、货品、仓库等。</td><td>商品详情同步。</td></tr>
-      <tr><td><code>aliexpress.choice.product.stocks.query</code></td><td>查询商品当前 JIT SKU 仓库可售库存。</td><td>写入前查询与写入后回查。</td></tr>
-      <tr><td><code>aliexpress.choice.product.stocks.update</code></td><td>更新 JIT SKU 仓库目标库存。</td><td>按 product_id 聚合需要上调库存的 SKU 后调用。</td></tr>
-      <tr><td><code>aliexpress.choice.product.jit.stock.rule.query</code></td><td>查询类目 JIT 最小安全库存阈值。</td><td>类目首次同步或变化时调用，仅作为风险提示。</td></tr>
-    </tbody>
-  </table>
-  <div class="callout"><b>不使用：</b><code>aliexpress.postproduct.redefining.editmutilpleskustocks</code> 属于 POP 商品库存接口，不作为全托管 JIT 库存写入主链路。</div>
-
-  <h2>11. 后台库存同步流程</h2>
-  <ol>
-    <li>读取已启用的 SKU 库存同步规则。</li>
-    <li>调用 <code>stocks.query</code> 查询平台实时库存，不能使用列表缓存直接写入。</li>
-    <li>查询 ERP 本地 SKU 可用库存。</li>
-    <li>根据补货规则计算 <code>target_qty</code>。</li>
-    <li>校验本地 SKU 映射、<code>jit_warehouse</code>、规则触发条件、禁止降库存和活动 SKU 限制。</li>
-    <li>按 <code>product_id</code> 聚合需要上调库存的 SKU，调用 <code>stocks.update</code>。</li>
-    <li>解析 SKU + 仓库级结果，不能只判断顶层 success。</li>
-    <li>成功后再次调用 <code>stocks.query</code> 回查，并记录库存快照与日志。</li>
-  </ol>
-  <img class="flow-img" src="ali-choice-stock-sync-flow.png" alt="速卖通全托管库存同步流程图">
-
-  <h2>12. 日志要求</h2>
+  <h3>11.3 SKU 表格</h3>
   <table>
     <thead><tr><th>字段</th><th>说明</th></tr></thead>
     <tbody>
-      <tr><td>标识</td><td>task_id、product_id、sku_id、local_sku、warehouse_code。</td></tr>
-      <tr><td>库存快照</td><td>current_online_qty、local_available_qty、target_qty。</td></tr>
-      <tr><td>规则</td><td>rule_type、threshold_qty、replenish_qty、fallback_qty。</td></tr>
-      <tr><td>接口数据</td><td>request_payload、response_payload、error_code、error_message。</td></tr>
-      <tr><td>结果</td><td>成功、失败、跳过、活动锁定、未达到补货条件、禁止降库存。</td></tr>
-      <tr><td>审计</td><td>operator / task_id、created_at。</td></tr>
+      <tr><td>选择框</td><td>每条 SKU 独立勾选；表头支持全选，用于批量修改补货方式。</td></tr>
+      <tr><td>SKU 信息</td><td>SKU 名称、在线 SKU、本地 SKU、店铺，全部左对齐。</td></tr>
+      <tr><td>可售数量</td><td>平台当前可售库存。</td></tr>
+      <tr><td>本地可用</td><td>ERP 本地 SKU 可用库存。</td></tr>
+      <tr><td>库存同步</td><td>每个 SKU 独立开关。开启后后台任务执行规则；关闭后保留配置但不执行。开关状态必须持久化。</td></tr>
+      <tr><td>补货方式</td><td>每个 SKU 独立选择。</td></tr>
+      <tr><td>补货逻辑</td><td>根据补货方式显示对应阈值、数量和计算说明。</td></tr>
+    </tbody>
+  </table>
+  <h3>11.4 单独修改与批量修改</h3>
+  <ul>
+    <li>逐条修改：直接修改某一 SKU 的库存同步开关、补货方式和补货参数。</li>
+    <li>批量修改：勾选多条 SKU 后，在顶部选择补货方式并应用到已选 SKU。</li>
+    <li>批量修改只覆盖已勾选 SKU，不影响未勾选 SKU。</li>
+    <li>批量应用后，用户仍可以继续单独修改某条 SKU。</li>
+  </ul>
+
+  <h2>12. 库存同步规则</h2>
+  <table>
+    <thead><tr><th>补货方式</th><th>触发与计算逻辑</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>本地可用库存</td><td><code>target_qty = local_available_qty</code></td><td>本地仓库 SKU 有多少可用库存，平台目标库存同步为多少。</td></tr>
+      <tr><td>自定义数量</td><td>平台在线库存低于阈值时，补到指定数量。</td><td>支持固定补货数量；需要校验活动库存限制。</td></tr>
+      <tr><td>无库存兜底</td><td>平台库存低于阈值且系统无可用库存时，补到配置的兜底数量。</td><td>存在本地无货但平台可售风险，必须记录规则和执行日志。</td></tr>
+    </tbody>
+  </table>
+  <p>后台任务仅读取“库存同步 = 开启”的 SKU 规则。关闭开关后不删除规则参数，重新开启时继续使用原配置。</p>
+
+  <h2>13. 接口对接</h2>
+  <table>
+    <thead><tr><th>接口</th><th>用途</th><th>调用时机</th></tr></thead>
+    <tbody>
+      <tr><td><code>global.seller.relation.query</code></td><td>获取商家账号列表，识别 <code>business_type = ONE_STOP_SERVICE</code> 的全托管店铺。</td><td>店铺关系同步。</td></tr>
+      <tr><td><code>aliexpress.choice.products.list</code></td><td>按店铺分页获取商品列表，固定传 <code>version = 2</code>，保存完整返回数据。</td><td>商品列表全量和增量同步。</td></tr>
+      <tr><td><code>aliexpress.choice.product.query</code></td><td>按店铺和 item_id 获取商品及 SKU 详情，固定传 <code>version = 2</code>。</td><td>新增商品、商品变化或状态复核时。</td></tr>
+      <tr><td><code>aliexpress.choice.product.stocks.query</code></td><td>查询 SKU 各平台仓库的实时库存。</td><td>库存展示、写入前校验、写入后回查。</td></tr>
+      <tr><td><code>aliexpress.choice.product.stocks.update</code></td><td>更新 SKU 对应平台仓库库存。</td><td>用户保存库存或后台规则触发时。</td></tr>
+    </tbody>
+  </table>
+  <h3>13.1 下架判断</h3>
+  <ol>
+    <li>优先读取 <code>aliexpress.choice.products.list</code> 返回商品记录中的 <code>product_status</code>。</li>
+    <li><code>product_status</code> 命中平台下架、删除或失效枚举时，ERP 主状态更新为已下架。</li>
+    <li>单次列表未返回 item_id 时，调用 <code>aliexpress.choice.product.query</code> 复核，不能直接判定下架。</li>
+    <li>平台原始状态枚举必须完整保存，并映射为 ERP 标准状态。</li>
+  </ol>
+  <div class="callout warning"><b>枚举校准：</b><code>product_status</code> 的具体原始枚举值以速卖通官方文档和真实 version=2 返回 JSON 为准，开发前必须建立并评审映射表。</div>
+
+  <h2>14. 后台库存同步流程</h2>
+  <ol>
+    <li>扫描库存同步开关为开启的 SKU 规则。</li>
+    <li>校验店铺授权、Listing、SKU、本地 SKU 映射和平台仓库映射。</li>
+    <li>调用库存查询接口获取 SKU 各平台仓库实时库存。</li>
+    <li>读取本地 SKU 可用库存。</li>
+    <li>按补货方式和仓库维度计算目标库存。</li>
+    <li>校验触发阈值、活动库存保护及平台禁止降库存规则。</li>
+    <li>仅对需要变化的 SKU + 仓库调用库存更新接口。</li>
+    <li>解析 SKU + 仓库级结果，不能只判断接口顶层 success。</li>
+    <li>更新成功后再次查询平台库存，保存库存快照并记录日志。</li>
+  </ol>
+
+  <h2>15. 数据与日志要求</h2>
+  <table>
+    <thead><tr><th>数据类别</th><th>必需字段</th></tr></thead>
+    <tbody>
+      <tr><td>Listing 标识</td><td>channel、channel_seller_id、item_id。</td></tr>
+      <tr><td>SKU 标识</td><td>item_id、sku_id / 在线 SKU、本地 SKU、SKU 编码、货品条码、货品 ID。</td></tr>
+      <tr><td>仓库标识</td><td>sku_id、warehouse_code、warehouse_name。</td></tr>
+      <tr><td>库存快照</td><td>old_platform_qty、current_platform_qty、local_available_qty、target_qty。</td></tr>
+      <tr><td>同步规则</td><td>sync_enabled、rule_type、threshold_qty、replenish_qty、fallback_qty。</td></tr>
+      <tr><td>接口日志</td><td>request_payload、response_payload、error_code、error_message、task_id。</td></tr>
+      <tr><td>审计字段</td><td>operator、created_at、updated_at、source_api。</td></tr>
     </tbody>
   </table>
 
-  <h2>13. 验收标准</h2>
+  <h2>16. 验收标准</h2>
   <ol>
     <li>仅同步并展示 <code>business_type = ONE_STOP_SERVICE</code> 的全托管店铺。</li>
-    <li>商品列表支持状态切换、筛选、排序和每页 10 条分页。</li>
-    <li>列表字段、SKU 明细字段和弹窗字段按原型展示，长文本不破坏布局。</li>
-    <li>审核不通过展示中文具体原因。</li>
-    <li>库存同步弹窗支持 SKU 逐条勾选、全选、批量修改和单独修改。</li>
-    <li>批量规则只应用于已勾选 SKU。</li>
-    <li>非 <code>jit_warehouse</code>、未映射本地 SKU、目标库存不高于当前库存时不调用更新接口。</li>
-    <li>库存更新按 SKU + 仓库级解析结果，并在写入后回查。</li>
-    <li>每条 listing / SKU 的同步变化和错误均可在日志中追溯。</li>
+    <li>状态 Tab 仅包含全部、销售中、审核中、审核不通过、已下架，主状态统计互斥且加总等于全部。</li>
+    <li>商品列表默认每页 100 条，支持切换 50、100、200、500 条/页。</li>
+    <li>列表不展示最近变化列；操作列仅保留日志。</li>
+    <li>点击商品 SKU 数量入口打开右侧宽抽屉，展示该 Listing 下全部 SKU。</li>
+    <li>SKU 抽屉字段完整、表头吸顶、货品 ID 不截断，每个 SKU 展示对应图片。</li>
+    <li>多仓库存按 SKU + 仓库独立展示、修改、保存和回查。</li>
+    <li>活动 Listing 展示 SALE 标签；活动 SKU 各仓库存不得降低。</li>
+    <li>库存同步弹窗支持映射关系、同步状态和补货方式筛选。</li>
+    <li>每条 SKU 有独立库存同步开关；关闭后后台任务不执行，但保留规则配置。</li>
+    <li>支持逐条配置与勾选 SKU 后批量修改补货方式，批量操作不影响未选数据。</li>
+    <li>操作日志支持时间范围、操作模块、操作人筛选及分页。</li>
+    <li>所有库存更新均保存请求、响应、更新前后库存及操作日志。</li>
   </ol>
+
+  <h2>17. 本期确认结论</h2>
+  <ul>
+    <li>Listing 主列表不展开 SKU，避免十万级铺货场景下的数据量和页面性能问题。</li>
+    <li>SKU 使用右侧宽抽屉集中展示和维护。</li>
+    <li>售罄、货品未绑定不作为状态 Tab，仅作为筛选和汇总特征。</li>
+    <li>商品详情页和原始 JSON 入口取消。</li>
+    <li>库存同步开关、补货方式和补货逻辑均按 SKU 粒度配置。</li>
+    <li>全托管多仓库存按仓库独立维护，活动库存限制按 SKU + 仓库校验。</li>
+  </ul>
 </article>
 </main>
 <script>
