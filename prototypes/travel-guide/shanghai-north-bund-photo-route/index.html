@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101923">
+  <title>北外滩江景打卡路线｜上海</title>
+  <style>
+    :root{--ink:#15202b;--muted:#65717d;--paper:#f4f1ea;--card:#fffdf8;--blue:#2f6f8f;--deep:#101923;--orange:#f16f45;--line:#d8d2c6;--green:#2f7d69}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.65}
+    button,a{font:inherit}
+    .hero{min-height:560px;color:#fff;background:linear-gradient(180deg,rgba(6,17,26,.12),rgba(6,17,26,.86)),url("assets/manner-window.jpg") center/cover;display:flex;align-items:flex-end}
+    .hero-inner{width:min(1100px,100%);margin:auto;padding:72px 24px 52px}
+    .eyebrow{display:inline-flex;gap:8px;align-items:center;padding:7px 12px;border:1px solid rgba(255,255,255,.45);border-radius:999px;background:rgba(9,22,31,.36);backdrop-filter:blur(8px);font-size:13px;letter-spacing:.08em}
+    h1{max-width:800px;margin:18px 0 10px;font-family:Georgia,"Songti SC",serif;font-size:clamp(40px,7vw,76px);line-height:1.08;font-weight:600}
+    .lead{max-width:720px;margin:0;color:rgba(255,255,255,.86);font-size:17px}
+    .facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+    .fact{padding:9px 13px;border-radius:12px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(8px);font-size:14px}
+    main{width:min(1100px,calc(100% - 32px));margin:0 auto;padding:44px 0 72px}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin:0 0 18px}
+    .section-head h2{margin:0;font:600 clamp(27px,4vw,40px)/1.2 Georgia,"Songti SC",serif}
+    .section-head p{margin:0;color:var(--muted);font-size:14px}
+    .route-card{background:var(--deep);color:#fff;border-radius:28px;padding:28px;box-shadow:0 18px 50px rgba(22,31,39,.13);overflow:hidden}
+    .route-top{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:start}
+    .route-title{margin:0 0 7px;font-size:22px}
+    .route-note{margin:0;color:#aebcc8;font-size:14px}
+    .transport{padding:16px;border-radius:18px;background:#182633;border:1px solid rgba(255,255,255,.08)}
+    .transport b{display:block;color:#ffb18f;margin-bottom:4px}
+    .map{position:relative;margin-top:24px;min-height:320px;border-radius:22px;overflow:hidden;background:linear-gradient(155deg,#1b2d3b 0 55%,#19485d 55% 100%)}
+    .map:after{content:"黄浦江 · 对岸为陆家嘴";position:absolute;right:22px;bottom:18px;color:#8fc2d5;font:italic 13px Georgia,serif;letter-spacing:.04em}
+    .route-line{position:absolute;left:9%;right:8%;top:126px;height:4px;background:linear-gradient(90deg,var(--orange),#ffc08d);border-radius:9px;transform:rotate(2deg);transform-origin:left center}
+    .route-line:after{content:"";position:absolute;right:-1px;top:-5px;border-left:12px solid #ffc08d;border-top:7px solid transparent;border-bottom:7px solid transparent}
+    .node{position:absolute;top:86px;transform:translateX(-50%);width:118px;text-align:center;color:#fff;text-decoration:none}
+    .node:nth-of-type(even){top:140px}
+    .dot{display:grid;place-items:center;width:36px;height:36px;margin:auto;border-radius:50%;background:var(--orange);border:4px solid #273c49;box-shadow:0 0 0 2px rgba(255,255,255,.55);font-weight:800}
+    .node span{display:block;margin-top:8px;font-size:13px;font-weight:700;line-height:1.35;text-shadow:0 2px 4px #000}
+    .node small{display:block;margin-top:2px;color:#aebcc8;font-size:11px}
+    .start{left:8%;top:222px;width:auto;transform:none;text-align:left}.start .dot{margin:0;background:var(--green)}
+    .start span{font-size:12px}.n1{left:23%}.n2{left:44%}.n3{left:64%}.n4{left:84%}
+    .walk-badges{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}
+    .walk-badges div{text-align:center;padding:8px;border-radius:10px;background:#192b38;color:#c4d0d8;font-size:12px}
+    .plan{margin:48px 0}
+    .tabs{display:flex;gap:8px;margin-bottom:16px;padding:5px;background:#e8e3d9;border-radius:14px;width:max-content;max-width:100%}
+    .tab{border:0;background:transparent;color:#5c6670;padding:9px 14px;border-radius:10px;cursor:pointer;font-weight:700}
+    .tab.active{background:#fff;color:var(--ink);box-shadow:0 3px 10px rgba(20,30,40,.08)}
+    .plan-panel{display:none;background:var(--card);border:1px solid #e0dbd0;border-radius:22px;padding:22px}
+    .plan-panel.active{display:block}
+    .schedule{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+    .time{padding:14px;border-radius:15px;background:#f2eee6;border-top:3px solid var(--orange)}
+    .time b{display:block;font-size:16px}.time span{font-size:12px;color:var(--muted)}
+    .warning{margin-top:14px;padding:12px 14px;border-radius:12px;background:#fff0e9;color:#8b422b;font-size:13px}
+    .spots{display:grid;gap:28px}
+    .spot{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);background:var(--card);border:1px solid #ded8cd;border-radius:26px;overflow:hidden;box-shadow:0 10px 30px rgba(28,33,36,.06)}
+    .spot:nth-child(even) .visual{order:2}
+    .visual{position:relative;min-height:440px;background:#19232c;overflow:hidden}
+    .visual img{width:100%;height:100%;object-fit:cover;display:block}
+    .visual.contain img{object-fit:contain}
+    .caption{position:absolute;left:14px;bottom:14px;padding:7px 10px;border-radius:10px;background:rgba(10,18,24,.72);color:#fff;font-size:12px;backdrop-filter:blur(8px)}
+    .content{padding:30px}
+    .number{color:var(--orange);font:700 14px Georgia,serif;letter-spacing:.12em}
+    .content h3{margin:8px 0 6px;font-size:26px;line-height:1.25}
+    .where{margin:0 0 20px;color:var(--muted);font-size:14px}
+    .tip-list{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+    .tip-list li{display:grid;grid-template-columns:72px 1fr;gap:10px;border-top:1px solid #e7e1d8;padding-top:12px}
+    .tip-list strong{font-size:13px;color:var(--green)}
+    .tip-list span{font-size:14px}
+    .nav-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+    .copy{border:0;padding:9px 12px;border-radius:10px;background:var(--deep);color:#fff;cursor:pointer;font-size:13px}
+    .copy.secondary{background:#e8e3da;color:var(--ink)}
+    .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+    .pair img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:14px}
+    .field{margin-top:50px;background:#e8efe9;border-radius:24px;padding:26px;display:grid;grid-template-columns:1fr 1fr;gap:26px}
+    .field h2{margin:0 0 12px;font-size:26px}.field p{margin:0;color:#53615b}
+    .check{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+    .check div{padding:11px 12px;border-radius:12px;background:rgba(255,255,255,.66);font-size:13px}
+    footer{padding:24px;text-align:center;color:#7a7d79;font-size:12px}
+    .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);padding:10px 15px;border-radius:12px;background:#101923;color:#fff;opacity:0;pointer-events:none;transition:.25s;z-index:9}.toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(max-width:760px){
+      .hero{min-height:520px}.hero-inner{padding:52px 20px 36px}main{width:min(100% - 24px,1100px);padding-top:30px}
+      .route-card{padding:20px;border-radius:22px}.route-top{grid-template-columns:1fr}.map{min-height:520px;background:linear-gradient(160deg,#1b2d3b 0 68%,#19485d 68%)}
+      .route-line{left:46px;right:auto;top:68px;bottom:70px;width:4px;height:auto;transform:none;background:linear-gradient(var(--orange),#ffc08d)}
+      .route-line:after{right:-5px;top:auto;bottom:-1px;border-left:7px solid transparent;border-right:7px solid transparent;border-top:12px solid #ffc08d;border-bottom:0}
+      .node,.node:nth-of-type(even){left:29px!important;top:auto;transform:none;width:235px;text-align:left;display:flex;align-items:center;gap:12px}.node .dot{margin:0;flex:0 0 auto}.node span{margin:0}.node small{margin:0}
+      .start{left:13px!important;top:24px!important}.n1{top:104px!important}.n2{top:200px!important}.n3{top:296px!important}.n4{top:392px!important}
+      .map:after{right:16px;bottom:14px}.walk-badges{grid-template-columns:1fr 1fr}
+      .schedule{grid-template-columns:1fr}.spot{grid-template-columns:1fr}.spot:nth-child(even) .visual{order:0}.visual{min-height:360px}.content{padding:23px}.field{grid-template-columns:1fr;padding:21px}.check{grid-template-columns:1fr}.pair{grid-template-columns:1fr 1fr}
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">SHANGHAI · NORTH BUND PHOTO WALK</div>
+      <h1>北外滩江景<br>四机位打卡路线</h1>
+      <p class="lead">把你四个视频里的地点串成一条不回头的步行线：下沉通道、MANNER玻璃门、二楼露台、公平路渡口倒影镜面。</p>
+      <div class="facts"><span class="fact">步行约 1.3–1.6 km</span><span class="fact">建议 85–100 分钟</span><span class="fact">下午顺路版优先</span><span class="fact">国庆预留排队时间</span></div>
+    </div>
+  </header>
+
+  <main>
+    <section aria-labelledby="route-title">
+      <div class="section-head"><div><h2 id="route-title">一条线走完</h2><p>示意图用于理解顺序，现场以地图步行导航与管控为准。</p></div></div>
+      <div class="route-card">
+        <div class="route-top">
+          <div><h3 class="route-title">陆家嘴 → 太平路入口 → 沿江向东</h3><p class="route-note">从陆家嘴过来，实时驾车不超过30分钟就打车；目的地输入“北外滩国客中心码头（太平路入口）”。</p></div>
+          <div class="transport"><b>离场去南京路</b>公平路渡口 → 步行至提篮桥站 → 12号线两站到天潼路 → 步行进入南京路。</div>
+        </div>
+        <div class="map">
+          <div class="route-line"></div>
+          <a class="node start" href="#spot-1"><span class="dot">起</span><span>太平路入口<small>网约车下车</small></span></a>
+          <a class="node n1" href="#spot-1"><span class="dot">1</span><span>下沉通道<small>步行约5分钟</small></span></a>
+          <a class="node n2" href="#spot-2"><span class="dot">2</span><span>MANNER<small>咖啡＋玻璃门</small></span></a>
+          <a class="node n3" href="#spot-3"><span class="dot">3</span><span>二楼露台<small>视频新增机位</small></span></a>
+          <a class="node n4" href="#spot-4"><span class="dot">4</span><span>公平路渡口<small>沿江约10–15分钟</small></span></a>
+        </div>
+        <div class="walk-badges"><div>① 低机位人像 15分钟</div><div>② 玻璃门 15分钟</div><div>③ 二楼露台 20–30分钟</div><div>④ 倒影 15–20分钟</div></div>
+      </div>
+    </section>
+
+    <section class="plan" aria-labelledby="plan-title">
+      <div class="section-head"><div><h2 id="plan-title">怎么放进当天行程</h2><p>推荐保留下午版本，才能兼顾南京路、外滩和20:30的COLCA晚餐。</p></div></div>
+      <div class="tabs" role="tablist"><button class="tab active" data-tab="day">顺路下午版</button><button class="tab" data-tab="night">视频夜景版</button></div>
+      <div class="plan-panel active" id="day">
+        <div class="schedule"><div class="time"><b>15:20</b><span>太平路入口下车</span></div><div class="time"><b>15:25</b><span>下沉通道拍摄</span></div><div class="time"><b>15:45</b><span>MANNER玻璃门</span></div><div class="time"><b>16:05</b><span>二楼露台＋咖啡</span></div><div class="time"><b>16:40–17:10</b><span>沿江步行＋倒影点</span></div></div>
+        <div class="warning">约17:15离开，国庆按30–40分钟去南京路预留。此方案主要拍白天、暖光和城市轮廓，二楼露台及倒影镜面的灯光效果不会与视频完全相同。</div>
+      </div>
+      <div class="plan-panel" id="night">
+        <div class="schedule"><div class="time"><b>17:30</b><span>到达下沉通道</span></div><div class="time"><b>17:50</b><span>MANNER玻璃门</span></div><div class="time"><b>18:10</b><span>二楼露台等亮灯</span></div><div class="time"><b>18:40</b><span>沿江向公平路步行</span></div><div class="time"><b>18:55–19:15</b><span>倒影夜景</span></div></div>
+        <div class="warning">同款夜景会明显挤压南京路和外滩，19:15离开后还要赶20:30 COLCA，不建议与你当前完整行程同时执行。</div>
+      </div>
+    </section>
+
+    <section aria-labelledby="tips-title">
+      <div class="section-head"><div><h2 id="tips-title">四个机位怎么拍</h2><p>点击“复制导航词”，直接粘贴进地图软件。</p></div></div>
+      <div class="spots">
+        <article class="spot" id="spot-1">
+          <div class="visual"><img src="assets/slope-pearl.jpg" alt="下沉通道出口拍摄东方明珠的大景"><div class="caption">取自视频 f5e661… · 巨型东方明珠构图</div></div>
+          <div class="content"><div class="number">STOP 01</div><h3>国际港务大厦下沉通道</h3><p class="where">太平路入口进入，沿大厦旁的下沉坡道一直走到出口。</p>
+            <ul class="tip-list"><li><strong>站位</strong><span>模特站在通道出口靠江一侧；摄影者退到斜坡较低处蹲拍，让通道形成天然画框。</span></li><li><strong>镜头</strong><span>手机用2×或3×长焦压缩空间，东方明珠会显得更大；先拍竖构图。</span></li><li><strong>参数</strong><span>点击人物脸部对焦，曝光略降约0.3档，保住东方明珠灯光细节。</span></li><li><strong>避坑</strong><span>这里是通行区域，拍完一组就让开；不要站在车辆或工作人员通道中央。</span></li></ul>
+            <div class="pair"><img src="assets/underpass.jpg" alt="国际港务大厦旁下沉通道入口"><img src="assets/slope-pearl.jpg" alt="从通道拍东方明珠"></div>
+            <div class="nav-row"><button class="copy" data-copy="北外滩国客中心码头（太平路入口）">复制导航词</button></div>
+          </div>
+        </article>
+
+        <article class="spot" id="spot-2">
+          <div class="visual"><img src="assets/manner-window.jpg" alt="MANNER国客滨江店玻璃门正对陆家嘴"><div class="caption">取自视频 1c5e76… · 玻璃门江景</div></div>
+          <div class="content"><div class="number">STOP 02</div><h3>MANNER COFFEE 国客滨江店</h3><p class="where">太平路国际港务大厦南约60米，江边；门店三面玻璃正对陆家嘴。</p>
+            <ul class="tip-list"><li><strong>站位</strong><span>摄影者站在店内中轴线，模特在玻璃门外或门口；把两扇门框当作画框。</span></li><li><strong>镜头</strong><span>横构图用1×收全陆家嘴，竖构图把东方明珠安排在人物一侧，避免塔被门框切断。</span></li><li><strong>顺序</strong><span>先观察玻璃门是否空，再拍照、点咖啡；不必为临窗座位长期排队。</span></li><li><strong>国庆</strong><span>人多时在门外快速完成同款，咖啡外带；门外若有临时活动布置，以当天开放区域为准。</span></li></ul>
+            <div class="nav-row"><button class="copy" data-copy="MANNER COFFEE 国客滨江店">复制导航词</button><button class="copy secondary" data-copy="太平路国际港务大厦南60米（江边）">复制地址</button></div>
+          </div>
+        </article>
+
+        <article class="spot" id="spot-3">
+          <div class="visual"><img src="assets/manner-terrace.jpg" alt="MANNER国客滨江店二楼露台正对陆家嘴夜景"><div class="caption">取自视频 771a94… · 二楼露台机位</div></div>
+          <div class="content"><div class="number">STOP 03</div><h3>MANNER二楼江景露台</h3><p class="where">与咖啡馆属于同一地点，但这是独立机位；按店内或外侧楼梯的现场指引前往二层。</p>
+            <ul class="tip-list"><li><strong>入口</strong><span>到店后先问店员“二楼露台从哪里上”；开放范围和入口可能随活动调整，不要只在一楼拍完就离开。</span></li><li><strong>站位</strong><span>摄影者站在露台内侧，人物靠近桌椅或玻璃栏杆但保持安全距离，让东方明珠落在人物一侧。</span></li><li><strong>镜头</strong><span>横构图用1×收全四件套；拍人像改用2×，利用长焦让陆家嘴建筑群更有压迫感。</span></li><li><strong>夜景</strong><span>视频同款需要等陆家嘴亮灯。手机曝光下调约0.3–0.7档，人物停稳，避免天空和灯牌过曝。</span></li><li><strong>下午</strong><span>按当前行程15:45后到达时主要是白天或暖光效果，视野依然完整，也更容易兼顾后面的南京路和外滩。</span></li></ul>
+            <div class="nav-row"><button class="copy" data-copy="MANNER COFFEE 国客滨江店（二楼露台）">复制导航词</button></div>
+          </div>
+        </article>
+
+        <article class="spot" id="spot-4">
+          <div class="visual contain"><img src="assets/fair-road-mirror.jpg" alt="公平路渡口倒影镜面拍出的陆家嘴夜景"><div class="caption">取自视频 d1d987… · 镜面倒影成片</div></div>
+          <div class="content"><div class="number">STOP 04</div><h3>公平路渡口左侧倒影镜面</h3><p class="where">导航到公平路渡口，面向江边寻找左侧观景平台和摄影点标识。</p>
+            <ul class="tip-list"><li><strong>位置</strong><span>沿北外滩滨江向东走，看到公平路渡口后去左侧观景平台，不需要乘轮渡。</span></li><li><strong>镜头</strong><span>优先0.5×超广角，把手机贴近镜面边缘；地平线放在画面中间，形成上下对称。</span></li><li><strong>夜景</strong><span>擦净镜头，开夜景模式并稳住2–3秒。倒影太暗时，轻点建筑区域后稍微提高曝光。</span></li><li><strong>礼貌</strong><span>热门时段按顺序快速拍；不要踩踏或移动镜面装置，也不要把随身物品留在通道上。</span></li></ul>
+            <div class="nav-row"><button class="copy" data-copy="公平路渡口">复制导航词</button><button class="copy secondary" data-copy="公平路渡口左侧观景平台">复制机位说明</button></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="field">
+      <div><h2>出发前30秒检查</h2><p>江边风大、国庆人多，轻装比携带太多设备更实用。两个人用手机就能完成全部机位。</p></div>
+      <div class="check"><div>□ 擦净前后镜头</div><div>□ 手机电量≥50%</div><div>□ 预留国庆步行缓冲</div><div>□ 确认二楼露台入口</div><div>□ 夜景人物保持静止</div><div>□ 17:15左右及时离场</div></div>
+    </section>
+  </main>
+
+  <footer>图片均截取自你提供的视频，仅用于本次个人行程规划。路线和开放情况以出发当天地图与现场管理为准。</footer>
+  <div class="toast" id="toast">已复制</div>
+  <script>
+    document.querySelectorAll('.tab').forEach(button=>button.addEventListener('click',()=>{
+      document.querySelectorAll('.tab,.plan-panel').forEach(el=>el.classList.remove('active'));
+      button.classList.add('active');document.getElementById(button.dataset.tab).classList.add('active');
+    }));
+    const toast=document.getElementById('toast');
+    document.querySelectorAll('[data-copy]').forEach(button=>button.addEventListener('click',async()=>{
+      try{await navigator.clipboard.writeText(button.dataset.copy);toast.textContent='已复制：'+button.dataset.copy}
+      catch{toast.textContent='请手动复制：'+button.dataset.copy}
+      toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1800);
+    }));
+  </script>
+</body>
+</html>
