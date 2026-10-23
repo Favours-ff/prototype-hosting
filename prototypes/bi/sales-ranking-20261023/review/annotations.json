@@ -17,7 +17,7 @@
       "strictAnchor": true,
       "category": "logic",
       "title": "排行维度",
-      "summary": "切换查看销售员、店铺、事业部和平台业绩。",
+      "summary": "按销售员、店铺、站点、平台、事业部查看排行。",
       "sections": [
         {
           "title": "状态与操作",
@@ -25,7 +25,7 @@
         },
         {
           "title": "边界与异常",
-          "content": "事业部同层级汇总，不重复累计；未归属为“未分配”。"
+          "content": "站点按订单国家／地区汇总；事业部同层级不重复累计。无归属为“未分配”。"
         },
         {
           "title": "数据来源",
@@ -53,7 +53,7 @@
       "sections": [
         {
           "title": "状态与操作",
-          "content": "默认有效销售额；可切换有效订单数、毛利润和毛利润率。"
+          "content": "默认有效销售额；可切换有效订单数、利润和利润率。"
         },
         {
           "title": "边界与异常",
@@ -77,32 +77,32 @@
       "requirementId": "F-003",
       "pageId": "P-001",
       "anchorId": "F-003",
-      "anchorSelector": "[data-annotation-anchor=\"shop-owner\"]",
+      "anchorSelector": "[data-annotation-anchor=\"operator-name\"]",
       "strictAnchor": true,
       "category": "data",
-      "title": "店铺负责人",
-      "summary": "店铺名称下显示平台及运营负责人。",
+      "title": "运营姓名标识",
+      "summary": "运营姓名后统一显示“（新员工）”或“（老员工）”。",
       "sections": [
         {
           "title": "状态与操作",
-          "content": "先选择“店铺排行”，再定位本标注。"
+          "content": "销售员姓名、店铺负责人、悬浮气泡及更多明细中的运营姓名均带新／老员工标记。"
         },
         {
           "title": "边界与异常",
-          "content": "未维护显示“未分配”；多人完整保留，长文本可查看全文。不改变业绩归属。"
+          "content": "平台、站点和事业部名称不加员工标记。新／老员工判定及来源待确认，不自行按入职天数计算。多人完整保留；未维护负责人显示“未分配”。"
         },
         {
           "title": "数据来源",
-          "content": "店铺平台及运营负责人配置；实际字段待核对。"
+          "content": "现有销售员及店铺运营负责人信息；员工分类来源待确认。"
         },
         {
           "title": "打开方式与复用",
-          "content": "当前页店铺横条名称区；其他维度不显示。"
+          "content": "当前页销售员／店铺排行、悬浮气泡及更多明细复用同一姓名展示。"
         }
       ],
       "sourceRef": "prd.html#F-003",
       "status": "pending",
-      "unavailableHint": "请先选择“店铺排行”。"
+      "unavailableHint": "请先选择“销售员排行”或“店铺排行”。"
     },
     {
       "id": "ANN-004",
