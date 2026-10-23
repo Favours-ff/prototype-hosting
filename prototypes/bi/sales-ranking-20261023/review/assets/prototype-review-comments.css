@@ -1,0 +1,26 @@
+.review-action-group{display:flex;align-items:center;gap:8px}
+.review-login-button{width:100%;margin-top:8px}
+.review-identity{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;padding:8px 10px;background:#f6f8fb;border:1px solid #e5e9ef;border-radius:7px}
+.identity-note{color:#526277;font-size:11px}.identity-tag{display:inline-flex;margin-left:6px;padding:1px 6px;color:#0958d9;font-size:10px;background:#e6f4ff;border-radius:999px}
+.comment-toolbar{display:flex;align-items:center;gap:6px;margin:0 0 8px}
+.comment-filter{padding:4px 8px;color:#64748b;font-size:11px;background:#fff;border:1px solid #dfe5ec;border-radius:5px;cursor:pointer}
+.comment-filter.active{color:#1677ff;background:#eaf4ff;border-color:#91caff}
+.comment-retry{margin-left:auto;color:#1677ff;background:transparent;border:0;font-size:11px;cursor:pointer}
+.comment-status{display:inline-flex;padding:1px 6px;font-size:10px;border-radius:999px}
+.comment-status.open{color:#d46b08;background:#fff7e6}
+.comment-status.resolved{color:#389e0d;background:#f6ffed}
+.comment-head{display:flex;align-items:center;gap:6px}
+.comment-scope{margin-top:5px;color:#7a879a;font-size:11px}
+.comment-actions{display:flex;justify-content:flex-end;margin-top:6px}
+.comment-action{padding:3px 7px;color:#1677ff;font-size:11px;background:#fff;border:1px solid #91caff;border-radius:5px;cursor:pointer}
+.annotation-review-button{display:inline-flex;margin-top:8px;margin-left:10px;padding:0;color:#1677ff;font-size:12px;background:transparent;border:0;cursor:pointer}
+.comment-replies{margin:8px 0 0 14px;padding-left:10px;border-left:2px solid #e6f4ff}.comment-reply{padding:7px 0}.comment-reply+.comment-reply{border-top:1px dashed #e5e9ef}
+.new-comment-form,.reply-form{display:grid;gap:8px;margin:0 0 12px;padding:10px;background:#fafcff;border:1px solid #dce8f7;border-radius:8px}.new-comment-form label{color:#33445b;font-weight:600;font-size:12px}.new-comment-form select,.new-comment-form textarea,.reply-form textarea{width:100%;padding:8px;color:#26364d;background:#fff;border:1px solid #d8dee7;border-radius:6px;outline:none}.new-comment-form textarea,.reply-form textarea{min-height:72px;resize:vertical}.new-comment-form select:focus,.new-comment-form textarea:focus,.reply-form textarea:focus{border-color:#4096ff;box-shadow:0 0 0 2px rgb(22 119 255 / 10%)}.form-hint{margin-right:auto;color:#8a96a8;font-size:10px}
+.review-drawer-mask{position:fixed;z-index:100;inset:0;background:rgb(15 23 42 / 28%)}
+.review-drawer{position:absolute;top:0;right:0;bottom:0;width:440px;padding:0;background:#fff;box-shadow:-14px 0 36px rgb(15 23 42 / 18%);overflow:auto}
+.drawer-head{display:flex;align-items:flex-start;justify-content:space-between;padding:20px 22px;border-bottom:1px solid #e5e9ef}
+.drawer-head h2{margin:0;font-size:18px}.drawer-head p{margin:6px 0 0;color:#7a879a;font-size:12px}
+.drawer-body{padding:20px 22px}.drawer-notice{margin-bottom:16px;padding:11px 12px;color:#526277;font-size:12px;line-height:1.55;background:#f6f8fb;border:1px solid #e5e9ef;border-radius:7px}
+.drawer-notice.warning{color:#ad6800;background:#fffbe6;border-color:#ffe58f}.drawer-notice.error{color:#cf1322;background:#fff1f0;border-color:#ffa39e}.drawer-notice.success{color:#237804;background:#f6ffed;border-color:#b7eb8f}
+.review-form{display:grid;gap:15px}.form-field{display:grid;gap:6px}.form-field label{color:#33445b;font-weight:600;font-size:13px}.form-field small{color:#8a96a8;font-size:11px}.review-form input,.review-form textarea,.review-form select{width:100%;padding:9px 10px;color:#26364d;background:#fff;border:1px solid #d8dee7;border-radius:7px;outline:none}.review-form input:focus,.review-form textarea:focus,.review-form select:focus{border-color:#4096ff;box-shadow:0 0 0 2px rgb(22 119 255 / 10%)}.review-form textarea{min-height:126px;resize:vertical}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.character-count{text-align:right;color:#8a96a8;font-size:11px}.drawer-actions{display:flex;justify-content:flex-end;gap:8px;padding-top:4px}.primary-button:disabled{color:#9aa6b7;background:#dfe5ec;border-color:#dfe5ec;cursor:not-allowed}
+@media(max-width:720px){.review-drawer{width:100%}}

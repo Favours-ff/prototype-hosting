@@ -1,0 +1,268 @@
+{
+  "schemaVersion": 1,
+  "prototypeId": "sales-ranking",
+  "prototypeVersion": "2.1",
+  "changeId": "CR-20261023-001",
+  "generatedFrom": {
+    "productPrd": "../销售运营概况排行榜调整PRD.md"
+  },
+  "annotations": [
+    {
+      "id": "ANN-001",
+      "displayNumber": "1.1",
+      "requirementId": "F-001",
+      "pageId": "P-001",
+      "anchorId": "F-001",
+      "anchorSelector": "[data-annotation-anchor=\"rank-dimensions\"]",
+      "strictAnchor": true,
+      "category": "logic",
+      "title": "排行维度",
+      "summary": "切换查看销售员、店铺、事业部和平台业绩。",
+      "sections": [
+        {
+          "title": "状态与操作",
+          "content": "默认销售员；切换保留指标及顶部查询条件。"
+        },
+        {
+          "title": "边界与异常",
+          "content": "事业部同层级汇总，不重复累计；未归属为“未分配”。"
+        },
+        {
+          "title": "数据来源",
+          "content": "销售运营统计及组织归属。"
+        },
+        {
+          "title": "打开方式与复用",
+          "content": "当前页切换，无跳转。"
+        }
+      ],
+      "sourceRef": "prd.html#F-001",
+      "status": "pending"
+    },
+    {
+      "id": "ANN-002",
+      "displayNumber": "1.2",
+      "requirementId": "F-002",
+      "pageId": "P-001",
+      "anchorId": "F-002",
+      "anchorSelector": "[data-annotation-anchor=\"rank-metrics\"]",
+      "strictAnchor": true,
+      "category": "logic",
+      "title": "指标与排序",
+      "summary": "选择指标后按统计期数值降序展示。",
+      "sections": [
+        {
+          "title": "状态与操作",
+          "content": "默认有效销售额；可切换有效订单数、毛利润和毛利润率。"
+        },
+        {
+          "title": "边界与异常",
+          "content": "金额最多2位小数，订单整数，利润率2位；缺失置末显示“—”。"
+        },
+        {
+          "title": "数据来源",
+          "content": "现有销售运营统计。"
+        },
+        {
+          "title": "打开方式与复用",
+          "content": "当前页，图表和浮层同步更新。"
+        }
+      ],
+      "sourceRef": "prd.html#F-002",
+      "status": "pending"
+    },
+    {
+      "id": "ANN-003",
+      "displayNumber": "1.3",
+      "requirementId": "F-003",
+      "pageId": "P-001",
+      "anchorId": "F-003",
+      "anchorSelector": "[data-annotation-anchor=\"shop-owner\"]",
+      "strictAnchor": true,
+      "category": "data",
+      "title": "店铺负责人",
+      "summary": "店铺名称下显示平台及运营负责人。",
+      "sections": [
+        {
+          "title": "状态与操作",
+          "content": "先选择“店铺排行”，再定位本标注。"
+        },
+        {
+          "title": "边界与异常",
+          "content": "未维护显示“未分配”；多人完整保留，长文本可查看全文。不改变业绩归属。"
+        },
+        {
+          "title": "数据来源",
+          "content": "店铺平台及运营负责人配置；实际字段待核对。"
+        },
+        {
+          "title": "打开方式与复用",
+          "content": "当前页店铺横条名称区；其他维度不显示。"
+        }
+      ],
+      "sourceRef": "prd.html#F-003",
+      "status": "pending",
+      "unavailableHint": "请先选择“店铺排行”。"
+    },
+    {
+      "id": "ANN-004",
+      "displayNumber": "1.4",
+      "requirementId": "F-004",
+      "pageId": "P-001",
+      "anchorId": "F-004",
+      "anchorSelector": "[data-annotation-anchor=\"rank-more\"]",
+      "strictAnchor": true,
+      "category": "logic",
+      "title": "更多",
+      "summary": "打开当前维度、指标的完整排行明细。",
+      "sections": [
+        {
+          "title": "状态与操作",
+          "content": "点击“更多”打开明细，按统计期指标降序展示排名、名称、两期值及差值。"
+        },
+        {
+          "title": "边界与异常",
+          "content": "沿用顶部范围及对比周期；明细可滚动。利润率比较百分点；店铺补充平台与负责人。"
+        },
+        {
+          "title": "数据来源",
+          "content": "当前查询范围的销售运营统计。"
+        },
+        {
+          "title": "打开方式与复用",
+          "content": "当前页弹窗；关闭或Esc退出，保留原筛选及图例状态。"
+        }
+      ],
+      "sourceRef": "prd.html#F-004",
+      "status": "pending"
+    },
+    {
+      "id": "ANN-005",
+      "displayNumber": "1.5",
+      "requirementId": "F-005",
+      "pageId": "P-001",
+      "anchorId": "F-005",
+      "anchorSelector": "[data-annotation-anchor=\"rank-chart\"]",
+      "strictAnchor": true,
+      "category": "logic",
+      "title": "双横条及浮层",
+      "summary": "保持原图表样式，对齐两期数据。",
+      "sections": [
+        {
+          "title": "状态与操作",
+          "content": "悬停行显示两期值、差值、涨跌幅及占比，移出关闭。"
+        },
+        {
+          "title": "边界与异常",
+          "content": "对比期≤0或缺失，涨跌幅为“—”；利润率只比百分点；其他计算规则见需求来源。"
+        },
+        {
+          "title": "数据来源",
+          "content": "当前查询及对比周期的销售运营统计。"
+        },
+        {
+          "title": "打开方式与复用",
+          "content": "当前图表浮层，不跳转。"
+        }
+      ],
+      "sourceRef": "prd.html#F-005",
+      "status": "pending"
+    },
+    {
+      "id": "ANN-006",
+      "displayNumber": "1.6",
+      "requirementId": "F-006",
+      "pageId": "P-001",
+      "anchorId": "F-006",
+      "anchorSelector": "[data-annotation-anchor=\"rank-legend\"]",
+      "strictAnchor": true,
+      "category": "logic",
+      "title": "图例",
+      "summary": "隐藏或恢复统计期／对比期横条。",
+      "sections": [
+        {
+          "title": "状态与操作",
+          "content": "默认两期均显示，点击图例切换。"
+        },
+        {
+          "title": "边界与异常",
+          "content": "至少保留一个系列；不改变统计和排名依据。"
+        },
+        {
+          "title": "数据来源",
+          "content": "无"
+        },
+        {
+          "title": "打开方式与复用",
+          "content": "当前图表内复用。"
+        }
+      ],
+      "sourceRef": "prd.html#F-006",
+      "status": "pending"
+    },
+    {
+      "id": "ANN-007",
+      "displayNumber": "1.7",
+      "requirementId": "F-006",
+      "pageId": "P-001",
+      "anchorId": "F-006",
+      "anchorSelector": "[data-annotation-anchor=\"rank-zoom\"]",
+      "strictAnchor": true,
+      "category": "logic",
+      "title": "放大与还原",
+      "summary": "展开排行榜，方便查看长列表。",
+      "sections": [
+        {
+          "title": "状态与操作",
+          "content": "点击放大；还原或Esc退出，保留筛选状态。"
+        },
+        {
+          "title": "边界与异常",
+          "content": "放大后可滚动，图例及悬停继续可用。"
+        },
+        {
+          "title": "数据来源",
+          "content": "无"
+        },
+        {
+          "title": "打开方式与复用",
+          "content": "当前页展开，不打开新页面。"
+        }
+      ],
+      "sourceRef": "prd.html#F-006",
+      "status": "pending"
+    },
+    {
+      "id": "ANN-008",
+      "displayNumber": "1.8",
+      "requirementId": "F-007",
+      "pageId": "P-001",
+      "anchorId": "F-007",
+      "anchorSelector": "[data-annotation-anchor=\"rank-summary\"]",
+      "strictAnchor": true,
+      "category": "data",
+      "title": "统计范围",
+      "summary": "排行沿用顶部权限及查询条件。",
+      "sections": [
+        {
+          "title": "状态与操作",
+          "content": "展示范围、指标合计、参与排名数及对比周期。"
+        },
+        {
+          "title": "边界与异常",
+          "content": "利润率不平均。加载、失败和空值处理见需求来源。"
+        },
+        {
+          "title": "数据来源",
+          "content": "现有销售运营汇总及权限范围。"
+        },
+        {
+          "title": "打开方式与复用",
+          "content": "当前页，跨维度统一口径。"
+        }
+      ],
+      "sourceRef": "prd.html#F-007",
+      "status": "pending"
+    }
+  ]
+}

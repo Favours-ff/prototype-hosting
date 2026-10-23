@@ -1,7 +1,17 @@
 {
-  "generatedAt": "2026-08-11T14:15:50+08:00",
-  "count": 18,
+  "generatedAt": "2026-10-23",
+  "count": 19,
   "prototypes": [
+    {
+      "prototypeId": "sales-ranking-20261023",
+      "title": "销售运营概况排行榜（第二版，含正式标注）",
+      "businessSystem": "BI",
+      "owner": "Favours-ff",
+      "createdAt": "2026-10-23",
+      "updatedAt": "2026-10-23",
+      "path": "prototypes/bi/sales-ranking-20261023",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/bi/sales-ranking-20261023/"
+    },
     {
       "prototypeId": "prototype-20260716-111913",
       "title": "包裹丢失赔付接口字段取值说明",
