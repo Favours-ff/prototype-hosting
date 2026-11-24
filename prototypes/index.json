@@ -1,7 +1,77 @@
 {
-  "generatedAt": "2026-10-23",
-  "count": 19,
+  "generatedAt": "2026-11-24",
+  "count": 26,
   "prototypes": [
+    {
+      "prototypeId": "shopee-tiktok-th-refundless-prd",
+      "title": "Shopee、TikTok 泰国站指定系统 SKU 无退货退款自动处理 PRD（V1.2）",
+      "businessSystem": "after-sales",
+      "owner": "Favours-ff",
+      "createdAt": "2026-11-24",
+      "updatedAt": "2026-11-24",
+      "path": "prototypes/after-sales/shopee-tiktok-th-refundless-prd",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/after-sales/shopee-tiktok-th-refundless-prd/"
+    },
+    {
+      "prototypeId": "sku-stock-department-rule-v1",
+      "title": "SKU 库存分部门，规则配置一期（DEMO-5206）",
+      "businessSystem": "ERP",
+      "owner": "Favours-ff",
+      "createdAt": "2026-11-17",
+      "updatedAt": "2026-11-23",
+      "path": "prototypes/erp/sku-stock-department-rule-v1",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/sku-stock-department-rule-v1/"
+    },
+    {
+      "prototypeId": "sea-price-adjustment-logic",
+      "title": "东南亚价格调整公共逻辑说明（DEMO-5037）",
+      "businessSystem": "ERP",
+      "owner": "Favours-ff",
+      "createdAt": "2026-10-26",
+      "updatedAt": "2026-10-26",
+      "path": "prototypes/erp/sea-price-adjustment-logic",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/sea-price-adjustment-logic/"
+    },
+    {
+      "prototypeId": "sea-logistics-sla-and-th-reship",
+      "title": "区分 Shopee/TikTok 订单物流渠道服务时效类型 + Shopee 泰国指定渠道重新安排预报（DEMO-4453/4385）",
+      "businessSystem": "ERP",
+      "owner": "Favours-ff",
+      "createdAt": "2026-08-19",
+      "updatedAt": "2026-11-18",
+      "path": "prototypes/erp/sea-logistics-sla-and-th-reship",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/sea-logistics-sla-and-th-reship/"
+    },
+    {
+      "prototypeId": "system-batch-task-urgent-data",
+      "title": "系统批量任务 - 处理业务紧急且异常的数据（DEMO-4426）",
+      "businessSystem": "ERP",
+      "owner": "Favours-ff",
+      "createdAt": "2026-08-18",
+      "updatedAt": "2026-11-24",
+      "path": "prototypes/erp/system-batch-task-urgent-data",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/system-batch-task-urgent-data/"
+    },
+    {
+      "prototypeId": "focus-nfe-tiktok-brazil",
+      "title": "TK 巴西站点自动开票流程 Focus NF-e（DEMO-4729）",
+      "businessSystem": "ERP",
+      "owner": "Favours-ff",
+      "createdAt": "2026-09-15",
+      "updatedAt": "2026-09-20",
+      "path": "prototypes/erp/focus-nfe-tiktok-brazil",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/focus-nfe-tiktok-brazil/"
+    },
+    {
+      "prototypeId": "domestic-platform-product-stock-sync",
+      "title": "国内各平台商品数据拉取入库存表（DEMO-4936）",
+      "businessSystem": "ERP",
+      "owner": "Favours-ff",
+      "createdAt": "2026-10-16",
+      "updatedAt": "2026-11-17",
+      "path": "prototypes/erp/domestic-platform-product-stock-sync",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/domestic-platform-product-stock-sync/"
+    },
     {
       "prototypeId": "sales-ranking-20261023",
       "title": "销售运营概况排行榜（第二版，含正式标注）",
@@ -157,7 +227,7 @@
     },
     {
       "prototypeId": "prototype-20260807-153834",
-      "title": "??????",
+      "title": "折扣管理原型（调整版）",
       "businessSystem": "erp",
       "owner": "Favours-ff",
       "sourcePath": "prototype/erp-20260602-183445-adjusted",

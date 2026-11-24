@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>需求文档与原型总览目录 · Favours-ff</title>
+  <style>
+    :root{
+      --blue:#1677ff;--blue-dark:#173968;--blue-soft:#e6f4ff;
+      --green:#237804;--green-bg:#f6ffed;--green-bd:#b7eb8f;
+      --orange:#ad6800;--orange-bg:#fffbe6;--orange-bd:#ffe58f;
+      --purple:#531dab;--purple-bg:#f9f0ff;--purple-bd:#d3adf7;
+      --cyan:#006d75;--cyan-bg:#e6fffb;--cyan-bd:#87e8de;
+      --gray:#475467;--gray-bg:#f2f4f7;--gray-bd:#d0d5dd;
+      --ink:#1f2937;--muted:#667085;--line:#e5e7eb;--bg:#f5f7fa;--card:#fff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+    .hero{background:linear-gradient(135deg,#102a52,#173968 45%,#1677ff);color:#fff;padding:38px 24px 34px}
+    .wrap{max-width:1200px;margin:auto}
+    .hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+    .hero h1{margin:0 0 8px;font-size:28px;letter-spacing:.3px}
+    .hero p{margin:0;opacity:.9;max-width:760px}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}
+    .stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:14px 16px;backdrop-filter:blur(4px)}
+    .stat .num{font-size:24px;font-weight:700;line-height:1.2}
+    .stat .lbl{font-size:12px;opacity:.85;margin-top:4px}
+
+    .main{padding:22px 24px 64px}
+    .toolbar{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:0 2px 8px rgba(16,24,40,.04);margin-bottom:18px}
+    .toolbar-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .toolbar-row + .toolbar-row{margin-top:12px;padding-top:12px;border-top:1px solid #f0f2f5}
+    .search{flex:1;min-width:220px;height:38px;border:1px solid var(--line);border-radius:8px;padding:0 12px;font-size:14px;outline:none}
+    .search:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(22,119,255,.12)}
+    select{height:38px;border:1px solid var(--line);border-radius:8px;padding:0 10px;font-size:13px;background:#fff;color:var(--ink)}
+    .btn{height:38px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:500}
+    .btn:hover{border-color:var(--blue);color:var(--blue)}
+    .btn-primary{background:var(--blue);border-color:var(--blue);color:#fff}
+    .btn-primary:hover{background:#0958d9;color:#fff}
+
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:6px 13px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:13px;cursor:pointer;transition:.15s}
+    .tab:hover{border-color:var(--blue);color:var(--blue)}
+    .tab.active{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+
+    .sec-title{display:flex;justify-content:space-between;align-items:center;margin:20px 0 12px}
+    .sec-title h2{margin:0;font-size:18px;border-left:4px solid var(--blue);padding-left:10px}
+    .sec-title .count{font-size:13px;color:var(--muted)}
+
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:0 2px 8px rgba(16,24,40,.03);display:flex;flex-direction:column;justify-content:space-between;transition:.15s}
+    .card:hover{border-color:#91caff;box-shadow:0 6px 18px rgba(22,119,255,.08)}
+    .card.featured{border-left:4px solid var(--blue)}
+    .badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
+    .tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;border:1px solid transparent;line-height:1.5}
+    .t-star{background:#e6f4ff;color:#0958d9;border-color:#91caff;font-weight:600}
+    .t-prd{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-bd)}
+    .t-proto{background:var(--cyan-bg);color:var(--cyan);border-color:var(--cyan-bd)}
+    .t-st-done{background:var(--green-bg);color:var(--green);border-color:var(--green-bd)}
+    .t-st-dev{background:#e6f4ff;color:#0958d9;border-color:#91caff}
+    .t-st-wait{background:var(--orange-bg);color:var(--orange);border-color:var(--orange-bd)}
+    .t-st-gray{background:var(--gray-bg);color:var(--gray);border-color:var(--gray-bd)}
+    .code-id{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;color:var(--muted);background:#f2f4f7;padding:1px 6px;border-radius:4px}
+
+    .card h3{margin:0 0 6px;font-size:16px;line-height:1.45}
+    .card h3 a{color:var(--ink);text-decoration:none}
+    .card h3 a:hover{color:var(--blue)}
+    .desc{margin:0 0 12px;font-size:13px;color:var(--muted);line-height:1.6}
+    .card-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding-top:10px;border-top:1px solid #f0f2f5}
+    .meta-txt{font-size:12px;color:var(--muted)}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .a-btn{font-size:12px;padding:4px 10px;border-radius:6px;text-decoration:none;border:1px solid var(--line);color:var(--ink);background:#fff}
+    .a-btn:hover{border-color:var(--blue);color:var(--blue)}
+    .a-btn.primary{background:var(--blue-soft);border-color:#91caff;color:#0958d9;font-weight:500}
+    .a-btn.primary:hover{background:var(--blue);border-color:var(--blue);color:#fff}
+
+    .empty{text-align:center;padding:48px 20px;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:12px}
+    .toast{position:fixed;bottom:24px;right:24px;background:#1f2937;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;box-shadow:0 6px 20px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:.2s}
+    .toast.show{opacity:1}
+    @media(max-width:860px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:22px}}
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div class="hero-top">
+        <div>
+          <h1>产品需求文档与原型总览目录</h1>
+          <p>统一归档 ERP、售后、BI、财务系统等全部 PRD 需求文档与交互原型，支持一键检索、分类查看与 Markdown 清单导出，方便持续复盘与阶段总结。</p>
+        </div>
+        <div style="font-size:12px;opacity:.85;text-align:right">
+          <div>维护人：Favours-ff</div>
+          <div>最后更新：2026-11-24</div>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="num" id="sTotal">0</div><div class="lbl">全部收录文档与原型</div></div>
+        <div class="stat"><div class="num" id="sFeatured">0</div><div class="lbl">本期重点整理需求</div></div>
+        <div class="stat"><div class="num" id="sPrd">0</div><div class="lbl">PRD / 逻辑说明文档</div></div>
+        <div class="stat"><div class="num" id="sProto">0</div><div class="lbl">交互原型与历史归档</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="wrap">
+      <div class="toolbar">
+        <div class="toolbar-row">
+          <input id="q" class="search" type="search" placeholder="搜索需求标题、云效单号（如 DEMO-5206）、平台或关键词...">
+          <select id="statusFilter">
+            <option value="ALL">全部状态</option>
+            <option value="待评审">待评审</option>
+            <option value="已评审">已评审</option>
+            <option value="待开发">待开发</option>
+            <option value="开发中">开发中</option>
+            <option value="待测试">待测试</option>
+            <option value="已完成">已完成</option>
+            <option value="历史归档">历史归档</option>
+          </select>
+          <select id="sortBy">
+            <option value="featured_updated">优先重点需求 + 更新时间</option>
+            <option value="updated_desc">按更新时间倒序</option>
+            <option value="created_desc">按创建时间倒序</option>
+          </select>
+          <button id="exportMd" class="btn btn-primary" type="button">复制 Markdown 汇总表</button>
+        </div>
+        <div class="toolbar-row">
+          <div class="tabs" id="catTabs"></div>
+        </div>
+      </div>
+
+      <div class="sec-title">
+        <h2 id="listHeading">全部需求与原型</h2>
+        <span class="count" id="resultCount"></span>
+      </div>
+
+      <div id="grid" class="grid"></div>
+      <div id="empty" class="empty" style="display:none">没有匹配的需求或原型，请尝试更换筛选条件或关键词。</div>
+    </div>
+  </main>
+
+  <div id="toast" class="toast">已复制 Markdown 汇总表到剪贴板</div>
+
+  <script>
+    const ITEMS = [
+      // === 本期重点整理（7 项） ===
+      {
+        id: "shopee-tiktok-th-refundless-prd",
+        title: "Shopee、TikTok 泰国站指定系统 SKU 无退货退款自动处理 PRD（V1.2）",
+        code: "PRD-V1.2",
+        category: "售后",
+        businessSystem: "售后 / ERP",
+        type: "PRD 需求文档",
+        status: "待评审",
+        featured: true,
+        createdAt: "2026-11-24",
+        updatedAt: "2026-11-24",
+        url: "./prototypes/after-sales/shopee-tiktok-th-refundless-prd/",
+        summary: "后端配置系统 SKU 查 ERP 退款表，命中 Shopee/TikTok 泰国站待处理状态白名单且平台资格允许时自动无退货全额退款；拒绝及异常场景推极简群消息转人工。"
+      },
+      {
+        id: "sku-stock-department-rule-v1",
+        title: "SKU 库存分部门，规则配置一期",
+        code: "DEMO-5206",
+        category: "ERP & 订单",
+        businessSystem: "订单系统",
+        type: "PRD 需求文档",
+        status: "待开发",
+        featured: true,
+        createdAt: "2026-11-17",
+        updatedAt: "2026-11-23",
+        url: "./prototypes/erp/sku-stock-department-rule-v1/",
+        yunxiaoUrl: "https://devops.aliyun.com/projex/project/d402a07c884ffd0add8d306f84/req/4edb210e7f7f61ada9b110cdd8",
+        summary: "国内事业部店铺使用东莞 1 仓发货时，采购/计划系统新增剔除国内平台后的加权日均销量口径，订单分仓与改仓按“可用库存 - 加权日销 × 7”及限制配置拦截。"
+      },
+      {
+        id: "sea-price-adjustment-logic",
+        title: "东南亚价格调整公共逻辑说明",
+        code: "DEMO-5037",
+        category: "ERP & 订单",
+        businessSystem: "基础配置模块",
+        type: "PRD 需求文档",
+        status: "已评审",
+        featured: true,
+        createdAt: "2026-10-26",
+        updatedAt: "2026-10-26",
+        url: "./prototypes/erp/sea-price-adjustment-logic/",
+        yunxiaoUrl: "https://devops.aliyun.com/projex/project/d402a07c884ffd0add8d306f84/req/9683d15f605c6dfed3f35047a0",
+        summary: "规范 Shopee、Lazada、TikTok 东南亚控价前置限制（假期/过期/禁用）、按店铺多线程执行、无折扣自动创建/复用活动及 50% 反推原价兜底改价逻辑。"
+      },
+      {
+        id: "sea-logistics-sla-and-th-reship",
+        title: "区分 Shopee/TikTok 订单物流渠道服务时效类型 + Shopee 泰国指定物流渠道重新安排预报",
+        code: "DEMO-4453 / 4385",
+        category: "ERP & 订单",
+        businessSystem: "订单系统",
+        type: "PRD 需求文档",
+        status: "待开发",
+        featured: true,
+        createdAt: "2026-08-19",
+        updatedAt: "2026-11-18",
+        url: "./prototypes/erp/sea-logistics-sla-and-th-reship/",
+        yunxiaoUrl: "https://devops.aliyun.com/projex/project/d402a07c884ffd0add8d306f84/req/972527bc4823724b742895d631",
+        summary: "识别 TikTok 100–800 与 Shopee instant/same_day 履约时效，接入高级筛选、物流规则与喜运达推送，并对泰国 2 仓 SHP Food 渠道 RETRY_SHIP 订单做 16–19 点重预报补救。"
+      },
+      {
+        id: "system-batch-task-urgent-data",
+        title: "系统批量任务 - 处理业务紧急且异常的数据",
+        code: "DEMO-4426",
+        category: "ERP & 订单",
+        businessSystem: "销售运营系统",
+        type: "PRD + 原型",
+        status: "开发中",
+        featured: true,
+        createdAt: "2026-08-18",
+        updatedAt: "2026-11-24",
+        url: "./prototypes/erp/system-batch-task-urgent-data/",
+        extraUrl: "https://erp-prototypes.pages.dev/prototype/operations-batch-task/",
+        extraLabel: "打开原型",
+        yunxiaoUrl: "https://devops.aliyun.com/projex/project/d402a07c884ffd0add8d306f84/req/fc5170b30d49b5e3449ec6128e",
+        summary: "批量任务模块兼容淘宝、天猫、京东、拼多多、1688 平台筛选框，以及批量修改库存时按平台维度读取默认仓位配置。"
+      },
+      {
+        id: "focus-nfe-tiktok-brazil",
+        title: "TK 巴西站点自动开票流程（Focus NF-e）",
+        code: "DEMO-4729",
+        category: "ERP & 订单",
+        businessSystem: "订单系统",
+        type: "交互原型",
+        status: "待评审",
+        featured: true,
+        createdAt: "2026-09-15",
+        updatedAt: "2026-09-20",
+        url: "./prototypes/erp/focus-nfe-tiktok-brazil/",
+        yunxiaoUrl: "https://devops.aliyun.com/projex/project/d402a07c884ffd0add8d306f84/req/cb2de886f5a7227dcb0cf10243",
+        summary: "TikTok Shop 巴西站点 Focus NF-e 自动开票交互流程与表单页面原型。"
+      },
+      {
+        id: "domestic-platform-product-stock-sync",
+        title: "国内各平台商品数据拉取入库存表",
+        code: "DEMO-4936",
+        category: "ERP & 订单",
+        businessSystem: "销售运营系统",
+        type: "PRD + 接口文档",
+        status: "待测试",
+        featured: true,
+        createdAt: "2026-10-16",
+        updatedAt: "2026-11-17",
+        url: "./prototypes/erp/domestic-platform-product-stock-sync/",
+        extraUrl: "https://favours-ff.github.io/domestic-ecommerce-api-matrix/",
+        extraLabel: "接口矩阵",
+        yunxiaoUrl: "https://devops.aliyun.com/projex/project/d402a07c884ffd0add8d306f84/req/17236f082c096429f15286ddbd",
+        summary: "拉取国内平台商品数据落库存表并定时更新，对接批量改库存与改价接口接入批量任务；含拼多多拼团价/单卖价+1元及活动商品拦截逻辑。"
+      },
+
+      // === 历史已托管原型与 PRD（prototype-hosting 全量收录） ===
+      {
+        id: "sales-ranking-20261023",
+        title: "销售运营概况排行榜（第二版，含正式标注）",
+        category: "BI & 财务",
+        businessSystem: "BI",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-10-23",
+        updatedAt: "2026-10-23",
+        url: "./prototypes/bi/sales-ranking-20261023/",
+        summary: "BI 销售运营概况排行榜第二版交互原型及正式交互标注。"
+      },
+      {
+        id: "prototype-20260918-151943",
+        title: "规则配置 · ERP",
+        category: "ERP & 订单",
+        businessSystem: "ERP",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-09-18",
+        updatedAt: "2026-09-18",
+        url: "./prototypes/erp/prototype-20260918-151943/",
+        summary: "ERP 规则配置页面原型。"
+      },
+      {
+        id: "prototype-20260826-102113",
+        title: "店铺物流配置",
+        category: "ERP & 订单",
+        businessSystem: "ERP",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-08-26",
+        updatedAt: "2026-08-26",
+        url: "./prototypes/erp/prototype-20260826-102113/",
+        summary: "ERP 店铺物流配置页面原型。"
+      },
+      {
+        id: "prd-20260811-141546",
+        title: "平台仓库映射与换货处理规则 PRD",
+        category: "ERP & 订单",
+        businessSystem: "ERP",
+        type: "PRD 需求文档",
+        status: "历史归档",
+        createdAt: "2026-08-11",
+        updatedAt: "2026-08-11",
+        url: "./prototypes/erp/prd-20260811-141546/",
+        summary: "平台仓库映射关系及换货处理规则完整 PRD 说明文档。"
+      },
+      {
+        id: "prototype-20260811-141503",
+        title: "平台仓库映射与换货处理规则原型",
+        category: "ERP & 订单",
+        businessSystem: "ERP",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-08-11",
+        updatedAt: "2026-08-11",
+        url: "./prototypes/erp/prototype-20260811-141503/",
+        summary: "平台仓库映射与换货处理规则配套前端交互原型。"
+      },
+      {
+        id: "prototype-20260807-153834",
+        title: "折扣管理原型（调整版）",
+        category: "ERP & 订单",
+        businessSystem: "ERP",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-08-07",
+        updatedAt: "2026-08-07",
+        url: "./prototypes/erp/prototype-20260807-153834/",
+        summary: "ERP 折扣管理调整版原型。"
+      },
+      {
+        id: "prototype-20260728-173719",
+        title: "发货确认收入导入与同步记录",
+        category: "BI & 财务",
+        businessSystem: "财务系统",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-07-28",
+        updatedAt: "2026-07-29",
+        url: "./prototypes/business-system/prototype-20260728-173719/",
+        summary: "财务系统发货确认收入导入与同步记录页面原型。"
+      },
+      {
+        id: "prototype-20260720-155746",
+        title: "发货确认收入 - 导入与同步记录（初版）",
+        category: "BI & 财务",
+        businessSystem: "财务系统",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-07-20",
+        updatedAt: "2026-07-20",
+        url: "./prototypes/finance-system/prototype-20260720-155746/",
+        summary: "财务系统发货确认收入导入与同步记录初版原型。"
+      },
+      {
+        id: "prototype-20260716-111913",
+        title: "包裹丢失赔付接口字段取值说明",
+        category: "售后",
+        businessSystem: "售后",
+        type: "PRD 需求文档",
+        status: "历史归档",
+        createdAt: "2026-07-16",
+        updatedAt: "2026-07-16",
+        url: "./prototypes/after-sales/prototype-20260716-111913/",
+        summary: "售后模块包裹丢失赔付相关平台接口字段取值说明文档。"
+      },
+      {
+        id: "prototype-20260716-111847",
+        title: "售后挽损模块 - 包裹丢失与运费多扣最终逻辑（业务版）",
+        category: "售后",
+        businessSystem: "售后挽损模块",
+        type: "PRD + 原型",
+        status: "历史归档",
+        createdAt: "2026-07-16",
+        updatedAt: "2026-07-16",
+        url: "./prototypes/business-system/prototype-20260716-111847/",
+        summary: "售后挽损模块包裹丢失与运费多扣最终处理逻辑说明与页面。"
+      },
+      {
+        id: "v1-1-20260706-103107",
+        title: "售后挽损模块 - 包裹丢失与运费多扣最终逻辑（v1.1）",
+        category: "售后",
+        businessSystem: "ERP 售后挽损",
+        type: "PRD + 原型",
+        status: "历史归档",
+        createdAt: "2026-07-06",
+        updatedAt: "2026-07-06",
+        url: "./prototypes/erp/v1-1-20260706-103107/",
+        summary: "ERP 售后挽损包裹丢失与运费多扣逻辑 v1.1 版本。"
+      },
+      {
+        id: "prototype-20260704-174519",
+        title: "售后挽损模块 - 包裹丢失与运费多扣最终逻辑（v1.0）",
+        category: "售后",
+        businessSystem: "ERP 售后挽损",
+        type: "PRD + 原型",
+        status: "历史归档",
+        createdAt: "2026-07-04",
+        updatedAt: "2026-07-04",
+        url: "./prototypes/erp/prototype-20260704-174519/",
+        summary: "ERP 售后挽损包裹丢失与运费多扣逻辑初版。"
+      },
+      {
+        id: "prototype-20260615-175630",
+        title: "销售运营概况趋势对比（更新版）",
+        category: "BI & 财务",
+        businessSystem: "BI",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-06-15",
+        updatedAt: "2026-06-15",
+        url: "./prototypes/bi/prototype-20260615-175630/",
+        summary: "BI 销售运营概况趋势对比页面原型。"
+      },
+      {
+        id: "prototype-20260612-113950",
+        title: "折扣管理（v2）",
+        category: "ERP & 订单",
+        businessSystem: "ERP",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-06-12",
+        updatedAt: "2026-06-12",
+        url: "./prototypes/erp/prototype-20260612-113950/",
+        summary: "ERP 折扣管理功能交互原型。"
+      },
+      {
+        id: "prototype-20260606-141530",
+        title: "销售运营概况趋势对比（初版）",
+        category: "BI & 财务",
+        businessSystem: "BI",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-06-06",
+        updatedAt: "2026-06-06",
+        url: "./prototypes/bi/prototype-20260606-141530/",
+        summary: "BI 销售运营概况趋势对比初版原型。"
+      },
+      {
+        id: "prototype-20260605-143245",
+        title: "速卖通全托管商品管理与库存同步",
+        category: "ERP & 订单",
+        businessSystem: "ERP",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-06-05",
+        updatedAt: "2026-06-18",
+        url: "./prototypes/erp/prototype-20260605-143245/",
+        summary: "速卖通全托管商品管理与库存同步原型（v3）。"
+      },
+      {
+        id: "prototype-20260602-183445",
+        title: "折扣管理原型（初版）",
+        category: "ERP & 订单",
+        businessSystem: "ERP",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-06-02",
+        updatedAt: "2026-06-02",
+        url: "./prototypes/erp/prototype-20260602-183445/",
+        summary: "ERP 折扣管理初版原型。"
+      },
+      {
+        id: "prototype-20260527-144601",
+        title: "已发货订单财务对账",
+        category: "BI & 财务",
+        businessSystem: "ERP / 财务",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-05-27",
+        updatedAt: "2026-05-27",
+        url: "./prototypes/erp/prototype-20260527-144601/",
+        summary: "已发货订单财务结算与对账页面原型。"
+      },
+      {
+        id: "prototype-20260526-111229",
+        title: "已发货订单结算对账",
+        category: "BI & 财务",
+        businessSystem: "ERP / 财务",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-05-26",
+        updatedAt: "2026-05-26",
+        url: "./prototypes/erp/prototype-20260526-111229/",
+        summary: "已发货订单结算对账原型。"
+      },
+      {
+        id: "prototype-20260522-095358",
+        title: "已发货订单结算匹配（v2）",
+        category: "BI & 财务",
+        businessSystem: "ERP / 财务",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-05-22",
+        updatedAt: "2026-05-22",
+        url: "./prototypes/erp/prototype-20260522-095358/",
+        summary: "已发货订单结算匹配原型版本 2。"
+      },
+      {
+        id: "prototype-20260522-094417",
+        title: "已发货订单结算匹配（v1.1）",
+        category: "BI & 财务",
+        businessSystem: "ERP / 财务",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-05-22",
+        updatedAt: "2026-05-22",
+        url: "./prototypes/erp/prototype-20260522-094417/",
+        summary: "已发货订单结算匹配原型修订版。"
+      },
+      {
+        id: "prototype-20260522-094401",
+        title: "已发货订单结算匹配（初版）",
+        category: "BI & 财务",
+        businessSystem: "ERP / 财务",
+        type: "交互原型",
+        status: "历史归档",
+        createdAt: "2026-05-22",
+        updatedAt: "2026-05-22",
+        url: "./prototypes/erp/prototype-20260522-094401/",
+        summary: "已发货订单结算匹配初版原型。"
+      },
+      {
+        id: "personal-agent-14",
+        title: "你的 Personal Agent · 钉钉 CLI 工作方法分享",
+        category: "其他",
+        businessSystem: "培训分享",
+        type: "分享文档",
+        status: "历史归档",
+        createdAt: "2026-09-01",
+        updatedAt: "2026-09-01",
+        url: "./prototypes/training/personal-agent-14/",
+        summary: "Personal Agent 与钉钉 CLI 工作方法培训分享页。"
+      },
+      {
+        id: "shanghai-nanjing-2026",
+        title: "上海 × 南京｜两个人的国庆慢游计划",
+        category: "其他",
+        businessSystem: "旅行攻略",
+        type: "专题页",
+        status: "历史归档",
+        createdAt: "2026-09-25",
+        updatedAt: "2026-09-25",
+        url: "./prototypes/travel-guide/shanghai-nanjing-2026/",
+        summary: "上海与南京国庆出行攻略专题页。"
+      },
+      {
+        id: "shanghai-north-bund-photo-route",
+        title: "北外滩江景打卡路线｜上海",
+        category: "其他",
+        businessSystem: "旅行攻略",
+        type: "专题页",
+        status: "历史归档",
+        createdAt: "2026-09-25",
+        updatedAt: "2026-09-25",
+        url: "./prototypes/travel-guide/shanghai-north-bund-photo-route/",
+        summary: "上海北外滩江景打卡路线指南。"
+      },
+      {
+        id: "shunde-daliang-2d1n-2-1-20260724-173552",
+        title: "顺德大良 2 天 1 夜行程攻略",
+        category: "其他",
+        businessSystem: "旅行攻略",
+        type: "专题页",
+        status: "历史归档",
+        createdAt: "2026-07-24",
+        updatedAt: "2026-07-24",
+        url: "./prototypes/travel-guide/shunde-daliang-2d1n-2-1-20260724-173552/",
+        summary: "顺德大良 2 天 1 夜美食与游玩攻略。"
+      }
+    ];
+
+    const CATS = ["全部", "⭐ 本期重点需求", "ERP & 订单", "售后", "BI & 财务", "其他"];
+    let activeCat = "全部";
+
+    const $ = (id) => document.getElementById(id);
+
+    function statusClass(st) {
+      if (st === "已完成") return "t-st-done";
+      if (st === "开发中" || st === "待测试" || st === "已评审") return "t-st-dev";
+      if (st === "待评审" || st === "待开发") return "t-st-wait";
+      return "t-st-gray";
+    }
+
+    function updateStats() {
+      $("sTotal").textContent = ITEMS.length;
+      $("sFeatured").textContent = ITEMS.filter(i => i.featured).length;
+      $("sPrd").textContent = ITEMS.filter(i => i.type.includes("PRD")).length;
+      $("sProto").textContent = ITEMS.filter(i => i.type.includes("原型") || i.status === "历史归档").length;
+    }
+
+    function renderTabs() {
+      const box = $("catTabs");
+      box.innerHTML = "";
+      CATS.forEach(c => {
+        const count = c === "全部"
+          ? ITEMS.length
+          : c === "⭐ 本期重点需求"
+            ? ITEMS.filter(i => i.featured).length
+            : ITEMS.filter(i => i.category === c).length;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "tab" + (activeCat === c ? " active" : "");
+        btn.textContent = `${c} (${count})`;
+        btn.onclick = () => { activeCat = c; renderTabs(); renderList(); };
+        box.appendChild(btn);
+      });
+    }
+
+    function getFiltered() {
+      const q = $("q").value.trim().toLowerCase();
+      const st = $("statusFilter").value;
+      const sort = $("sortBy").value;
+
+      let list = ITEMS.filter(i => {
+        if (activeCat === "⭐ 本期重点需求" && !i.featured) return false;
+        if (activeCat !== "全部" && activeCat !== "⭐ 本期重点需求" && i.category !== activeCat) return false;
+        if (st !== "ALL" && i.status !== st) return false;
+        if (q) {
+          const hay = [i.title, i.code || "", i.businessSystem, i.category, i.type, i.status, i.summary].join(" ").toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+
+      list.sort((a, b) => {
+        if (sort === "featured_updated") {
+          const fa = a.featured ? 1 : 0, fb = b.featured ? 1 : 0;
+          if (fa !== fb) return fb - fa;
+          return (b.updatedAt || "").localeCompare(a.updatedAt || "");
+        }
+        if (sort === "created_desc") return (b.createdAt || "").localeCompare(a.createdAt || "");
+        return (b.updatedAt || "").localeCompare(a.updatedAt || "");
+      });
+      return list;
+    }
+
+    function renderList() {
+      const list = getFiltered();
+      $("listHeading").textContent = activeCat === "全部" ? "全部需求与原型" : activeCat;
+      $("resultCount").textContent = `共 ${list.length} 项`;
+      const grid = $("grid");
+      const empty = $("empty");
+
+      if (!list.length) {
+        grid.innerHTML = "";
+        empty.style.display = "block";
+        return;
+      }
+      empty.style.display = "none";
+
+      grid.innerHTML = list.map(i => `
+        <article class="card ${i.featured ? "featured" : ""}">
+          <div>
+            <div class="badges">
+              ${i.featured ? '<span class="tag t-star">本期重点</span>' : ""}
+              <span class="tag ${i.type.includes("PRD") ? "t-prd" : "t-proto"}">${i.type}</span>
+              <span class="tag ${statusClass(i.status)}">${i.status}</span>
+              ${i.code ? `<span class="code-id">${i.code}</span>` : ""}
+            </div>
+            <h3><a href="${i.url}">${i.title}</a></h3>
+            <p class="desc">${i.summary}</p>
+          </div>
+          <div class="card-foot">
+            <div class="meta-txt">${i.businessSystem} · 更新 ${i.updatedAt}</div>
+            <div class="actions">
+              <a class="a-btn primary" href="${i.url}">${i.type === "交互原型" ? "打开原型" : "查看文档"}</a>
+              ${i.extraUrl ? `<a class="a-btn" href="${i.extraUrl}" target="_blank" rel="noopener">${i.extraLabel || "关联链接"} ↗</a>` : ""}
+              ${i.yunxiaoUrl ? `<a class="a-btn" href="${i.yunxiaoUrl}" target="_blank" rel="noopener">云效 ↗</a>` : ""}
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function showToast(msg) {
+      const t = $("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2400);
+    }
+
+    $("exportMd").onclick = () => {
+      const base = location.href.replace(/index\.html.*$/, "").replace(/#.*$/, "");
+      const list = getFiltered();
+      const lines = [
+        "| 序号 | 编号 | 需求 / 原型标题 | 模块 | 类型 | 状态 | 更新时间 | 链接 |",
+        "|---|---|---|---|---|---|---|---|"
+      ];
+      list.forEach((i, idx) => {
+        const fullUrl = i.url.startsWith("http") ? i.url : new URL(i.url, base).href;
+        lines.push(`| ${idx + 1} | ${i.code || "-"} | ${i.title} | ${i.businessSystem} | ${i.type} | ${i.status} | ${i.updatedAt} | [查看](${fullUrl}) |`);
+      });
+      navigator.clipboard.writeText(lines.join("\n")).then(
+        () => showToast(`已复制 ${list.length} 条记录的 Markdown 汇总表`),
+        () => showToast("复制失败，请手动在浏览器允许剪贴板权限")
+      );
+    };
+
+    $("q").addEventListener("input", renderList);
+    $("statusFilter").addEventListener("change", renderList);
+    $("sortBy").addEventListener("change", renderList);
+
+    updateStats();
+    renderTabs();
+    renderList();
+  </script>
+</body>
+</html>

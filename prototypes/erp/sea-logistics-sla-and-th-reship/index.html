@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Shopee/TikTok 订单物流渠道时效区分 + Shopee 泰国重预报 - PRD</title>
+  <style>
+    :root{--blue:#1677ff;--blue-soft:#e6f4ff;--green:#52c41a;--orange:#fa8c16;--red:#ff4d4f;--ink:#1f2937;--muted:#667085;--line:#e5e7eb;--bg:#f5f7fa;--card:#fff}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+    .topbar{background:#102a52;padding:10px 24px;font-size:13px}
+    .topbar-inner{max-width:1180px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .topbar a{color:#cfe3ff;text-decoration:none}
+    .topbar a:hover{color:#fff;text-decoration:underline}
+    .hero{background:linear-gradient(135deg,#173968,#1677ff);color:#fff;padding:38px 32px}
+    .hero-inner,.page{max-width:1180px;margin:auto}
+    .hero h1{margin:0 0 10px;font-size:28px}
+    .hero p{margin:4px 0;opacity:.9}
+    .meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:13px}
+    .page{padding:24px 24px 60px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 8px rgba(16,24,40,.04);padding:24px;margin:18px 0}
+    h2{font-size:20px;margin:0 0 14px;border-left:4px solid var(--blue);padding-left:10px}
+    h3{font-size:16px;margin:18px 0 8px}
+    p{margin:8px 0}
+    .note{border-radius:8px;padding:12px 14px;background:var(--blue-soft);border-left:4px solid var(--blue);margin:12px 0}
+    .warn{background:#fff7e6;border-left-color:var(--orange)}
+    table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+    th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+    th{background:#f8fafc;font-weight:600}
+    code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#f2f4f7;padding:1px 5px;border-radius:4px;color:#344054}
+    ul,ol{padding-left:20px}
+    li{margin:6px 0}
+    a.link{color:var(--blue);text-decoration:none}
+    a.link:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <div class="topbar"><div class="topbar-inner">
+    <a href="../../../">← 返回需求与原型总览目录</a>
+    <div>
+      <a href="https://devops.aliyun.com/projex/project/d402a07c884ffd0add8d306f84/req/972527bc4823724b742895d631" target="_blank" rel="noopener" style="margin-right:16px">云效 DEMO-4453 ↗</a>
+      <a href="https://devops.aliyun.com/projex/project/d402a07c884ffd0add8d306f84/req/ae2f2fa8966dbe09353a0bad0c" target="_blank" rel="noopener">云效 DEMO-4385 ↗</a>
+    </div>
+  </div></div>
+  <header class="hero"><div class="hero-inner">
+    <h1>区分 Shopee / TikTok 订单物流渠道服务时效类型 + Shopee 泰国指定渠道重新安排预报</h1>
+    <p>整合两条关联履约需求：识别平台即时/当日达/次日达履约时效，接入物流规则、喜运达推送与预约取件逻辑，并对 Shopee 泰国特殊渠道提供重预报补救。</p>
+    <div class="meta">
+      <span>云效编号：DEMO-4453 / DEMO-4385</span>
+      <span>模块：订单系统</span>
+      <span>状态：待开发 / 已完成</span>
+      <span>更新日期：2026-11-18</span>
+    </div>
+  </div></header>
+
+  <main class="page">
+    <section class="card">
+      <h2>一、TikTok 履约时效取值（DEMO-4453）</h2>
+      <p>接口 <code>Get Order Detail</code> 新增字段 <code>fulfillment_priority_level</code>（页面展示中文说明，数据库表存英文枚举值）：</p>
+      <table>
+        <thead><tr><th>返回值</th><th>入表存储值</th><th>页面展示名称</th></tr></thead>
+        <tbody>
+          <tr><td><code>100</code></td><td><code>Instant</code></td><td>及时单</td></tr>
+          <tr><td><code>200</code></td><td><code>Sameday 8 Hours</code></td><td>当日达-8小时</td></tr>
+          <tr><td><code>300</code></td><td><code>Sameday</code></td><td>当日达</td></tr>
+          <tr><td><code>400</code></td><td><code>Next Day Delivery</code></td><td>次日达</td></tr>
+          <tr><td><code>500</code></td><td><code>Express</code></td><td>快递</td></tr>
+          <tr><td><code>600</code></td><td><code>Standard</code></td><td>标准配送</td></tr>
+          <tr><td><code>700</code></td><td><code>Economy</code></td><td>经济型</td></tr>
+          <tr><td><code>800</code></td><td><code>Cargo</code></td><td>货运</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>二、Shopee 履约时效取值（DEMO-4453）</h2>
+      <ol>
+        <li>通过 <code>v2.order.get_order_list</code> 获取 <code>logistics_channel_id</code>（物流渠道 ID）；</li>
+        <li>再调用物流渠道列表接口 <code>v2.logistics.get_channel_list</code> 读取 <code>service_type_identifier</code>（服务类型）：</li>
+      </ol>
+      <table>
+        <thead><tr><th>入表存储值</th><th>页面展示名称</th></tr></thead>
+        <tbody>
+          <tr><td><code>instant</code></td><td>即时</td></tr>
+          <tr><td><code>same_day</code></td><td>当日达</td></tr>
+          <tr><td><code>null</code></td><td>空</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>三、系统页面、规则与推送联动</h2>
+      <ul>
+        <li><strong>订单页面展示与筛选</strong>：在「平台配送方式」下方新增<strong>履约时效</strong>字段，并在高级筛选中新增对应筛选条件。</li>
+        <li><strong>订单规则 - 物流规则</strong>：新增条件 <code>平台物流履约时效</code>，可选枚举值为上述两个平台的时效类型。</li>
+        <li><strong>TikTok 即时/当日/次日达预报（100 / 200 / 300 / 400）</strong>：物流预报时先调用 <a class="link" href="https://partner.tiktokshop.com/docv2/page/get-package-handover-time-slots-202309" target="_blank" rel="noopener">get-package-handover-time-slots-202309</a> 获取可预约时段，再调用 <a class="link" href="https://partner.tiktokshop.com/docv2/page/ship-package-202309" target="_blank" rel="noopener">ship-package-202309</a> 获取跟踪号并安排取件时间（常规订单保持现有规则）。</li>
+        <li><strong>喜运达推送接口调整</strong>：参考接口文档 <a class="link" href="https://s.apifox.cn/26aa3cc7-5a6c-4a26-bfe5-0fa658bcbb39/api-19182573" target="_blank" rel="noopener">Apifox 接口说明</a>，新增字段 <code>fulfillmentLevel</code>，按上述两平台取值对应传参。</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>四、Shopee 泰国指定物流渠道重新安排预报（DEMO-4385 + 补救逻辑）</h2>
+      <p><strong>业务背景：</strong>泰国本土 Shopee 特殊渠道具备时效要求，原有预约时间不满足揽收窗口导致订单无法被揽收进而被取消（日均约 50 单）。</p>
+      <h3>命中前置条件</h3>
+      <ul>
+        <li>站点：Shopee 泰国站点（TH）；</li>
+        <li>平台订单状态：<code>RETRY_SHIP</code>；</li>
+        <li>平台配送方式：<code>[Express Delivery (SHP Food)]</code>；</li>
+        <li>云易盒订单状态：<code>已发货</code>；发货仓库：<code>泰国2仓</code>；</li>
+        <li>查询范围：最近 1 个月内已发货订单。</li>
+      </ul>
+      <h3>执行与补救逻辑</h3>
+      <ol>
+        <li><strong>Shopee <code>instant</code> 即时单</strong>：当天订单预约时间调整为下午 16 点，16 点后订单预约次日 16 点，在物流预报取件时间生效。</li>
+        <li><strong>泰国特殊渠道重预报</strong>：订单预报默认选择取件时间 <strong>16:00–19:00</strong>；若当天无该时段，则次日调用 <a class="link" href="https://open.shopee.com/documents/v2/v2.logistics.get_shipping_parameter?module=95&type=1" target="_blank" rel="noopener">v2.logistics.get_shipping_parameter</a> 查询可用取件时间，再调用 <a class="link" href="https://open.shopee.com/documents/v2/v2.logistics.update_shipping_order?module=95&type=1" target="_blank" rel="noopener">v2.logistics.update_shipping_order</a> 重新预约次日 16:00–19:00，并触发机器人通知。</li>
+      </ol>
+    </section>
+  </main>
+</body>
+</html>

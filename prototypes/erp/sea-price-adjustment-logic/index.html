@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>东南亚价格调整公共逻辑说明 - PRD</title>
+  <style>
+    :root{--blue:#1677ff;--blue-soft:#e6f4ff;--green:#52c41a;--orange:#fa8c16;--red:#ff4d4f;--ink:#1f2937;--muted:#667085;--line:#e5e7eb;--bg:#f5f7fa;--card:#fff}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+    .topbar{background:#102a52;padding:10px 24px;font-size:13px}
+    .topbar-inner{max-width:1180px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .topbar a{color:#cfe3ff;text-decoration:none}
+    .topbar a:hover{color:#fff;text-decoration:underline}
+    .hero{background:linear-gradient(135deg,#173968,#1677ff);color:#fff;padding:38px 32px}
+    .hero-inner,.page{max-width:1180px;margin:auto}
+    .hero h1{margin:0 0 10px;font-size:28px}
+    .hero p{margin:4px 0;opacity:.9}
+    .meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:13px}
+    .page{padding:24px 24px 60px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 8px rgba(16,24,40,.04);padding:24px;margin:18px 0}
+    h2{font-size:20px;margin:0 0 14px;border-left:4px solid var(--blue);padding-left:10px}
+    h3{font-size:16px;margin:18px 0 8px}
+    p{margin:8px 0}
+    .note{border-radius:8px;padding:12px 14px;background:var(--blue-soft);border-left:4px solid var(--blue);margin:12px 0}
+    .warn{background:#fff7e6;border-left-color:var(--orange)}
+    table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+    th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+    th{background:#f8fafc;font-weight:600}
+    code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#f2f4f7;padding:1px 5px;border-radius:4px;color:#344054}
+    ul,ol{padding-left:20px}
+    li{margin:6px 0}
+  </style>
+</head>
+<body>
+  <div class="topbar"><div class="topbar-inner">
+    <a href="../../../">← 返回需求与原型总览目录</a>
+    <a href="https://devops.aliyun.com/projex/project/d402a07c884ffd0add8d306f84/req/9683d15f605c6dfed3f35047a0" target="_blank" rel="noopener">查看云效原单（DEMO-5037）↗</a>
+  </div></div>
+  <header class="hero"><div class="hero-inner">
+    <h1>东南亚价格调整公共逻辑说明</h1>
+    <p>统一规范 Shopee、Lazada、TikTok 东南亚站点自动控价的执行前置限制、活动自动创建/复用、已有折扣改价及反推原价兜底逻辑。</p>
+    <div class="meta">
+      <span>云效编号：DEMO-5037</span>
+      <span>模块：基础配置模块</span>
+      <span>状态：已评审</span>
+      <span>优先级：中</span>
+      <span>创建日期：2026-10-26</span>
+    </div>
+  </div></header>
+
+  <main class="page">
+    <section class="card">
+      <h2>一、控价执行前的限制</h2>
+      <p>店铺存在以下任一情况时，均<strong>不执行控价</strong>并记录跳过原因：</p>
+      <ul>
+        <li>店铺开启假期模式；</li>
+        <li>店铺授权过期；</li>
+        <li>店铺被禁用。</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>二、任务执行规则</h2>
+      <ol>
+        <li>按<strong>店铺维度多线程</strong>执行，不按 SKU 维度独立并发，减少同店铺重复创建折扣活动。</li>
+        <li>同一店铺、同一 Listing 下需要改价的多个规格，<strong>一起批量提交</strong>给平台，避免分次修改造成规格价格差异过大而失败。</li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>三、没有折扣价时的处理规则</h2>
+      <p>检测到 SKU 未设置折扣价时，按以下顺序执行：</p>
+      <ol>
+        <li>查询该店铺是否存在可用的 <code>控价折扣价-系统自动创建</code> 活动。</li>
+        <li>存在多个可用自动活动时，优先使用<strong>创建时间最新</strong>的一个。</li>
+        <li>将 SKU 加入该活动，折扣价设置为控价金额。</li>
+        <li>没有可用活动，或所选活动容量已满时，自动创建新活动（命名格式：<code>控价折扣价-系统自动创建+当前日期</code>），再加入 SKU。仅复用控价自动创建的活动，不得将其他人工活动直接当作自动活动使用。</li>
+      </ol>
+
+      <h3>自动创建活动规则</h3>
+      <table>
+        <thead><tr><th>项目</th><th>规则说明</th></tr></thead>
+        <tbody>
+          <tr><td>活动名称</td><td><code>控价折扣价-系统自动创建＋创建日期</code></td></tr>
+          <tr><td>历史活动识别</td><td>兼容原来不带日期的自动活动名称</td></tr>
+          <tr><td>Shopee 开始时间</td><td>创建时刻 1 小时后，可提前加入 SKU 并配置价格</td></tr>
+          <tr><td>其他平台开始时间</td><td>按当前时间创建，实际提交须满足平台限制</td></tr>
+          <tr><td>活动周期</td><td>从活动开始时间起算，目标为 180 天</td></tr>
+          <tr><td>折扣价</td><td>SKU 的控价金额</td></tr>
+          <tr><td>限购数量</td><td>不限制</td></tr>
+          <tr><td>满容量处理</td><td>自动创建新的控价活动</td></tr>
+        </tbody>
+      </table>
+      <p class="note warn"><strong>Shopee 特殊限制：</strong>平台接口要求活动时长严格<strong>小于 180 天</strong>，因此不能直接提交恰好 180 天的时长，需按接口允许的边界值处理。</p>
+    </section>
+
+    <section class="card">
+      <h2>四、已有折扣价时的改价规则</h2>
+      <p>适用于 <strong>Shopee、Lazada、TikTok</strong>：</p>
+      <ul>
+        <li>直接将折扣价修改为控价金额。</li>
+        <li>若因 SKU 原价与折扣价差异过大导致平台拒绝改价：
+          <ol>
+            <li>记录控价失败及平台返回原因；</li>
+            <li>按控价金额反推 50% 修改原价，修改原价后再修改折扣价（计算公式：<code>原价 = 控价金额 ÷ 50% = 控价金额 × 2</code>，例如控价金额 100，则原价改为 200）；</li>
+            <li><strong>不执行</strong>移出并重新加入活动的修复流程，保留当前活动直接尝试修改原价；</li>
+            <li>若原价修改成功但折扣价修改失败，需记录已修改的原价及折扣价失败原因，整条控价记录仍标记为失败。</li>
+          </ol>
+        </li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>五、执行结果要求</h2>
+      <ul>
+        <li><strong>店铺不符合执行条件</strong>：记录跳过原因。</li>
+        <li><strong>平台活动锁价</strong>：跳过并提示人工处理。</li>
+        <li><strong>改价或加入活动失败</strong>：记录失败步骤及平台返回原因。</li>
+        <li><strong>活动创建成功但 SKU 加入失败</strong>：不能算控价成功，需标记失败。</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

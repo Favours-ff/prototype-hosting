@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SKU 库存分部门规则配置（一期） - PRD</title>
+  <style>
+    :root{--blue:#1677ff;--blue-soft:#e6f4ff;--green:#52c41a;--orange:#fa8c16;--red:#ff4d4f;--ink:#1f2937;--muted:#667085;--line:#e5e7eb;--bg:#f5f7fa;--card:#fff}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+    .topbar{background:#102a52;padding:10px 24px;font-size:13px}
+    .topbar-inner{max-width:1180px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .topbar a{color:#cfe3ff;text-decoration:none}
+    .topbar a:hover{color:#fff;text-decoration:underline}
+    .hero{background:linear-gradient(135deg,#173968,#1677ff);color:#fff;padding:38px 32px}
+    .hero-inner,.page{max-width:1180px;margin:auto}
+    .hero h1{margin:0 0 10px;font-size:28px}
+    .hero p{margin:4px 0;opacity:.9}
+    .meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:13px}
+    .page{padding:24px 24px 60px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 8px rgba(16,24,40,.04);padding:24px;margin:18px 0}
+    h2{font-size:20px;margin:0 0 14px;border-left:4px solid var(--blue);padding-left:10px}
+    h3{font-size:16px;margin:18px 0 8px}
+    p{margin:8px 0}
+    .note{border-radius:8px;padding:12px 14px;background:var(--blue-soft);border-left:4px solid var(--blue);margin:12px 0}
+    .warn{background:#fff7e6;border-left-color:var(--orange)}
+    table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+    th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+    th{background:#f8fafc;font-weight:600}
+    code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#f2f4f7;padding:1px 5px;border-radius:4px;color:#344054}
+    ul,ol{padding-left:20px}
+    li{margin:6px 0}
+  </style>
+</head>
+<body>
+  <div class="topbar"><div class="topbar-inner">
+    <a href="../../../">← 返回需求与原型总览目录</a>
+    <a href="https://devops.aliyun.com/projex/project/d402a07c884ffd0add8d306f84/req/4edb210e7f7f61ada9b110cdd8" target="_blank" rel="noopener">查看云效原单（DEMO-5206）↗</a>
+  </div></div>
+  <header class="hero"><div class="hero-inner">
+    <h1>SKU 库存分部门规则配置（一期）</h1>
+    <p>面向国内事业部店铺在东莞 1 仓发货场景，补齐采购/计划系统日均销量口径并在订单系统分仓与人工改仓环节执行可用库存安全线拦截。</p>
+    <div class="meta">
+      <span>云效编号：DEMO-5206</span>
+      <span>模块：订单系统</span>
+      <span>状态：待开发</span>
+      <span>优先级：中</span>
+      <span>创建日期：2026-11-17</span>
+      <span>更新日期：2026-11-23</span>
+    </div>
+  </div></header>
+
+  <main class="page">
+    <section class="card">
+      <h2>一、采购与计划系统数据调整</h2>
+      <ol>
+        <li><strong>采购系统（<code>purchase_sku_sales</code>）</strong>：新增平台区分字段，用于识别 SKU 销量所属的电商平台。</li>
+        <li><strong>计划系统（<code>reserve_stock_info</code>）</strong>：统计 SKU 日均销量时，新增字段 <code>加权日均销量（不含国内事业部）</code>，统计口径需剔除以下国内平台销量：
+          <strong>淘宝天猫、拼多多（PDD）、京东、1688、抖音</strong>。
+        </li>
+      </ol>
+      <div class="note">
+        <strong>核心判断基准：</strong>
+        <ul>
+          <li>在公共限制配置（仓库 + SKU 维度）中的 SKU：<strong>直接禁止</strong>使用东莞 1 仓发货；</li>
+          <li>不在配置中的 SKU：当订单/包裹待发货数量 <code>≤ 东莞 1 仓可用库存 - 加权日均销量（不含国内事业部） × 7</code> 时允许用东莞 1 仓发货，超出则拦截。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>二、订单系统校验与拦截逻辑</h2>
+      <p><strong>适用范围：</strong>国内事业部所属店铺。</p>
+      <p><strong>触发时机：</strong></p>
+      <ol>
+        <li>订单执行系统配置的自动分仓规则，将发货仓库匹配为东莞 1 仓时；</li>
+        <li>用户手动操作「修改订单仓库」或「指定分仓」，将发货仓库设置为东莞 1 仓时。</li>
+      </ol>
+
+      <h3>执行步骤</h3>
+      <table>
+        <thead><tr><th>步骤</th><th>规则内容</th></tr></thead>
+        <tbody>
+          <tr><td>1. 汇总待发数量</td><td>以本次操作的订单或包裹为范围，将同一 SKU 的待发货数量合计后参与校验。</td></tr>
+          <tr><td>2. 匹配限制配置</td><td>按 <code>事业部 ＋ 店铺 ＋ SKU ＋ 仓库（东莞 1 仓）</code> 匹配「SKU 转仓限制配置」。命中配置的 SKU 直接禁止使用东莞 1 仓发货。</td></tr>
+          <tr><td>3. 校验未命中 SKU</td><td>计算可发数量上限：<code>可发数量上限 = 东莞 1 仓该 SKU 可用库存 - 该 SKU 加权日销 × 7</code>。<br>• 待发货数量 <code>≤</code> 可发数量上限 → 允许使用东莞 1 仓；<br>• 待发货数量 <code>＞</code> 可发数量上限 → 不允许使用东莞 1 仓。<br><span style="color:#667085">注：可用库存取扣除占用库存后的数量，避免重复扣减。</span></td></tr>
+          <tr><td>4. 拦截与提示</td><td>订单或包裹中任一 SKU 校验不通过，即拦截本次仓库修改或分仓。</td></tr>
+        </tbody>
+      </table>
+
+      <h3>拦截提示文案</h3>
+      <table>
+        <thead><tr><th>触发场景</th><th>系统提示 / 日志文案</th></tr></thead>
+        <tbody>
+          <tr><td>手动修改仓库命中限制配置</td><td>弹窗提示：<code>订单中的SKU属于SKU转仓限制配置中，不允许用东莞1仓发货。</code></td></tr>
+          <tr><td>自动分仓规则命中限制配置</td><td>提示分仓失败，并在订单日志记录：<code>订单中的SKU属于SKU转仓限制配置中，不允许用东莞1仓发货</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
