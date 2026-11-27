@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>旧 OMS 东南亚广告数据取值逻辑</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #fff;
+      --page: #f1f4f8;
+      --text: #1d2b40;
+      --muted: #53637a;
+      --line: #dce4ef;
+      --blue: #1957aa;
+      --blue-soft: #eef5ff;
+      font: 15px/1.7 "Microsoft YaHei UI", "PingFang SC", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page); color: var(--text); }
+    a { color: var(--blue); text-underline-offset: 3px; }
+    a:hover { color: #0b3e86; }
+    :focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
+    .header { background: #182d49; color: white; border-bottom: 4px solid #4691e7; }
+    .header-inner { max-width: 1220px; margin: auto; padding: 28px 24px 26px; }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: clamp(25px, 3.6vw, 37px); line-height: 1.25; letter-spacing: -.025em; }
+    .header p { margin-top: 8px; color: #d8e4f5; }
+    .layout { max-width: 1220px; margin: 24px auto 48px; padding-inline: 24px; display: grid; grid-template-columns: 153px minmax(0, 1fr); gap: 24px; }
+    nav { position: sticky; top: 18px; align-self: start; display: grid; gap: 3px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
+    nav a { display: block; padding: 6px 8px; border-radius: 5px; color: var(--text); text-decoration: none; font-size: 13px; }
+    nav a:hover { color: var(--blue); background: var(--blue-soft); }
+    section { margin-bottom: 15px; padding: 22px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; scroll-margin-top: 12px; }
+    section:last-child { margin-bottom: 0; }
+    h2 { font-size: 21px; line-height: 1.35; margin-bottom: 9px; }
+    h3 { font-size: 16px; margin: 17px 0 7px; }
+    .description, .source { color: var(--muted); }
+    .source { margin-top: 10px; font-size: 13px; }
+    .source > * + * { margin-left: 9px; }
+    .table-wrap { max-width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: 7px; margin-top: 11px; }
+    table { width: 100%; border-spacing: 0; min-width: 590px; }
+    th, td { text-align: left; vertical-align: top; padding: 8px 11px; font-size: 14px; }
+    thead th { background: #eaf1fb; color: #1c395e; font-weight: 680; }
+    tbody th { width: 23%; font-weight: 630; }
+    tbody tr + tr > * { border-top: 1px solid #e8edf4; }
+    tbody tr:nth-child(even) { background: #f8fafc; }
+    .field-map tbody td:nth-child(2) { width: 32%; }
+    code { border-radius: 4px; padding: .1em .28em; background: #eff3f8; color: #1b436c; font: .88em/1.5 ui-monospace, Consolas, monospace; overflow-wrap: anywhere; }
+    strong { font-weight: 690; }
+    .note { margin-top: 11px; padding: 9px 12px; border-left: 3px solid #c58b24; background: #fff7e8; color: #5a421e; font-size: 13px; }
+    @media (max-width: 760px) {
+      .header-inner { padding: 21px 15px; }
+      .layout { display: block; margin: 13px auto 28px; padding-inline: 10px; }
+      nav { position: static; display: flex; flex-wrap: wrap; margin-bottom: 11px; }
+      section { padding: 15px; }
+    }
+    @media print {
+      :root { font-size: 11pt; }
+      body, .header { background: white; color: black; }
+      .header, section { border: 0; }
+      .header-inner, .layout, section { padding: 0; }
+      .header p { color: black; }
+      .layout { display: block; margin: 12px 0; }
+      nav { display: none; }
+      h2, h3 { break-after: avoid; }
+      .table-wrap { overflow: visible; }
+      table { min-width: 0; }
+      thead { display: table-header-group; }
+      tr { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <h1>旧 OMS 东南亚广告数据取值逻辑</h1>
+      <p>订单系统 → 订单报表 → 东南亚广告数据</p>
+    </div>
+  </header>
+  <div class="layout">
+    <nav aria-label="文档目录">
+      <a href="#scope">报表范围</a>
+      <a href="#shopee">Shopee 字段</a>
+      <a href="#tiktok">TikTok 字段</a>
+      <a href="#lazada">Lazada 取数</a>
+      <a href="#formulas">指标公式</a>
+      <a href="#alerts">异常预警</a>
+    </nav>
+    <main>
+      <section id="scope">
+        <h2>报表范围</h2>
+        <p>报表按店铺、日期展示广告投放表现。#410 首先接入 Shopee 和 Lazada，#978 增加 TikTok。追加后，平台筛选项为 Shopee、Lazada、TikTok。</p>
+        <p class="source"><span>禅道 #410</span><span>禅道 #978</span></p>
+      </section>
+
+      <section id="shopee">
+        <h2>Shopee 字段映射</h2>
+        <p class="description">限组织架构「东南亚本土运营」部门的店铺，站点为泰国、菲律宾、印度尼西亚。旧需求按站点固定原币，分别为 THB、PHP、IDR。</p>
+        <p class="note"><strong>直接转化订单字段有出入。</strong> #410 原型截图这一列写的是 <code>direct_conversions</code>。按 Shopee 官方接口定义，订单数取 <code>direct_order</code>，<code>direct_conversions</code> 是转化率。旧 OMS 实际实现用的是哪个字段，尚未核对源码。</p>
+        <h3>余额与投放数据</h3>
+        <p>余额走 <code>v2.ads.get_total_balance</code>。投放明细走 <code>v2.ads.get_all_cpc_ads_daily_performance</code>，每个 <code>response[]</code> 元素对应店铺的一个统计日。下表按官方接口字段对照旧报表列。</p>
+        <div class="table-wrap">
+          <table class="field-map">
+            <thead><tr><th scope="col">旧报表字段</th><th scope="col">数据源／返回字段</th><th scope="col">取值逻辑</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">平台、站点、店铺别名、运营人员</th><td>OMS 店铺档案及运营归属</td><td>按本次取数店铺关联平台、站点、店铺别名和对应运营人员。</td></tr>
+              <tr><th scope="row">日期</th><td><code>response[].date</code></td><td>取投放数据对应的统计日。</td></tr>
+              <tr><th scope="row">店铺广告余额</th><td><code>response.total_balance</code></td><td>按店铺取余额，按站点识别币种，原型要求保留两位小数。<code>response.data_timestamp</code> 是余额快照时间。</td></tr>
+              <tr><th scope="row">店铺广告余额-RMB</th><td>原币余额及云易盒中转汇率</td><td>原币余额 × 对应日期汇率。</td></tr>
+              <tr><th scope="row">预计可消耗天数</th><td>店铺余额、当日花费</td><td>同币种的广告余额 ÷ 当日花费。</td></tr>
+              <tr><th scope="row">曝光量</th><td><code>response[].impression</code></td><td>取当天曝光量。</td></tr>
+              <tr><th scope="row">点击数</th><td><code>response[].clicks</code></td><td>取当天点击数。</td></tr>
+              <tr><th scope="row">直接转化订单</th><td><code>response[].direct_order</code></td><td>取直接归因的转化订单数。</td></tr>
+              <tr><th scope="row">转化订单数</th><td><code>response[].broad_order</code></td><td>取整体转化订单数。</td></tr>
+              <tr><th scope="row">直接售出数量／售出数量</th><td><code>response[].direct_item_sold</code><br><code>response[].broad_item_sold</code></td><td>分别取直接归因、整体归因的成交件数。</td></tr>
+              <tr><th scope="row">花费金额-RMB</th><td><code>response[].expense</code></td><td>取当日广告花费，按报表口径折算为人民币。</td></tr>
+              <tr><th scope="row">直接售出金额-RMB／售出金额-RMB</th><td><code>response[].direct_gmv</code><br><code>response[].broad_gmv</code></td><td>分别取直接归因、整体归因的销售额，按报表口径折算为人民币。</td></tr>
+              <tr><th scope="row">点击率</th><td><code>response[].ctr</code></td><td>也可用点击数 ÷ 曝光量复算。</td></tr>
+              <tr><th scope="row">直接转化率／转化率</th><td><code>response[].direct_conversions</code><br><code>response[].broad_conversions</code></td><td>分别用直接转化订单数、整体转化订单数除以点击数复算。</td></tr>
+              <tr><th scope="row">ROAS</th><td><code>response[].broad_roas</code></td><td>旧列对应整体售出金额 ÷ 花费金额。接口另有 <code>direct_roas</code> 对应直接归因口径。</td></tr>
+              <tr><th scope="row">单次转化成本-RMB</th><td>接口有 <code>response[].cost_per_conversion</code></td><td>旧报表可按人民币花费 ÷ 转化订单数复算。</td></tr>
+              <tr><th scope="row">ACOS、广告客单价-RMB、单次点击成本-RMB</th><td>日表现的花费、售出金额、订单数和点击数</td><td>按<a href="#formulas">指标公式</a>计算。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="source"><span>禅道 #410</span><span>旧报表字段截图</span><a href="https://open.shopee.com/documents/v2/v2.ads.get_total_balance?module=117&amp;type=1">Shopee 余额接口</a><a href="https://open.shopee.com/documents/v2/v2.ads.get_all_cpc_ads_daily_performance?module=117&amp;type=1">Shopee 日表现接口</a></p>
+      </section>
+
+      <section id="tiktok">
+        <h2>TikTok 字段映射</h2>
+        <p class="description">每日拉取前一天的广告数据，存入数据中心 <code>tiktok_gmv_max_list</code>。按 <code>shop_id</code>＋<code>period</code> 汇总成每店每天一行。旧需求注明接口金额为 USD，报表提供原币与人民币金额。</p>
+        <div class="table-wrap">
+          <table class="field-map">
+            <thead><tr><th scope="col">旧报表字段</th><th scope="col">Excel 映射的数据源</th><th scope="col">取值逻辑</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">平台</th><td>固定值 <code>tk</code></td><td>展示 TikTok。</td></tr>
+              <tr><th scope="row">店铺别名、站点、运营人员</th><td><code>shop_id</code> 关联 OMS 店铺</td><td>取店铺别名、对应站点和运营人员。有多个运营人员时全部展示。</td></tr>
+              <tr><th scope="row">日期</th><td><code>period</code></td><td>取投放统计日。</td></tr>
+              <tr><th scope="row">花费金额-RMB</th><td><code>cost</code></td><td>汇总同店同日花费，由 USD 折算为 RMB。</td></tr>
+              <tr><th scope="row">直接售出金额-RMB、售出金额-RMB</th><td><code>gross_revenue</code></td><td>旧表两列都使用同一份店铺日销售额，由 USD 折算为 RMB。</td></tr>
+              <tr><th scope="row">直接转化订单、转化订单数</th><td><code>orders</code></td><td>旧表两列都使用同一份店铺日订单合计。</td></tr>
+              <tr><th scope="row">ROAS</th><td><code>gross_revenue</code>、<code>cost</code></td><td>同币种的售出金额 ÷ 花费金额。</td></tr>
+              <tr><th scope="row">ACOS</th><td><code>cost</code>、<code>gross_revenue</code></td><td>同币种的花费金额 ÷ 售出金额。</td></tr>
+              <tr><th scope="row">广告客单价-RMB</th><td><code>gross_revenue</code>、<code>orders</code></td><td>人民币售出金额 ÷ 订单数。</td></tr>
+              <tr><th scope="row">单次转化成本-RMB</th><td><code>cost_per_order</code></td><td>这是附件列出的来源字段。附件同时注明公式为人民币花费金额 ÷ 转化订单数。店铺日口径按汇总后的分子和分母计算。</td></tr>
+              <tr><th scope="row">店铺广告余额-RMB、预计可消耗天数</th><td>余额当时提工单咨询，尚无取值来源</td><td>附件中天数公式为「店铺广告余额 ÷ 花费金额」。当时余额为空，页面按空字段展示 <code>-</code>。</td></tr>
+              <tr><th scope="row">曝光量、点击数、直接售出数量、售出数量</th><td>附件标为 <code>-</code></td><td>显示 <code>-</code>。</td></tr>
+              <tr><th scope="row">点击率、直接转化率、转化率、单次点击成本-RMB</th><td>附件标为 <code>-</code></td><td>显示 <code>-</code>。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">人民币换算的汇率表及取汇率日期，#978 和附件均未写明。TikTok 暂无异常推送，保留旧报表的字段合并与导出。</p>
+        <p class="source"><span>禅道 #978</span> · 附件《tk广告 (1).xlsx》Sheet1 A1:X4</p>
+      </section>
+
+      <section id="lazada">
+        <h2>Lazada 取数</h2>
+        <p class="description">限「东南亚本土运营」部门的店铺。Python 每天从店铺后台导出前一天的推广数据并写入数据库。</p>
+        <div class="table-wrap">
+          <table class="field-map">
+            <thead><tr><th scope="col">项目</th><th scope="col">后台来源</th><th scope="col">取值逻辑</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">店铺广告余额</th><td>营销中心 → 超级推广 → 总览 → 账户余额</td><td>按站点取原币，一店只取一次。人民币余额按对应日期的云易盒中转汇率换算。</td></tr>
+              <tr><th scope="row">全效宝</th><td>营销中心 → 超级推广 → 数据洞察 → 全效宝 → 推广计划 → 导出</td><td>旧截图确认曝光量、点击数、直接转化订单对应 <code>Impression</code>、<code>Clicks</code>、<code>Direct Orders</code>。</td></tr>
+              <tr><th scope="row">超级新星</th><td>营销中心 → 超级推广 → 数据洞察 → 超级新星（旧版本）→ 推广计划 → 导出</td><td>同店同日有两类计划时，合计各计划的投放数据。余额为同一账户余额，取一次。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="source"><span>禅道 #410</span><span>旧报表字段截图</span></p>
+      </section>
+
+      <section id="formulas">
+        <h2>旧报表指标公式</h2>
+        <p class="description">下表按旧报表留存导出的可复算记录整理。TikTok 的适用字段以其附件映射为准。</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">指标</th><th scope="col">计算方式</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">ROAS</th><td>售出金额 ÷ 花费金额</td></tr>
+              <tr><th scope="row">ACOS</th><td>花费金额 ÷ 售出金额，按百分比展示</td></tr>
+              <tr><th scope="row">点击率</th><td>点击数 ÷ 曝光量，按百分比展示</td></tr>
+              <tr><th scope="row">直接转化率／转化率</th><td>直接转化订单数／转化订单数各自除以点击数，按百分比展示</td></tr>
+              <tr><th scope="row">广告客单价-RMB</th><td>售出金额-RMB ÷ 转化订单数</td></tr>
+              <tr><th scope="row">单次点击成本-RMB</th><td>花费金额-RMB ÷ 点击数</td></tr>
+              <tr><th scope="row">单次转化成本-RMB</th><td>花费金额-RMB ÷ 转化订单数</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">#410 的共享盘原型文件未打开。官方字段可以对照，截图之外的旧 OMS 实际取数实现、Lazada 其他导出列名以及除数为 0 的旧处理方式尚未核实。</p>
+      </section>
+
+      <section id="alerts">
+        <h2>异常预警</h2>
+        <p class="description">#410 的 Shopee、Lazada 店铺适用。命中多项就提示全部原因。钉钉消息带店铺别名、日期、异常原因，并 @ 对应运营人员。</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">异常</th><th scope="col">触发条件</th><th scope="col">提示内容</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">预算不足</th><td>预计可消耗天数 ≤ 3 天</td><td>预算不足，需要充值。</td></tr>
+              <tr><th scope="row">预算偏低</th><td>广告余额-RMB ≤ 10</td><td>预算偏低。</td></tr>
+              <tr><th scope="row">ACOS 偏高</th><td>ACOS ≥ 12.5%</td><td>检查关键词精度及出价。</td></tr>
+              <tr><th scope="row">亏损推广</th><td>单次转化成本-RMB ≥ 广告客单价-RMB × 20%</td><td>检查链接是否适合投放广告。</td></tr>
+              <tr><th scope="row">点击率异常</th><td>点击率 ≤ 3%</td><td>检查关键词精度及主图吸引力。</td></tr>
+              <tr><th scope="row">转化率异常</th><td>转化率 ≤ 2.5%</td><td>检查关键词精度及链接竞争力。</td></tr>
+              <tr><th scope="row">曝光量下降</th><td>当日曝光量 ÷「过去 7 天曝光量」− 1 ≤ −15%</td><td>检查广告状态、关键词排名、链接是否异常。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">旧截图未说明「过去 7 天曝光量」取日均还是合计。</p>
+        <p class="source"><span>禅道 #410 预警规则截图</span></p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
