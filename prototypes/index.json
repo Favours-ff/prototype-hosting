@@ -1,7 +1,37 @@
 {
-  "generatedAt": "2026-11-24",
-  "count": 26,
+  "generatedAt": "2026-11-27",
+  "count": 29,
   "prototypes": [
+    {
+      "prototypeId": "sea-shop-performance-api-matrix",
+      "title": "三平台店铺表现接口矩阵（Shopee / TikTok Shop / Lazada）",
+      "businessSystem": "ERP",
+      "owner": "Favours-ff",
+      "createdAt": "2026-11-27",
+      "updatedAt": "2026-11-27",
+      "path": "prototypes/erp/sea-shop-performance-api-matrix",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/sea-shop-performance-api-matrix/"
+    },
+    {
+      "prototypeId": "sea-promotion-api-matrix",
+      "title": "三平台优惠数据拉取矩阵（Shopee / TikTok Shop / Lazada）",
+      "businessSystem": "ERP",
+      "owner": "Favours-ff",
+      "createdAt": "2026-11-26",
+      "updatedAt": "2026-11-26",
+      "path": "prototypes/erp/sea-promotion-api-matrix",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/erp/sea-promotion-api-matrix/"
+    },
+    {
+      "prototypeId": "domestic-refund-orders-20261125",
+      "title": "国内退款订单接入需求（V1.4）",
+      "businessSystem": "after-sales",
+      "owner": "Favours-ff",
+      "createdAt": "2026-11-25",
+      "updatedAt": "2026-11-25",
+      "path": "prototypes/after-sales/domestic-refund-orders-20261125",
+      "url": "https://favours-ff.github.io/prototype-hosting/prototypes/after-sales/domestic-refund-orders-20261125/"
+    },
     {
       "prototypeId": "shopee-tiktok-th-refundless-prd",
       "title": "Shopee、TikTok 泰国站指定系统 SKU 无退货退款自动处理 PRD（V1.2）",

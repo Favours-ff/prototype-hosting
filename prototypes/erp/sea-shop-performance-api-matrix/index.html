@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>三平台店铺表现接口矩阵</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --page: #f4f6f9;
+      --line: #dce4ef;
+      --ink: #17233a;
+      --muted: #50617a;
+      --blue: #2457d6;
+      --navy: #17366d;
+      --soft: #edf2f8;
+      --green: #086846;
+      --green-bg: #eaf8f1;
+      --amber: #7f4b00;
+      --amber-bg: #fff3d9;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--page);
+      color: var(--ink);
+      font: 14px/1.68 "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+    }
+    main { width: min(1450px, calc(100% - 40px)); margin: 25px auto 44px; }
+    header {
+      padding: 24px 27px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--navy), var(--blue) 88%);
+      color: #fff;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: clamp(24px, 4vw, 34px); line-height: 1.25; }
+    h2 { font-size: 20px; line-height: 1.4; }
+    h3 { font-size: 16px; }
+    header p { margin-top: 7px; color: #eef3ff; }
+    nav { display: flex; flex-wrap: wrap; gap: 6px 19px; margin-top: 13px; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    nav a { color: #fff; }
+    a:focus-visible, .scroll:focus-visible { outline: 3px solid #6382e9; outline-offset: 3px; }
+    section {
+      margin-top: 17px;
+      padding: 17px 21px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      scroll-margin-top: 16px;
+    }
+    .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 3px 15px; flex-wrap: wrap; margin-bottom: 10px; }
+    .section-head p, .small { color: var(--muted); font-size: 13px; }
+    .scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 810px; }
+    th, td { padding: 11px 12px; vertical-align: top; text-align: left; }
+    thead th { background: var(--soft); white-space: nowrap; }
+    tbody th, tbody td { border-top: 1px solid var(--line); }
+    tbody tr:nth-child(even) { background: #f8fafc; }
+    tbody th { color: var(--navy); white-space: nowrap; }
+    tbody th small { display: block; margin-top: 3px; color: var(--muted); font-weight: 400; }
+    td p + p { margin-top: 5px; }
+    code {
+      background: var(--soft);
+      color: var(--navy);
+      padding: 1px 4px;
+      border-radius: 4px;
+      font: 12.5px/1.5 Consolas, monospace;
+      overflow-wrap: anywhere;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+    .route { display: block; width: fit-content; max-width: 100%; margin-bottom: 4px; line-height: 1.55; }
+    .tag { display: inline-block; padding: 1px 7px; border-radius: 5px; font-size: 12px; font-weight: 650; }
+    .ok { color: var(--green); background: var(--green-bg); }
+    .blocked { color: var(--amber); background: var(--amber-bg); }
+    .example-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .example { min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 8px; scroll-margin-top: 16px; }
+    .example p { margin-top: 6px; }
+    pre {
+      margin: 9px 0 0;
+      padding: 9px 10px;
+      border-radius: 6px;
+      background: #f1f5fb;
+      color: var(--navy);
+      font: 12.5px/1.55 Consolas, monospace;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    ul { margin: 0; padding-left: 20px; }
+    li + li { margin-top: 5px; }
+    #business-advisor ul, #business-advisor ul + p { margin-top: 10px; }
+    @media (max-width: 1000px) {
+      .example-grid { grid-template-columns: 1fr; }
+      th, td { padding: 9px; }
+      table { font-size: 13px; }
+      .route { font-size: 12px; }
+    }
+    @media (max-width: 650px) {
+      main { width: calc(100% - 20px); margin-top: 10px; }
+      header, section { padding: 14px; }
+    }
+    @media print {
+      main { width: 100%; margin: 0; }
+      header { background: white; color: var(--ink); }
+      header p { color: var(--ink); }
+      nav { display: none; }
+      section { padding: 8px 0; border: 0; }
+      .scroll { overflow: visible; }
+      table { min-width: 0; }
+      th, td { padding: 6px; }
+      tr, .example { break-inside: avoid; }
+      .example-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>三平台店铺表现接口矩阵</h1>
+    <p>店铺健康、经营指标和取数来源。实测记录截至 2026-11-27。</p>
+    <nav aria-label="章节导航"><a href="#matrix">接口矩阵</a><a href="#requests">请求与回包示例</a><a href="#business-advisor">Lazada 生意参谋</a><a href="#storage">入库规则</a></nav>
+  </header>
+
+  <section id="matrix" aria-labelledby="matrix-title">
+    <div class="section-head"><h2 id="matrix-title">接口矩阵</h2></div>
+    <div class="scroll" tabindex="0" role="region" aria-label="三个平台的接口和取数入口">
+      <table>
+        <colgroup><col style="width:12%"><col style="width:23%"><col style="width:23%"><col style="width:25%"><col style="width:17%"></colgroup>
+        <thead><tr><th scope="col">平台／用途</th><th scope="col">取数入口</th><th scope="col">传参／操作</th><th scope="col">可取数据与粒度</th><th scope="col">验证结果</th></tr></thead>
+        <tbody>
+          <tr>
+            <th scope="row">Shopee<small>店铺健康</small></th>
+            <td><code class="route">GET /api/v2/account_health/get_shop_performance</code><a href="https://open.shopee.com/documents/v2/v2.account_health.get_shop_performance?module=103&amp;type=1" target="_blank" rel="noopener">官方文档</a></td>
+            <td><p>Query 传 <code>partner_id</code>、<code>shop_id</code>、<code>access_token</code>、秒级 <code>timestamp</code>、<code>sign</code>。</p><p class="small">无业务参数。<a href="#shopee">查看回包样例</a></p></td>
+            <td><p><code>response.overall_performance</code> 和 <code>response.metric_list[]</code>。</p><p>每店每天一份快照，保留当期、上期及单位、阈值。</p></td>
+            <td><p><span class="tag ok">已实测</span></p><p class="small">11 月 9 日，菲律宾与印尼 3 家店完整回包。</p></td>
+          </tr>
+          <tr>
+            <th scope="row">TikTok Shop<small>全店经营</small></th>
+            <td><code class="route">GET /analytics/202609/shop/performance</code><a href="https://partner.tiktokshop.com/docv2/page/get-shop-performance-202609" target="_blank" rel="noopener">官方文档</a></td>
+            <td><p>Query 传 <code>shop_cipher</code>、<code>app_key</code>、秒级 <code>timestamp</code>、<code>sign</code> 和日期区间。固定 <code>granularity=1D</code>、<code>currency=LOCAL</code>。</p><p>Header 传 <code>x-tts-access-token</code>。<a href="#tiktok">查看单日请求</a></p></td>
+            <td><p><code>data.latest_available_date</code> 和 <code>data.performance.intervals[]</code>。</p><p>按店铺当地日期存经营日数据。区间内取 <code>sales.gmv.amount</code>、<code>sales.gmv.currency</code>。</p></td>
+            <td><p><span class="tag blocked">当前应用权限待补</span></p><p class="small">11 月 9 日成功摘要。11 月 27 日同店返回 <code>105005</code>。</p></td>
+          </tr>
+          <tr>
+            <th scope="row">Lazada<small>店铺服务指标</small></th>
+            <td><code class="route">GET /seller/metrics/get</code><a href="https://open.lazada.com/apps/doc/api?path=%2Fseller%2Fmetrics%2Fget" target="_blank" rel="noopener">官方文档</a></td>
+            <td><p>Query 传 <code>app_key</code>、<code>access_token</code>、毫秒级 <code>timestamp</code>、<code>sign_method=sha256</code>、<code>sign</code>。</p><p class="small">按店铺站点选网关。无业务参数。<a href="#lazada">查看回包样例</a></p></td>
+            <td><p><code>data.ship_on_time</code>、<code>data.positive_seller_rating</code>、<code>data.response_rate</code> 等。</p><p>每店每天一份快照，保留原值及采集时间。</p></td>
+            <td><p><span class="tag ok">已实测</span></p><p class="small">11 月 27 日，菲律宾店 <code>LZD015_PH_BT</code> 成功。</p></td>
+          </tr>
+          <tr>
+            <th scope="row">Lazada<small>生意参谋日数据</small></th>
+            <td><p><strong>卖家后台报表导出</strong></p><p>数据洞察 → 生意参谋 → 关键指标 → 导出</p></td>
+            <td><p>选对应站点和店铺，按日选统计日期，再导出报表。</p><p class="small"><a href="#business-advisor">查看指标口径与对账样例</a></p></td>
+            <td><p>营收、访客数、买家数、订单数、页面浏览量、转化率和客单价。</p><p>按店铺当地统计日入库，导出覆盖的字段以实际报表表头为准。</p></td>
+            <td><p><span class="tag ok">后台有导出</span></p><p class="small">公开目录暂未查到对应的全店经营日数据接口。导出文件尚未核对。</p></td>
+          </tr>
+          <tr>
+            <th scope="row">Lazada<small>实时表现与排名</small></th>
+            <td><p><strong>卖家后台看板</strong></p><p>数据洞察 → 生意参谋 → 实时表现／实时排名</p></td>
+            <td><p>确认店铺和页面更新时间。</p><p class="small"><a href="#advisor-realtime">查看截图指标</a></p></td>
+            <td><p>今日营收、访客数、买家数、页面浏览量、订单数及昨日同期对比。访客榜按商品展示实时访客数。</p></td>
+            <td><p><span class="tag blocked">公开接口待确认</span></p><p class="small">暂未查到实时曲线或访客榜的公开接口。</p></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="requests" aria-labelledby="requests-title">
+    <div class="section-head"><h2 id="requests-title">请求与回包示例</h2><p>请求示例仅列业务参数与网关。公共鉴权参数见上表。</p></div>
+    <div class="example-grid">
+      <article id="shopee" class="example">
+        <h3>Shopee</h3>
+        <p>店铺级签名按 <code>partner_id + path + timestamp + access_token + shop_id</code> 拼接，使用绑定应用密钥做 HMAC-SHA256。</p>
+        <p class="small"><code>SPE020_ID_BT</code> 的指标回包节选</p>
+        <pre aria-label="Shopee 回包节选">{
+  "metric_id": 3,
+  "metric_name": "non_fulfillment_rate",
+  "current_period": 0.46,
+  "last_period": 0.96,
+  "unit": 2,
+  "target": { "value": 10, "comparator": "&lt;" }
+}</pre>
+        <p class="small"><code>unit=2</code> 的这项指标当前为 0.46%，上期为 0.96%。</p>
+      </article>
+      <article id="tiktok" class="example">
+        <h3>TikTok Shop</h3>
+        <p>调用 <code>open-api.tiktokglobalshop.com</code>。用同店同应用的 <code>shop_cipher</code> 和卖家授权。按官网规则签名，避免 Query 与签名参数不一致。</p>
+        <p class="small"><code>TIK001_TH_BT</code> 的历史成功单日参数</p>
+        <pre aria-label="TikTok Shop 单日的业务参数">start_date_ge=2026-11-07
+end_date_lt=2026-11-08
+granularity=1D
+currency=LOCAL</pre>
+        <p class="small">泰国店这组参数取 11 月 7 日。历史留有一条日区间的成功摘要。当前 <code>105005</code> 的请求号为 <code>202611271016429E708108EB98511A53A7</code>。</p>
+      </article>
+      <article id="lazada" class="example">
+        <h3>Lazada</h3>
+        <p>菲律宾请求网关为 <code>https://api.lazada.com.ph/rest</code>。签名以 <code>/seller/metrics/get</code> 开头，签好后再编码 Query，输出大写十六进制签名。</p>
+        <p class="small"><code>LZD015_PH_BT</code> 的回包节选</p>
+        <pre aria-label="Lazada 回包节选">{
+  "seller_id": 500519136680,
+  "ship_on_time": "100.0",
+  "positive_seller_rating": "96.0",
+  "response_rate": "1.0"
+}</pre>
+        <p class="small">请求号 <code>214ee32317957457340485905</code>。</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="business-advisor" aria-labelledby="advisor-title">
+    <div class="section-head"><h2 id="advisor-title">Lazada 生意参谋指标与取数口径</h2><p>日指标以「关键指标」报表为取数来源。</p></div>
+    <div class="scroll" tabindex="0" role="region" aria-label="Lazada 生意参谋字段对照">
+      <table>
+        <thead><tr><th scope="col">页面指标</th><th scope="col">11 月 26 日截图示例</th><th scope="col">入库口径</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">营收</th><td>₱6,630.16</td><td>保存报表的 Revenue、金额和币种。订单 API 可用于同店同日对账，平台后台营收取报表值。</td></tr>
+          <tr><th scope="row">访客数／页面浏览量</th><td>85 人／184 次</td><td>分别保存 Visitors 和 Pageviews。访客是人数，浏览量是次数，这两项从报表取。</td></tr>
+          <tr><th scope="row">买家数／订单数</th><td>日指标截图未显示这两张卡片</td><td>分别保存 Buyers 和 Orders。买家按人数统计，同一个买家可以下多单。ERP 可用订单 API 按订单号独立统计订单数。</td></tr>
+          <tr><th scope="row">转化率</th><td>5.88%</td><td>优先取报表原值。复核公式为买家数 ÷ 访客数。按截图数值反推约 5 位买家，<code>5 ÷ 85 ≈ 5.88%</code>。</td></tr>
+          <tr><th scope="row">客单价</th><td>₱1,326.03</td><td>优先取报表原值。这里对应 Revenue per Buyer，即营收 ÷ 买家数。<code>6,630.16 ÷ 5 ≈ 1,326.03</code>。</td></tr>
+          <tr><th scope="row">日环比／上周同日对比</th><td>例如营收分别为 +57.94%、+22.44%</td><td>导出有对比列时保留原值。需要自行计算时，用相同口径的前一日及上周同日数据，基期缺失或为 0 时留空。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li id="advisor-realtime"><strong>首页实时表现。</strong>11 月 27 日页面更新于 10:25:59，展示营收 ₱2,252.70、访客 32、买家 2、浏览量 56、订单 2，以及昨天同期变化。实时访客榜显示商品排名。暂未确认有公开接口或可导出的实时明细。</li>
+      <li><strong>订单 API 对账样本。</strong>用 <code>GET /orders/get</code> 拉 <code>LZD015_PH_BT</code> 11 月 26 日当地创建的订单，排除未支付、已取消后剩 5 单，订单 <code>price</code> 合计 ₱6,356.00。用 <code>GET /orders/items/get</code> 批量传 <code>order_ids</code>，这 5 单的商品行 <code>paid_price</code> 合计 ₱5,922.48。截图未显示店铺编号，尚未核对是否同店。</li>
+      <li><strong>店铺服务接口核验。</strong><code>GET /seller/performance/get</code> 传 <code>language=en-US</code>，实测返回 <code>data.indicators[]</code>，包括好评率、聊天回复、准时发货和取消率等服务指标。请求号 <code>214126fa17957465372958766</code>。</li>
+    </ul>
+    <p class="small"><a href="https://www.lazada.cn/storydetail/187/103683" target="_blank" rel="noopener">生意参谋导出</a> · <a href="https://img-ovs.alicdn.com/other/common/d28114299b244839aaca232cdf90f6c3" target="_blank" rel="noopener">指标定义</a> · <a href="https://open.lazada.com/apps/doc/api?path=%2Forders%2Fget" target="_blank" rel="noopener">订单列表</a> · <a href="https://open.lazada.com/apps/doc/api?path=%2Forders%2Fitems%2Fget" target="_blank" rel="noopener">订单商品明细</a> · <a href="https://open.lazada.com/apps/doc/api?path=%2Fseller%2Fperformance%2Fget" target="_blank" rel="noopener">店铺服务表现接口</a></p>
+  </section>
+
+  <section id="storage" aria-labelledby="storage-title">
+    <div class="section-head"><h2 id="storage-title">入库规则</h2></div>
+    <ul>
+      <li>Shopee 健康和 Lazada 服务快照用 <code>站点 + 平台店铺 ID + 当地采集日期</code> 去重。TikTok 经营数据用 <code>站点 + 平台店铺 ID + 当地统计日期</code> 去重，按首期固定的 <code>LOCAL</code> 口径保存。</li>
+      <li>Lazada 生意参谋日数据用 <code>站点 + 平台店铺 ID + 当地统计日期</code> 去重，记录导出来源、导入时间和报表原始行。同日重导按同一统计日更新。</li>
+      <li>保留 ERP 店铺 ID、接口路径或版本、采集时间、<code>request_id</code> 和原始业务 JSON。平台大 ID 用字符串，金额用定点小数并附原币。</li>
+      <li>业务成功才更新指标。Shopee 看 <code>error</code>，TikTok 和 Lazada 看 <code>code</code>，兼容各自返回的类型。请求失败、空指标和真实零值分别记录，补拉时按原日期更新。</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>
