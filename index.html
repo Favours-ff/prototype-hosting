@@ -90,7 +90,7 @@
         </div>
         <div style="font-size:12px;opacity:.85;text-align:right">
           <div>维护人：Favours-ff</div>
-          <div>最后更新：2026-11-27</div>
+          <div>最后更新：2026-11-28</div>
         </div>
       </div>
       <div class="stats">
@@ -143,7 +143,20 @@
 
   <script>
     const ITEMS = [
-      // === 本期重点整理（10 项） ===
+      // === 本期重点整理（11 项） ===
+      {
+        id: "aliexpress-overseas-custody-warehouse-20261128",
+        title: "速卖通海外托管订单自动匹配系统仓（OMS 调整）",
+        category: "ERP & 订单",
+        businessSystem: "ERP / OMS 订单",
+        type: "PRD + 查表说明",
+        status: "待评审",
+        featured: true,
+        createdAt: "2026-11-28",
+        updatedAt: "2026-11-28",
+        url: "./prototypes/erp/aliexpress-overseas-custody-warehouse-20261128/",
+        summary: "仓库管理页面不动、不接新接口，仅在 OMS 订单侧调整：海托平台仓发单按 extend_map.wc 先查 aliexpress_warehouse_inventory 取 ware_name，再匹配 logistics_db.warehouse 系统仓，未命中报异常不兜底优选仓。"
+      },
       {
         id: "sea-shop-performance-api-matrix",
         title: "三平台店铺表现接口矩阵（Shopee / TikTok Shop / Lazada）",
